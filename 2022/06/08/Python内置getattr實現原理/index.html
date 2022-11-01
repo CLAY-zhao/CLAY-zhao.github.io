@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>getattr實現原理 | 士多啤梨苹果橙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="getattr是Python中的一個内建函數，在官方的getattr解釋中是這樣説明的 getattr(object, name[, default]) -&gt; value  Get a named attribute from an object; getattr(x, &#39;y&#39;) is equivalent to x.y. When a default argument is">
+<meta property="og:type" content="article">
+<meta property="og:title" content="getattr實現原理">
+<meta property="og:url" content="http://example.com/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="士多啤梨苹果橙">
+<meta property="og:description" content="getattr是Python中的一個内建函數，在官方的getattr解釋中是這樣説明的 getattr(object, name[, default]) -&gt; value  Get a named attribute from an object; getattr(x, &#39;y&#39;) is equivalent to x.y. When a default argument is">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-08T03:30:28.000Z">
+<meta property="article:modified_time" content="2022-11-01T09:08:17.643Z">
+<meta property="article:author" content="小芳芳">
+<meta property="article:tag" content="CPython">
+<meta property="article:tag" content="C">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="士多啤梨苹果橙" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">士多啤梨苹果橙</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Python内置getattr實現原理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" class="article-date">
+  <time datetime="2022-06-08T03:30:28.000Z" itemprop="datePublished">2022-06-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CPython/">CPython</a>►<a class="article-category-link" href="/categories/CPython/C/">C</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      getattr實現原理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>getattr是Python中的一個内建函數，在官方的getattr解釋中是這樣説明的</p>
+<pre><code class="python">getattr(object, name[, default]) -&gt; value
+
+Get a named attribute from an object; getattr(x, &#39;y&#39;) is equivalent to x.y.
+When a default argument is given, it is returned when the attribute doesn&#39;t
+exist; without it, an exception is raised in that case.
+</code></pre>
+<span id="more"></span>
+
+<p>你可以給定一個object，并通過name string獲取命名屬性，如果沒有設置默認參數，查找屬性不存在，就會引發異常</p>
+<pre><code class="python">class A:
+    pass
+
+a = A()
+
+item = getattr(a, &quot;name&quot;)
+
+Traceback (most recent call last):
+  File &quot;E:\test.py&quot;, line 7, in &lt;module&gt;
+    item = getattr(a, &quot;name&quot;)
+AttributeError: &#39;A&#39; object has no attribute &#39;name&#39;
+</code></pre>
+<p>你可以給定一個默認參數, 儅屬性查找不存在時，會返回給定的默認值</p>
+<pre><code class="python">class A:
+    pass
+
+a = A()
+
+item = getattr(a, &quot;name&quot;, &quot;Peter&quot;)
+
+print(item)
+
+Peter
+
+Process finished with exit code 0
+</code></pre>
+<p>getattr方法最主要的作用的實現反射機制，可以動態獲取對象的屬性，還有setattr、hasattr、delattr類似的方法，那麽getattr是如何實現屬性查找的呢？</p>
+<h3 id="getattr的背後實現機制"><a href="#getattr的背後實現機制" class="headerlink" title="getattr的背後實現機制"></a>getattr的背後實現機制</h3><p>getattr是Python中的内置函數，可以查看源代碼的Python/bltinmodule.c文件，在大概第2703行有很多方法</p>
+<pre><code class="c">static PyMethodDef builtin_methods[] = &#123;
+    &#123;&quot;__build_class__&quot;, (PyCFunction)(void(*)(void))builtin___build_class__,
+     METH_FASTCALL | METH_KEYWORDS, build_class_doc&#125;,
+    &#123;&quot;__import__&quot;,      (PyCFunction)(void(*)(void))builtin___import__, METH_VARARGS | METH_KEYWORDS, import_doc&#125;,
+    BUILTIN_ABS_METHODDEF
+    BUILTIN_ALL_METHODDEF
+    BUILTIN_ANY_METHODDEF
+    BUILTIN_ASCII_METHODDEF
+    BUILTIN_BIN_METHODDEF
+    &#123;&quot;breakpoint&quot;,      (PyCFunction)(void(*)(void))builtin_breakpoint, METH_FASTCALL | METH_KEYWORDS, breakpoint_doc&#125;,
+    BUILTIN_CALLABLE_METHODDEF
+    BUILTIN_CHR_METHODDEF
+    BUILTIN_COMPILE_METHODDEF
+    BUILTIN_DELATTR_METHODDEF
+    &#123;&quot;dir&quot;,             builtin_dir,        METH_VARARGS, dir_doc&#125;,
+    BUILTIN_DIVMOD_METHODDEF
+    BUILTIN_EVAL_METHODDEF
+    BUILTIN_EXEC_METHODDEF
+    BUILTIN_FORMAT_METHODDEF
+    &#123;&quot;getattr&quot;,         (PyCFunction)(void(*)(void))builtin_getattr, METH_FASTCALL, getattr_doc&#125;,
+    BUILTIN_GLOBALS_METHODDEF
+    BUILTIN_HASATTR_METHODDEF
+    BUILTIN_HASH_METHODDEF
+    BUILTIN_HEX_METHODDEF
+    BUILTIN_ID_METHODDEF
+    BUILTIN_INPUT_METHODDEF
+    BUILTIN_ISINSTANCE_METHODDEF
+    BUILTIN_ISSUBCLASS_METHODDEF
+    &#123;&quot;iter&quot;,            (PyCFunction)(void(*)(void))builtin_iter,       METH_FASTCALL, iter_doc&#125;,
+    BUILTIN_LEN_METHODDEF
+    BUILTIN_LOCALS_METHODDEF
+    &#123;&quot;max&quot;,             (PyCFunction)(void(*)(void))builtin_max,        METH_VARARGS | METH_KEYWORDS, max_doc&#125;,
+    &#123;&quot;min&quot;,             (PyCFunction)(void(*)(void))builtin_min,        METH_VARARGS | METH_KEYWORDS, min_doc&#125;,
+    &#123;&quot;next&quot;,            (PyCFunction)(void(*)(void))builtin_next,       METH_FASTCALL, next_doc&#125;,
+    BUILTIN_OCT_METHODDEF
+    BUILTIN_ORD_METHODDEF
+    BUILTIN_POW_METHODDEF
+    &#123;&quot;print&quot;,           (PyCFunction)(void(*)(void))builtin_print,      METH_FASTCALL | METH_KEYWORDS, print_doc&#125;,
+    BUILTIN_REPR_METHODDEF
+    BUILTIN_ROUND_METHODDEF
+    BUILTIN_SETATTR_METHODDEF
+    BUILTIN_SORTED_METHODDEF
+    BUILTIN_SUM_METHODDEF
+    &#123;&quot;vars&quot;,            builtin_vars,       METH_VARARGS, vars_doc&#125;,
+    &#123;NULL,              NULL&#125;,
+&#125;;
+</code></pre>
+<p>而儅調用getattr方法時，就會執行builtin_getattr函數</p>
+<pre><code class="c">/* AC: cannot convert yet, as needs PEP 457 group support in inspect */
+static PyObject *
+builtin_getattr(PyObject *self, PyObject *const *args, Py_ssize_t nargs)
+&#123;
+    PyObject *v, *name, *result;
+
+    if (!_PyArg_CheckPositional(&quot;getattr&quot;, nargs, 2, 3))
+        return NULL;
+
+    v = args[0];  // 取出對象, getattr(obj, &quot;xxx&quot;), v就是obj對象
+    name = args[1]; // 取出字符串, 也就是xxx
+    if (!PyUnicode_Check(name)) &#123;
+    // 類型檢查, 如果name string不是字符串類型, 就會抛出 getattr(): attribute name must be string 異常
+        PyErr_SetString(PyExc_TypeError,
+                        &quot;getattr(): attribute name must be string&quot;);
+        return NULL;
+    &#125;
+    if (nargs &gt; 2) &#123;
+        // 如果設置了默認參數, 就會執行這裏的代碼
+        if (_PyObject_LookupAttr(v, name, &amp;result) == 0) &#123;
+            PyObject *dflt = args[2];
+            Py_INCREF(dflt);
+            return dflt;
+        &#125;
+    &#125;
+    else &#123;
+        // 沒有設置默認參數
+        result = PyObject_GetAttr(v, name);
+    &#125;
+    return result;
+&#125;
+</code></pre>
+<p>可以看到 builtin_getattr 方法還是比較簡單的，一進來先檢查 name string 是否為字符串類型，否則就抛異常</p>
+<pre><code class="python">class A:
+    pass
+
+a = A()
+
+item = getattr(a, 1, &quot;Peter&quot;)
+
+Traceback (most recent call last):
+  File &quot;E:\herokuapp\dawei-base\tests\test.py&quot;, line 7, in &lt;module&gt;
+    item = getattr(a, 1, &quot;Peter&quot;)
+TypeError: getattr(): attribute name must be string
+</code></pre>
+<p>如果設置了默認參數，也就是 getattr(a, “name”, “Peter”) 這種寫法，就會調用 _PyObject_LookupAttr 方法，分別傳入了a對象、”name” 字符串，以及 &amp;result, 儅屬性找到時就會賦值result，并返回result，那如果沒有找到屬性，就會通過 args[2] 獲取到給定的默認參數，并將該參數返回</p>
+<p>查看_PyObject_LookupAttr的代碼調用</p>
+<pre><code class="c">int
+_PyObject_LookupAttr(PyObject *v, PyObject *name, PyObject **result)
+&#123;
+    PyTypeObject *tp = Py_TYPE(v);
+
+    if (!PyUnicode_Check(name)) &#123;
+        PyErr_Format(PyExc_TypeError,
+                     &quot;attribute name must be string, not &#39;%.200s&#39;&quot;,
+                     Py_TYPE(name)-&gt;tp_name);
+        *result = NULL;
+        return -1;
+    &#125;
+
+    if (tp-&gt;tp_getattro == PyObject_GenericGetAttr) &#123;
+    // 在對象沒有重載tp_getattro方法時，會調用_PyObject_GenericGetAttrWithDict方法查找
+        *result = _PyObject_GenericGetAttrWithDict(v, name, NULL, 1);
+        if (*result != NULL) &#123;
+        // 1為找到了
+            return 1;
+        &#125;
+        if (PyErr_Occurred()) &#123;
+            // -1為報異常
+            return -1;
+        &#125;
+    // 沒有找到
+        return 0;
+    &#125;
+    if (tp-&gt;tp_getattro != NULL) &#123;
+    // tp_getattro被我們重載了，就會調用我們自己的tp_getattro方法
+        *result = (*tp-&gt;tp_getattro)(v, name);
+    &#125;
+    else if (tp-&gt;tp_getattr != NULL) &#123;
+    // 如果tp_getattro也沒有重載，就會判斷tp_getattr是否被重載
+        const char *name_str = PyUnicode_AsUTF8(name);
+        if (name_str == NULL) &#123;
+            *result = NULL;
+            return -1;
+        &#125;
+        *result = (*tp-&gt;tp_getattr)(v, (char *)name_str);
+    &#125;
+    else &#123;
+    // 既沒有重載tp_getattro，也沒有重載tp_getattr，抛異常
+        *result = NULL;
+        return 0;
+    &#125;
+
+    if (*result != NULL) &#123;
+    // 找到屬性了
+        return 1;
+    &#125;
+    if (!PyErr_ExceptionMatches(PyExc_AttributeError)) &#123;
+        return -1;
+    &#125;
+    PyErr_Clear();
+    // 沒有找到
+    return 0;
+&#125;
+</code></pre>
+<p>那在我們沒有重載tp_getattro方法時，會執行_PyObject_GenericGetAttrWithDict方法，代碼還挺長😶</p>
+<pre><code class="c">/* Generic GetAttr functions - put these in your tp_[gs]etattro slot. */
+
+PyObject *
+_PyObject_GenericGetAttrWithDict(PyObject *obj, PyObject *name,
+                                 PyObject *dict, int suppress)
+&#123;
+    /* Make sure the logic of _PyObject_GetMethod is in sync with
+       this method.
+
+       When suppress=1, this function suppress AttributeError.
+    */
+
+    PyTypeObject *tp = Py_TYPE(obj); // 獲取obj的父類
+    PyObject *descr = NULL;
+    PyObject *res = NULL;
+    descrgetfunc f;
+    Py_ssize_t dictoffset;
+    PyObject **dictptr;
+
+    if (!PyUnicode_Check(name))&#123;
+        PyErr_Format(PyExc_TypeError,
+                     &quot;attribute name must be string, not &#39;%.200s&#39;&quot;,
+                     Py_TYPE(name)-&gt;tp_name);
+        return NULL;
+    &#125;
+    Py_INCREF(name); // name string引用計數+1
+
+    if (tp-&gt;tp_dict == NULL) &#123;
+        if (PyType_Ready(tp) &lt; 0)
+            goto done;
+    &#125;
+
+    /*
+    _PyType_Lookup代碼調用比較多，就不粘出來了，它裏面做了一些對屬性值得緩存，最主要的是通過MRO查找屬性，
+    它會通過a對象的父類，也就是A類，獲取A類的MRO，并通過遍歷MRO，獲取每個類的__dict__，再通過hash查找
+    */
+    descr = _PyType_Lookup(tp, name);
+
+    f = NULL;
+    if (descr != NULL) &#123;
+    // 如果找到屬性了，
+        Py_INCREF(descr);
+    // 獲取__get__方法
+        f = Py_TYPE(descr)-&gt;tp_descr_get;
+    // 判斷是否__get__不爲空并且__set__不爲空
+        if (f != NULL &amp;&amp; PyDescr_IsData(descr)) &#123;
+        // 調用__get__方法
+            res = f(descr, obj, (PyObject *)Py_TYPE(obj));
+            if (res == NULL &amp;&amp; suppress &amp;&amp;
+                    PyErr_ExceptionMatches(PyExc_AttributeError)) &#123;
+                PyErr_Clear();
+            &#125;
+            goto done;
+        &#125;
+    &#125;
+
+    if (dict == NULL) &#123;
+        /* Inline _PyObject_GetDictPtr */
+        dictoffset = tp-&gt;tp_dictoffset;
+        if (dictoffset != 0) &#123;
+            if (dictoffset &lt; 0) &#123;
+                Py_ssize_t tsize = Py_SIZE(obj);
+                if (tsize &lt; 0) &#123;
+                    tsize = -tsize;
+                &#125;
+                size_t size = _PyObject_VAR_SIZE(tp, tsize);
+                _PyObject_ASSERT(obj, size &lt;= PY_SSIZE_T_MAX);
+
+                dictoffset += (Py_ssize_t)size;
+                _PyObject_ASSERT(obj, dictoffset &gt; 0);
+                _PyObject_ASSERT(obj, dictoffset % SIZEOF_VOID_P == 0);
+            &#125;
+            dictptr = (PyObject **) ((char *)obj + dictoffset);
+            dict = *dictptr;
+        &#125;
+    &#125;
+    if (dict != NULL) &#123;
+    // 進入該 if statement, 説明__get__或者__set__沒有定義, 就在__dict__裏邊找
+        Py_INCREF(dict);
+        res = PyDict_GetItemWithError(dict, name);
+        if (res != NULL) &#123;
+            Py_INCREF(res);
+            Py_DECREF(dict);
+            goto done;
+        &#125;
+        else &#123;
+            Py_DECREF(dict);
+            if (PyErr_Occurred()) &#123;
+                if (suppress &amp;&amp; PyErr_ExceptionMatches(PyExc_AttributeError)) &#123;
+                    PyErr_Clear();
+                &#125;
+                else &#123;
+                    goto done;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+
+    if (f != NULL) &#123;
+    // 進入該 if statement, 説明__dict__裏也沒有, 那就就調用__get__方法
+        res = f(descr, obj, (PyObject *)Py_TYPE(obj));
+        if (res == NULL &amp;&amp; suppress &amp;&amp;
+                PyErr_ExceptionMatches(PyExc_AttributeError)) &#123;
+            PyErr_Clear();
+        &#125;
+        goto done;
+    &#125;
+
+    if (descr != NULL) &#123;
+    // 如果走到這, 判斷自己不爲NULL就返回本身, 意思是__get__和__set__都沒有定義, 并且__dict__也沒有找到
+        res = descr;
+        descr = NULL;
+        goto done;
+    &#125;
+
+    if (!suppress) &#123;
+        PyErr_Format(PyExc_AttributeError,
+                     &quot;&#39;%.50s&#39; object has no attribute &#39;%U&#39;&quot;,
+                     tp-&gt;tp_name, name);
+    &#125;
+  done:
+    Py_XDECREF(descr);
+    Py_DECREF(name);
+    return res;
+&#125;
+</code></pre>
+<p>_PyObject_GenericGetAttrWithDict處理流程</p>
+<ol>
+<li>獲取查找類的父類，并取出MRO，遍歷MRO查找屬性</li>
+<li>如果找到屬性，會判斷該對象是不是一個Descriptor</li>
+<li>如果對象定義了__get__并且定義了__set__，調用__get__并返回</li>
+<li>如果沒有定義__set__，就在__dict__裏邊找</li>
+<li>如果__dict__也沒有找到，就調用__get__并返回</li>
+<li>如果__get__也沒有定義，就把自身返回</li>
+</ol>
+<p>可以看到，光查找屬性就做了不少的處理，那如果在我們重載了tp_getattro的情況下，它就會調用如下代碼</p>
+<pre><code class="c">if (tp-&gt;tp_getattro != NULL) &#123;
+    // 定義了__getattribute__方法，調用并傳遞實例對象v，也就是上面説的a，還有name string
+    *result = (*tp-&gt;tp_getattro)(v, name);
+&#125;
+</code></pre>
+<p>在我們為類中定義了__getattribute__方法時，就會在getattr(a, “name”, “豬豬俠”)時被調用，並傳遞a，name到__getattribute__裏作爲參數</p>
+<pre><code class="python">class Name:
+    def __get__(self, instance, owner):
+        return &quot;Peter&quot;
+
+class A:
+    name = Name()
+    def __getattribute__(self, item):
+        print(self, item)
+        return item
+
+a = A()
+item = getattr(a, &quot;name&quot;, &quot;豬豬俠&quot;)
+
+打印結果: &lt;__main__.A object at 0x000001BC1C306FA0&gt; name
+</code></pre>
+<p>對於__getattr__方法，需要滿足兩個條件</p>
+<ol>
+<li>訪問對象屬性</li>
+<li>觸發AttributeError異常</li>
+</ol>
+<pre><code class="python">class A:
+    name = &quot;Peter&quot;
+    def __getattr__(self, item):
+        print(item)
+
+a = A()
+item = getattr(a, &quot;sex&quot;)
+
+打印結果: sex
+</code></pre>
+<p>如果經過一系列的找到屬性都沒有找到，并且你給定了默認參數，就會在你沒有找到的情況下，將默認參數返回給你</p>
+<pre><code class="c">if (_PyObject_LookupAttr(v, name, &amp;result) == 0) &#123;
+    // 0表示沒有找到
+    PyObject *dflt = args[2]; // 取出默認參數
+    Py_INCREF(dflt); // 引用計數+1
+    return dflt; // 返回
+&#125;
+</code></pre>
+<p>在我們只給了兩個參數的情況下，如 getattr(a, “name”)，此時會調用 PyObject_GetAttr(v, name)</p>
+<pre><code class="c">PyObject *
+PyObject_GetAttr(PyObject *v, PyObject *name)
+&#123;
+    PyTypeObject *tp = Py_TYPE(v); // 獲取父類
+
+    if (!PyUnicode_Check(name)) &#123;
+    // 類型檢查
+        PyErr_Format(PyExc_TypeError,
+                     &quot;attribute name must be string, not &#39;%.200s&#39;&quot;,
+                     Py_TYPE(name)-&gt;tp_name);
+        return NULL;
+    &#125;
+    if (tp-&gt;tp_getattro != NULL)
+        return (*tp-&gt;tp_getattro)(v, name);
+    if (tp-&gt;tp_getattr != NULL) &#123;
+        const char *name_str = PyUnicode_AsUTF8(name);
+        if (name_str == NULL)
+            return NULL;
+        return (*tp-&gt;tp_getattr)(v, (char *)name_str);
+    &#125;
+    PyErr_Format(PyExc_AttributeError,
+                 &quot;&#39;%.50s&#39; object has no attribute &#39;%U&#39;&quot;,
+                 tp-&gt;tp_name, name);
+    return NULL;
+&#125;
+</code></pre>
+<p>處理的事情跟_PyObject_LookupAttr方法挺相似的，在沒有重載tp_getattro的情況下都是調用了_PyObject_GenericGetAttrWithDict方法，只不過_PyObject_LookupAttr給_PyObject_GenericGetAttrWithDict的參數suppress傳遞了1，而調用PyObject_GetAttr時，傳遞suppress為0</p>
+<blockquote>
+<p>Make sure the logic of _PyObject_GetMethod is in sync with this method.<br>  When suppress=1, this function suppress AttributeError.</p>
+</blockquote>
+<p>儅suppress為0時，如果找不到屬性，則會抛出異常</p>
+<pre><code class="c">if (!suppress) &#123;
+    PyErr_Format(PyExc_AttributeError,
+                 &quot;&#39;%.50s&#39; object has no attribute &#39;%U&#39;&quot;,
+                 tp-&gt;tp_name, name);
+&#125;
+</code></pre>
+<pre><code class="python">Traceback (most recent call last):
+  File &quot;E:\test.py&quot;, line 12, in &lt;module&gt;
+    item = getattr(a, &quot;age&quot;)
+AttributeError: &#39;A&#39; object has no attribute &#39;age&#39;
+</code></pre>
+<p>儅getattr設置了默認參數，suppress就為1，在沒有找到的情況下，調用_PyObject_GenericGetAttrWithDict不會引發異常，并在整個查找結果返回為0的情況下，會將默認參數取出并作爲結果返回</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" data-id="cl9y08lkq000kwcuq3l2pb2u0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Python Tuple實現原理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">哪些Python操作是atomic的？</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/">CPython</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/">C</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/Python/">Python</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Office/">Office</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Office/PowerPoint/">PowerPoint</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Python/Django/">Django</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Life/" rel="tag">Life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Office/" rel="tag">Office</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PowerPoint/" rel="tag">PowerPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 20px;">C</a> <a href="/tags/CPython/" style="font-size: 20px;">CPython</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Life/" style="font-size: 10px;">Life</a> <a href="/tags/Office/" style="font-size: 10px;">Office</a> <a href="/tags/PowerPoint/" style="font-size: 10px;">PowerPoint</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/">PPT结构组成（工作中的总结）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/">Python Django服务启动时做了什么?</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">Property源码分析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Python list实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/">Python zip内置类的背后机制</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 小芳芳<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

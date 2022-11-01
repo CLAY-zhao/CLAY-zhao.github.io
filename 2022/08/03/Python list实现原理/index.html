@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Python list实现原理 | 士多啤梨苹果橙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Python List实现原理Python list对象的一些介绍：https:&#x2F;&#x2F;www.runoob.com&#x2F;python3&#x2F;python3-list.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python list实现原理">
+<meta property="og:url" content="http://example.com/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="士多啤梨苹果橙">
+<meta property="og:description" content="Python List实现原理Python list对象的一些介绍：https:&#x2F;&#x2F;www.runoob.com&#x2F;python3&#x2F;python3-list.html">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://res.cloudinary.com/dotachkke/image/upload/v1659499527/upload/ocwhce1t8xk0heafiaza.png">
+<meta property="article:published_time" content="2022-08-03T04:11:58.000Z">
+<meta property="article:modified_time" content="2022-11-01T09:08:17.641Z">
+<meta property="article:author" content="小芳芳">
+<meta property="article:tag" content="CPython">
+<meta property="article:tag" content="C">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://res.cloudinary.com/dotachkke/image/upload/v1659499527/upload/ocwhce1t8xk0heafiaza.png">
+  
+    <link rel="alternate" href="/atom.xml" title="士多啤梨苹果橙" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">士多啤梨苹果橙</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Python list实现原理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="article-date">
+  <time datetime="2022-08-03T04:11:58.000Z" itemprop="datePublished">2022-08-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CPython/">CPython</a>►<a class="article-category-link" href="/categories/CPython/C/">C</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Python list实现原理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Python-List实现原理"><a href="#Python-List实现原理" class="headerlink" title="Python List实现原理"></a>Python List实现原理</h3><p>Python list对象的一些介绍：<a target="_blank" rel="noopener" href="https://www.runoob.com/python3/python3-list.html">https://www.runoob.com/python3/python3-list.html</a></p>
+<span id="more"></span>
+
+<blockquote>
+<p>基于CPython3.9.12版本阅读</p>
+</blockquote>
+<p>在CPython中list对应PyListObject，位于objects/listobject.c</p>
+<pre><code class="c">PyTypeObject PyList_Type = &#123;
+    PyVarObject_HEAD_INIT(&amp;PyType_Type, 0)
+    &quot;list&quot;,
+    sizeof(PyListObject),
+    0,
+    (destructor)list_dealloc,                   /* tp_dealloc */
+    0,                                          /* tp_vectorcall_offset */
+    0,                                          /* tp_getattr */
+    0,                                          /* tp_setattr */
+    0,                                          /* tp_as_async */
+    (reprfunc)list_repr,                        /* tp_repr */
+    0,                                          /* tp_as_number */
+    &amp;list_as_sequence,                          /* tp_as_sequence */
+    &amp;list_as_mapping,                           /* tp_as_mapping */
+    PyObject_HashNotImplemented,                /* tp_hash */
+    0,                                          /* tp_call */
+    0,                                          /* tp_str */
+    PyObject_GenericGetAttr,                    /* tp_getattro */
+    0,                                          /* tp_setattro */
+    0,                                          /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC |
+        Py_TPFLAGS_BASETYPE | Py_TPFLAGS_LIST_SUBCLASS, /* tp_flags */
+    list___init____doc__,                       /* tp_doc */
+    (traverseproc)list_traverse,                /* tp_traverse */
+    (inquiry)_list_clear,                       /* tp_clear */
+    list_richcompare,                           /* tp_richcompare */
+    0,                                          /* tp_weaklistoffset */
+    list_iter,                                  /* tp_iter */
+    0,                                          /* tp_iternext */
+    list_methods,                               /* tp_methods */
+    0,                                          /* tp_members */
+    0,                                          /* tp_getset */
+    0,                                          /* tp_base */
+    0,                                          /* tp_dict */
+    0,                                          /* tp_descr_get */
+    0,                                          /* tp_descr_set */
+    0,                                          /* tp_dictoffset */
+    (initproc)list___init__,                    /* tp_init */
+    PyType_GenericAlloc,                        /* tp_alloc */
+    PyType_GenericNew,                          /* tp_new */
+    PyObject_GC_Del,                            /* tp_free */
+    .tp_vectorcall = list_vectorcall,
+&#125;;
+</code></pre>
+<p>分别定义了__new__方法和__init__，先来看看在调用 list()时，做了什么，__new__调用了PyType_GenericNew</p>
+<pre><code class="c">PyObject *
+PyType_GenericNew(PyTypeObject *type, PyObject *args, PyObject *kwds)
+&#123;
+    return type-&gt;tp_alloc(type, 0); // 先为对象分配空间
+&#125;
+</code></pre>
+<p>__init__调用了list___init__方法</p>
+<pre><code class="c">static int
+list___init__(PyObject *self, PyObject *args, PyObject *kwargs)
+&#123;
+    int return_value = -1; // 返回值, -1在CPython里表示异常, (hash不会出现-1, 为-1的哈希会返回-2)
+    PyObject *iterable = NULL;
+
+    if (Py_IS_TYPE(self, &amp;PyList_Type) &amp;&amp;
+        !_PyArg_NoKeywords(&quot;list&quot;, kwargs)) &#123;
+    // 如果类型为List并且没有关键字, 则直接结束
+        goto exit;
+    &#125;
+    if (!_PyArg_CheckPositional(&quot;list&quot;, PyTuple_GET_SIZE(args), 0, 1)) &#123;
+    // 如果传递的位置参数不为0到1个, 
+        goto exit;
+    &#125;
+    if (PyTuple_GET_SIZE(args) &lt; 1) &#123;
+    // 如果位置参数参数小于1，则跳到skip_optional创建list, 但是是空列表
+        goto skip_optional;
+    &#125;
+    iterable = PyTuple_GET_ITEM(args, 0); // 获取args的第一个元素, 也就是[...]
+skip_optional:
+    return_value = list___init___impl((PyListObject *)self, iterable); // 创建列表
+
+exit:
+    return return_value;
+&#125;
+
+static int
+list___init___impl(PyListObject *self, PyObject *iterable)
+/*[clinic end generated code: output=0f3c21379d01de48 input=b3f3fe7206af8f6b]*/
+&#123;
+    /* Verify list invariants established by PyType_GenericAlloc() */
+    assert(0 &lt;= Py_SIZE(self));
+    assert(Py_SIZE(self) &lt;= self-&gt;allocated || self-&gt;allocated == -1);
+    assert(self-&gt;ob_item != NULL ||
+           self-&gt;allocated == 0 || self-&gt;allocated == -1);
+
+    /* Empty previous contents */
+    if (self-&gt;ob_item != NULL) &#123;
+        (void)_list_clear(self);
+    &#125;
+    if (iterable != NULL) &#123; // 如果传递了[...]对象, 则进入if statement
+        if (_PyObject_HasLen(iterable)) &#123;
+        /*
+        _PyObject_HasLen主要判断iterable对象是否实现了序列协议的对象相关字段附加结构(tp_as_sequence)或者
+        是否实现了映射协议的对象相关字段的附加结构(tp_as_mapping)
+        */
+            Py_ssize_t iter_len = PyObject_Size(iterable);
+        /*
+        PyObject_Size主要用来获取iterable对象的长度, 如果该对象定义了tp_as_sequence协议，
+        则会判断tp_as_sequence协议是否实现__len__方法，定义了则调用__len__, 如果没有定义, 
+        则再次获取tp_as_mapping协议，并在tp_as_mapping协议里判断是否定义__len__，定义了则调用, 如果两个协议都没有
+        定义__len__, 则返回-1
+        */
+            if (iter_len == -1) &#123;
+                if (!PyErr_ExceptionMatches(PyExc_TypeError)) &#123;
+            // 创建失败
+                    return -1;
+                &#125;
+                PyErr_Clear();
+            &#125;
+            if (iter_len &gt; 0 &amp;&amp; self-&gt;ob_item == NULL
+                &amp;&amp; list_preallocate_exact(self, iter_len)) &#123;
+        // 长度大于0、ob_item为NULL, 用于真正存储列表的元素, list_preallocate_exact为列表预分配内存, 调用C的malloc
+                return -1;
+            &#125;
+        &#125;
+        PyObject *rv = list_extend(self, iterable); // 最主要的方法, 代码太长, 分开粘
+        if (rv == NULL)
+            return -1;
+        Py_DECREF(rv);
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p>经过源码分析发现，在调用list([…])时，实际上是调用了list对象的extend方法，代码也比较长，一点一点分析😵</p>
+<pre><code class="c">static PyObject *
+list_extend(PyListObject *self, PyObject *iterable)
+/*[clinic end generated code: output=630fb3bca0c8e789 input=9ec5ba3a81be3a4d]*/
+&#123;
+    PyObject *it;      /* iter(v) */
+    Py_ssize_t m;                  /* size of self */
+    Py_ssize_t n;                  /* guess for size of iterable */
+    Py_ssize_t mn;                 /* m + n */
+    Py_ssize_t i;
+    PyObject *(*iternext)(PyObject *);
+
+    /* Special cases:
+       1) lists and tuples which can use PySequence_Fast ops
+       2) extending self to self requires making a copy first
+    */
+    if (PyList_CheckExact(iterable) || PyTuple_CheckExact(iterable) ||
+                (PyObject *)self == iterable) &#123; // 判断iterable是否为list类型或者tuple类型
+        PyObject **src, **dest; // 两个二级指针
+        iterable = PySequence_Fast(iterable, &quot;argument must be iterable&quot;);
+        if (!iterable)
+            return NULL;
+        n = PySequence_Fast_GET_SIZE(iterable); // 获取iterable的大小
+        if (n == 0) &#123;
+            /* short circuit when iterable is empty */
+            Py_DECREF(iterable);
+            Py_RETURN_NONE;
+        &#125;
+        m = Py_SIZE(self); // 获取自身的大小
+        /* It should not be possible to allocate a list large enough to cause
+        an overflow on any relevant platform */
+        assert(m &lt; PY_SSIZE_T_MAX - n);
+        if (list_resize(self, m + n) &lt; 0) &#123; // 扩容操作, 比较重要, 后面会讲
+            Py_DECREF(iterable);
+            return NULL;
+        &#125;
+        /* note that we may still have self == iterable here for the
+         * situation a.extend(a), but the following code works
+         * in that case too.  Just make sure to resize self
+         * before calling PySequence_Fast_ITEMS.
+         */
+        /* populate the end of self with iterable&#39;s items */
+        src = PySequence_Fast_ITEMS(iterable); // 获取iterable的ob_item, 真正用于存储元素
+        dest = self-&gt;ob_item + m;
+        for (i = 0; i &lt; n; i++) &#123; // 循环操作, 将iterable里的每个元素设置到self-&gt;ob_item里
+            PyObject *o = src[i];
+            Py_INCREF(o);
+            dest[i] = o;
+        &#125;
+        Py_DECREF(iterable); // 引用计数-1
+        Py_RETURN_NONE; // 返回None, 结束
+    &#125;
+
+    // 如果iterable不是list或者tuple类型，则会走到这
+    it = PyObject_GetIter(iterable); // 获取iterable的__iter__方法、调用，获取iterator
+    if (it == NULL)
+    // 如果__iter__返回空则调用结束, 失败
+        return NULL;
+    iternext = *Py_TYPE(it)-&gt;tp_iternext; // 从iterator中获取__next__方法
+
+    /* Guess a result list size. */
+    n = PyObject_LengthHint(iterable, 8); // 猜测结果列表的大小
+    if (n &lt; 0) &#123;
+    // 如果小于0, 失败, 结束调用
+        Py_DECREF(it);
+        return NULL;
+    &#125;
+    m = Py_SIZE(self); // 获取自身的大小
+    if (m &gt; PY_SSIZE_T_MAX - n) &#123; // 表示溢出
+        /* m + n overflowed; on the chance that n lied, and there really
+         * is enough room, ignore it.  If n was telling the truth, we&#39;ll
+         * eventually run out of memory during the loop.
+         */
+    &#125;
+    else &#123;
+        mn = m + n; // 自身大小加上iterator的大小
+        /* Make room. */
+        if (list_resize(self, mn) &lt; 0) // 判断是否需要扩容
+            goto error;
+        /* Make the list sane again. */
+        Py_SET_SIZE(self, m); // 继续保持大小
+    &#125;
+
+    /* Run iterator to exhaustion. */
+    for (;;) &#123;
+    // 死循环, 不断调用__next__, 直到消耗完
+        PyObject *item = iternext(it);
+        if (item == NULL) &#123;
+        // __next__返回空, 结束循环
+            if (PyErr_Occurred()) &#123;
+                if (PyErr_ExceptionMatches(PyExc_StopIteration))
+                    PyErr_Clear();
+                else
+                    goto error;
+            &#125;
+            break;
+        &#125;
+        if (Py_SIZE(self) &lt; self-&gt;allocated) &#123; // 如果自身大小小于已分配大小, 将元素设置到最后的位置, 并重新设置大小
+            /* steals ref */
+            PyList_SET_ITEM(self, Py_SIZE(self), item);
+            Py_SET_SIZE(self, Py_SIZE(self) + 1); // 自身大小ob_size + 1
+        &#125;
+        else &#123;
+        // 没有大于已分配大小
+            int status = app1(self, item); // 调用app1设置元素
+            Py_DECREF(item);  /* append creates a new ref */
+            if (status &lt; 0)
+        // 小于0可能因为内存溢出或者扩容失败
+                goto error;
+        &#125;
+    &#125;
+
+    /* Cut back result list if initial guess was too large. */
+    if (Py_SIZE(self) &lt; self-&gt;allocated) &#123;
+    // 这里也比较重要，再次判断自身大小是否小于已分配大小，并进行缩容，不需要多余的内存
+        if (list_resize(self, Py_SIZE(self)) &lt; 0)
+            goto error;
+    &#125;
+
+    Py_DECREF(it);
+    Py_RETURN_NONE;
+
+  error:
+    Py_DECREF(it);
+    return NULL;
+&#125;
+
+static int
+app1(PyListObject *self, PyObject *v)
+&#123;
+    Py_ssize_t n = PyList_GET_SIZE(self); // 获取list对象大小
+
+    assert (v != NULL);
+    if (n == PY_SSIZE_T_MAX) &#123;
+        PyErr_SetString(PyExc_OverflowError,
+            &quot;cannot add more objects to list&quot;);
+        return -1;
+    &#125;
+
+    // 扩容操作, self是列表, n+1就是newsize, 或者说新的ob_size
+    // 里面有很重要的一步, 就是将列表的ob_size设置为newsize, 也就是n+1
+    // 因为append之后列表长度大小会变化, 而ob_size则时刻维护着这个大小
+    if (list_resize(self, n+1) &lt; 0)
+    // 是否需要扩容
+        return -1;
+
+    Py_INCREF(v);
+    PyList_SET_ITEM(self, n, v); // 根据大小n作为下标设置元素的位置
+    return 0;
+&#125;
+
+PyObject *
+PySequence_Fast(PyObject *v, const char *m)
+&#123;
+    // v为传递进来的iterable对象
+    PyObject *it;
+
+    if (v == NULL) &#123;
+    // 为空则抛异常
+        return null_error();
+    &#125;
+
+    if (PyList_CheckExact(v) || PyTuple_CheckExact(v)) &#123;
+    // 校验是否为list或者为typle, 如果满足条件, 则直接返回该对象, 否则往下走, 创建一个空list, 再调用list_extend
+        Py_INCREF(v);
+        return v;
+    &#125;
+
+    it = PyObject_GetIter(v); // 从iterable对象中获取__iter__方法, 调用返回iterator
+    if (it == NULL) &#123;
+    // 如果返回了空, 抛异常
+        if (PyErr_ExceptionMatches(PyExc_TypeError))
+            PyErr_SetString(PyExc_TypeError, m);
+        return NULL;
+    &#125;
+
+    v = PySequence_List(it); // 创建一个list对象
+    Py_DECREF(it);
+
+    return v;
+&#125;
+
+PyObject *
+PySequence_List(PyObject *v)
+&#123;
+    PyObject *result;  /* result list */
+    PyObject *rv;          /* return value from PyList_Extend */
+
+    if (v == NULL) &#123;
+        return null_error();
+    &#125;
+
+    result = PyList_New(0); // 创建list，大小为0
+    if (result == NULL)
+        return NULL;
+
+    rv = _PyList_Extend((PyListObject *)result, v); // 里面调用的就是extend方法
+    if (rv == NULL) &#123;
+        Py_DECREF(result);
+        return NULL;
+    &#125;
+    Py_DECREF(rv);
+    return result;
+&#125;
+
+PyObject *
+_PyList_Extend(PyListObject *self, PyObject *iterable)
+&#123;
+    return list_extend(self, iterable);
+&#125;
+</code></pre>
+<p>list_extend做的事情其实并不复杂，主要先判断你传递的参数是否为list对象或者tuple对象，如果满足，则将该对象里的每个元素通过for循环一个一个设置到列表里，如果不是判断不是list、tuple对象，就会尝试获取该对象的__iter__方法，并new一个空列表，再通过调用list_extend重新走一遍；如果你一开始传递的参数就不是list或者tuple，它就会直接获取该对象的__iter__方法，调用获取iterator，然后获取iterator的__next__方法，并通过for死循环不断调用__next__获取元素并设置到列表，中间会一直判断是否需要扩容操作，最后还会判断是否需要进行缩容操作</p>
+<h3 id="列表扩容操作"><a href="#列表扩容操作" class="headerlink" title="列表扩容操作"></a>列表扩容操作</h3><p>创建list时，app1方法在每次设置元素时都会调用list_resize判断是否需要扩容，现在来看看具体实现</p>
+<pre><code class="c">static int
+list_resize(PyListObject *self, Py_ssize_t newsize)
+&#123;
+    // self就是列表，newsize就是指元素在添加之后的ob_size
+    // 比如列表当前ob_size为5，添加一个元素之后为6，发现容量不够，就会扩容，那么newsize就为6
+    PyObject **items; // 二级指针，用来指向指针数组的
+    size_t new_allocated, num_allocated_bytes; // 新的容量、对应的内存大小
+    Py_ssize_t allocated = self-&gt;allocated; // 获取原来的容量
+
+    /* Bypass realloc() when a previous overallocation is large enough
+       to accommodate the newsize.  If the newsize falls lower than half
+       the allocated size, then proceed with the realloc() to shrink the list.
+    */
+    // 如果newsize达到容量的一般，但还没有超过容量，那么意味着newsize、或者新的ob_size和容量是匹配的，不需要扩容
+    if (allocated &gt;= newsize &amp;&amp; newsize &gt;= (allocated &gt;&gt; 1)) &#123;
+        assert(self-&gt;ob_item != NULL || newsize == 0);
+        Py_SET_SIZE(self, newsize); // 只需要将列表的ob_size设置为newsize
+        return 0;
+    &#125;
+
+    /* This over-allocates proportional to the list size, making room
+     * for additional growth.  The over-allocation is mild, but is
+     * enough to give linear-time amortized behavior over a long
+     * sequence of appends() in the presence of a poorly-performing
+     * system realloc().
+     * Add padding to make the allocated size multiple of 4.
+     * The growth pattern is:  0, 4, 8, 16, 24, 32, 40, 52, 64, 76, ...
+     * Note: new_allocated won&#39;t overflow because the largest possible value
+     *       is PY_SSIZE_T_MAX * (9 / 8) + 6 which always fits in a size_t.
+     */
+
+    // 走到这，说明容量与ob_size不匹配了，需要进行扩容或者缩容
+    // 需要申请新的底层数组，具体申请多少个，这个是公式
+    new_allocated = ((size_t)newsize + (newsize &gt;&gt; 3) + 6) &amp; ~(size_t)3;
+    /* Do not overallocate if the new size is closer to overalocated size
+     * than to the old size.
+     */
+    if (newsize - Py_SIZE(self) &gt; (Py_ssize_t)(new_allocated - newsize))
+        new_allocated = ((size_t)newsize + 3) &amp; ~(size_t)3;
+
+    if (newsize == 0) // 如果newsize为0，那么容量也会变成0，假设将列表全部清空了，容量就会变为0
+        new_allocated = 0;
+    num_allocated_bytes = new_allocated * sizeof(PyObject *); // 在list数组中，存放的都是PyObject *，所以要计算内存
+    // 调用C malloc申请相应大小的内存，将其指针交给items
+    items = (PyObject **)PyMem_Realloc(self-&gt;ob_item, num_allocated_bytes);
+    if (items == NULL) &#123;
+    // 申请内存失败，没有内存了
+        PyErr_NoMemory();
+        return -1;
+    &#125;
+    self-&gt;ob_item = items; // 指向新的数组，此时列表就发生了扩容或缩容
+    Py_SET_SIZE(self, newsize); // 设置列表的ob_size为newsize
+    self-&gt;allocated = new_allocated; // 设置新的容量大小
+    return 0;
+&#125;
+</code></pre>
+<blockquote>
+<p>The growth pattern is:  0, 4, 8, 16, 24, 32, 40, 52, 64, 76, …，当发现容量不够时才会开始扩容</p>
+</blockquote>
+<pre><code class="python">newsize = 0
+ob_size = 0
+allocated = 0
+
+for i in range(100):
+    newsize += 1
+
+    if (allocated &gt;= newsize and newsize &gt;= (allocated &gt;&gt; 1)):
+        ob_size = newsize
+        continue
+
+    new_allocated = (newsize + (newsize &gt;&gt; 3) + 6) &amp; ~3
+    print(&quot;new allocated: &quot;, new_allocated)
+
+    if (newsize - ob_size &gt; (new_allocated - newsize)):
+        new_allocated = (newsize + 3) &amp; ~3
+        print(&quot;update new allocated: &quot;, new_allocated)
+
+    ob_size = newsize
+    allocated = new_allocated
+
+=====================&gt; 打印结果
+new allocated:  4
+new allocated:  8
+new allocated:  16
+new allocated:  24
+new allocated:  32
+new allocated:  40
+new allocated:  52
+new allocated:  64
+new allocated:  76
+new allocated:  92
+new allocated:  108
+</code></pre>
+<p>不断往空列表中append元素时，容量就会按上面的规律变化</p>
+<pre><code class="python">lst = []
+allocated = 0
+
+for item in range(100):
+    lst.append(item)
+
+    # 计算ob_size
+    ob_size = len(lst)
+
+    if ob_size &gt; allocated:
+        allocated = (lst.__sizeof__() - [].__sizeof__()) // 8
+        print(&quot;new allocated: &quot;, allocated, &quot;ob size: &quot;, lst.__sizeof__() - [].__sizeof__())
+
+=====================&gt; 打印结果
+new allocated:  4 ob size:  32
+new allocated:  8 ob size:  64
+new allocated:  16 ob size:  128
+new allocated:  24 ob size:  192
+new allocated:  32 ob size:  256
+new allocated:  40 ob size:  320
+new allocated:  52 ob size:  416
+new allocated:  64 ob size:  512
+new allocated:  76 ob size:  608
+new allocated:  92 ob size:  736
+new allocated:  108 ob size:  864
+</code></pre>
+<p>如果直接通过 lst = [] 这种方式创建列表，那么其长度和容量是一样的</p>
+<pre><code class="python">lst = [0] * 1000
+
+# 长度与容量是一样的
+print(len(lst), (lst.__sizeof__() - [].__sizeof__()) // 8)
+
+# 如果此时添加一个元素, 那么ob_size就会变为1001, 大于容量1000
+# 此时列表会进行扩容, 按照计算公式进行变化
+# new_allocated = ((size_t)newsize + (newsize &gt;&gt; 3) + 6) &amp; ~(size_t)3;
+print(&quot;新容量: &quot;, (1001 + (1001 &gt;&gt; 3) + 6) &amp; ~3) # 新容量: 1132
+
+# 添加一个元素
+lst.append(0)
+
+# 计算容量, 结果是一样的
+print((lst.__sizeof__() - [].__sizeof__()) // 8) # 1132
+</code></pre>
+<p>了解完扩容，还有一个缩容的情况，假如在扩容操作时，发现长度没有超过容量但又达到容量的一半，是不会缩容的，如果发现空闲了8个位置，但只需要两个，那么此时就会进行缩容操作</p>
+<pre><code class="python">lst = [0] * 1000
+
+# 长度与容量是一样的
+print(len(lst), (lst.__sizeof__() - [].__sizeof__()) // 8) # 1000:1000
+
+# 删除500个元素, 此时ob_size为500
+lst[:500] = []
+# 此时容量达到容量一半, 不会缩容
+print(len(lst), (lst.__sizeof__() - [].__sizeof__()) // 8) # 1000:1000
+
+# 如果再删除一个元素, 那么此时就会进行缩容操作 ob_size变成499, 小于1000 // 2
+# 缩容公式还是一样的: new_allocated = ((size_t)newsize + (newsize &gt;&gt; 3) + 6) &amp; ~(size_t)3;
+print((499 + (499 &gt;&gt; 3) + 6) &amp; ~3) # 564
+
+_ = lst.pop()
+print(len(lst), (lst.__sizeof__() - [].__sizeof__()) // 8) # 长度499 容量564
+</code></pre>
+<p>此外还有一个判断为 if (newsize == 0)，如果newsize为0，那么容量也是0</p>
+<pre><code class="python">lst = [0] * 1000
+print(len(lst), (lst.__sizeof__() - [].__sizeof__()) // 8) # 1000:1000
+
+lst[:] = []
+print(len(lst), (lst.__sizeof__() - [].__sizeof__()) // 8) # 0:0
+
+print((0 + (0 &gt;&gt; 3) + 6) &amp; ~3) # 4
+</code></pre>
+<p>当发现newsize为0时，就会把容量设置为0，CPython认为列表长度为0的话，可能你并不想使用这个列表</p>
+<h3 id="获取元素"><a href="#获取元素" class="headerlink" title="获取元素"></a>获取元素</h3><p>我们在使用列表时，可以通过下标：lst[1] 这种方式获取元素，那么底层是怎么实现的？</p>
+<p>PyListType里定义了映射协议结构</p>
+<pre><code class="c">static PyMappingMethods list_as_mapping = &#123;
+    (lenfunc)list_length,
+    (binaryfunc)list_subscript,
+    (objobjargproc)list_ass_subscript
+&#125;;
+</code></pre>
+<p>通过下标获取元素时会触发list_subscript方法</p>
+<pre><code class="c">static PyObject *
+list_subscript(PyListObject* self, PyObject* item)
+&#123;
+    // 先判断item是不是一个整数，item除了整数之外，也可以是切片
+    if (_PyIndex_Check(item)) &#123;
+        Py_ssize_t i;
+    // 检测i是否合法, 因为Python的整型没有限制, 列表长度和容量是由具体类型的变量维护的, 这个数是有范围的
+    // 如果输入一个过大的数字, Python会报错：IndexError: cannot fit &#39;int&#39; into an index-sized integer
+        i = PyNumber_AsSsize_t(item, PyExc_IndexError);
+        if (i == -1 &amp;&amp; PyErr_Occurred()) // 设置异常
+            return NULL;
+        if (i &lt; 0)
+        // 说明索引是负数, 那么加上列表长度就变为正数索引了
+            i += PyList_GET_SIZE(self);
+        return list_item(self, i); // 调用list_item通过ob_item[i]获取元素, 方法在下边
+    &#125;
+    else if (PySlice_Check(item)) &#123;
+    // 走到这说明是一个切片
+    // start: 切片起始位置、stop: 切片结束位置、step：步长
+    // slicelength: 获取元素个数, 比如[1:5:2], 那么就为2, 因为只能获取索引为1和3的元素
+    // i: 循环变量, 因为切片只能循环获取每一个元素, 比如[1:5:2], 需要循环两次, 第一次cur为1, 第二次cur为3
+        Py_ssize_t start, stop, step, slicelength, i;
+        size_t cur; // 底层数组中元素的索引
+        PyObject* result; // 返回结果
+        PyObject* it;
+        PyObject **src, **dest;
+
+        if (PySlice_Unpack(item, &amp;start, &amp;stop, &amp;step) &lt; 0) &#123;
+        // 对切片item进行解包, 得到起始、结束、步长
+            return NULL;
+        &#125;
+    // 计算slicelength, 我记得前面的文章好像分析过PySlice_AdjustIndices里面的源码, 是不是range源码解析❓
+        slicelength = PySlice_AdjustIndices(Py_SIZE(self), &amp;start, &amp;stop,
+                                            step);
+
+    // 如果slicelength为0, 说明没有元素可以获取, 因此直接返回一个空列表即可
+        if (slicelength &lt;= 0) &#123;
+            return PyList_New(0);
+        &#125;
+    // 如果步长为1, 那么在list_slice内部会创建一个PyListObject *np, 申请相应的底层数组, 设置allocated
+    // allocated为stop-start, 然后将参数列表中索引为ilow的元素到索引为ihigh的元素依次拷贝到np-&gt;ob_item, 然后设置ob_size并返回
+        else if (step == 1) &#123;
+            return list_slice(self, start, stop);
+        &#125;
+        else &#123;
+        // 走到这, 说明步长不为1, result为PyListObject *, 底层数组没有存储在PyListObject中, 而是通过ob_item关联
+        // list_new_prealloc就是申请底层数组、设置容量, 这里容量为slicelength
+            result = list_new_prealloc(slicelength);
+            if (!result) return NULL;
+
+            src = self-&gt;ob_item; // src为二级指针
+            dest = ((PyListObject *)result)-&gt;ob_item; // 同理src
+        // 进行循环操作, cur从start开始遍历, 每次加上step步长
+            for (cur = start, i = 0; i &lt; slicelength;
+                 cur += (size_t)step, i++) &#123;
+                it = src[cur]; // it就是self-&gt;ob_item中的元素
+                Py_INCREF(it); // 获取元素的对象引用计数+1
+                dest[i] = it; // 将获取元素设置到dest
+            &#125;
+            Py_SET_SIZE(result, slicelength); // 将大小设置为slicelength, 说明通过切片创建新列表, 其长度和容量也是一致的
+            return result; // 返回结果
+        &#125;
+    &#125;
+    else &#123;
+    // item不合法
+        PyErr_Format(PyExc_TypeError,
+                     &quot;list indices must be integers or slices, not %.200s&quot;,
+                     Py_TYPE(item)-&gt;tp_name);
+        return NULL;
+    &#125;
+&#125;
+
+static PyObject *
+list_item(PyListObject *a, Py_ssize_t i)
+&#123;
+    // 检测索引i的合法性, 如果 i &gt; 列表长度, 那么会报索引越界错误
+    if (!valid_index(i, Py_SIZE(a))) &#123;
+    // 如果索引为负数也会报索引越界错误, 因为上面已经对负数做了处理了, 如果还是一个负数, 那么同样报错
+    // 假设列表长度为3, 索引为-100, 加上长度后是-97, 结果还是负数, 所以还是会报错
+        if (indexerr == NULL) &#123;
+            indexerr = PyUnicode_FromString(
+                &quot;list index out of range&quot;);
+            if (indexerr == NULL)
+                return NULL;
+        &#125;
+        PyErr_SetObject(PyExc_IndexError, indexerr);
+        return NULL;
+    &#125;
+    Py_INCREF(a-&gt;ob_item[i]); // 引用计数+1
+    return a-&gt;ob_item[i]; // 通过下标获取第i个元素
+&#125;
+</code></pre>
+<p>分析过后，其实列表的切片操作也不是什么神奇的操作，实现的逻辑也比较简单</p>
+<h3 id="创建PyListObject"><a href="#创建PyListObject" class="headerlink" title="创建PyListObject"></a>创建PyListObject</h3><p>创建一个列表，在Python底层只提供了唯一一个Python/C API，此方法接收一个size参数，允许我们在创建一个PyListObject时，指定底层数组的长度</p>
+<pre><code class="c">PyObject *
+PyList_New(Py_ssize_t size)
+&#123;
+    PyListObject *op; // 声明一个PyListObject *对象
+
+    if (size &lt; 0) &#123;
+    // size大小小于0, 抛异常
+        PyErr_BadInternalCall();
+        return NULL;
+    &#125;
+    // 缓存池是否可用
+    if (numfree) &#123;
+    // 将缓存池内对象个数-1
+        numfree--;
+    // 从缓存池中获取一个
+        op = free_list[numfree];
+    // 设置引用计数
+        _Py_NewReference((PyObject *)op);
+    &#125; else &#123;
+    // 缓存池不可用时, 就申请内存
+        op = PyObject_GC_New(PyListObject, &amp;PyList_Type);
+        if (op == NULL) // 申请失败
+            return NULL;
+    &#125;
+    if (size &lt;= 0)
+    //如果size小于等于0, ob_item就设置为NULL
+        op-&gt;ob_item = NULL;
+    else &#123;
+    // 否则, 创建一个指定容量的指针数组, 然后让ob_item指向它
+    // 所以是先创建PyListObject对象, 然后创建底层数组, 最后通过ob_item关联
+        op-&gt;ob_item = (PyObject **) PyMem_Calloc(size, sizeof(PyObject *));
+        if (op-&gt;ob_item == NULL) &#123;
+            Py_DECREF(op);
+            return PyErr_NoMemory();
+        &#125;
+    &#125;
+    Py_SET_SIZE(op, size); // 设置ob_size
+    op-&gt;allocated = size; // 设置allocated
+    _PyObject_GC_TRACK(op); // GC管理
+    return (PyObject *) op;
+&#125;
+</code></pre>
+<p>在创建PyListObject对象时，会先检测缓存池是否可用，有就直接拿来用，否则通过malloc在系统堆上申请，缓存池最多维护80个PyListObject对象</p>
+<pre><code class="c">/* Empty list reuse scheme to save calls to malloc and free */
+#ifndef PyList_MAXFREELIST
+#  define PyList_MAXFREELIST 80
+#endif
+
+static PyListObject *free_list[PyList_MAXFREELIST];
+</code></pre>
+<p>既然能从缓存池中获取，那么在执行析构函数时，也要把列表放到缓存池中</p>
+<pre><code class="c">static void
+list_dealloc(PyListObject *op)
+&#123;
+    Py_ssize_t i;
+    PyObject_GC_UnTrack(op);
+    Py_TRASHCAN_BEGIN(op, list_dealloc)
+    if (op-&gt;ob_item != NULL) &#123; // 底层数组不为空时
+        /* Do it backwards, for Christian Tismer.
+           There&#39;s a simple test case where somehow this reduces
+           thrashing when a *very* large list is created and
+           immediately deleted. */
+        i = Py_SIZE(op);
+        while (--i &gt;= 0) &#123;
+        // 将底层数组中每个指针指向的对象的引用计数都-1
+            Py_XDECREF(op-&gt;ob_item[i]);
+        &#125;
+        PyMem_FREE(op-&gt;ob_item); // 释放底层数组所占的内存
+    &#125;
+    // 判断缓存池里面PyLitObject对象的个数, 如果没满, 就添加到缓存池
+    if (numfree &lt; PyList_MAXFREELIST &amp;&amp; PyList_CheckExact(op))
+        free_list[numfree++] = op;
+    else
+    // 否则缓存池满了, 就将PyListObject对象所占的内存释放
+        Py_TYPE(op)-&gt;tp_free((PyObject *)op);
+    Py_TRASHCAN_END
+&#125;
+</code></pre>
+<p>在创建一个PyListObject对象时，实际上分为了两步，先创建PyListObject对象，然后创建底层数组，最后让PyListObject对象中的ob_item指向这个底层数组，那么销毁一个PyListObject对象时，也就先销毁ob_item维护的底层数组，然后再释放PyListObject对象本身（在缓存池已满的情况下）</p>
+<p><img src="http://res.cloudinary.com/dotachkke/image/upload/v1659499527/upload/ocwhce1t8xk0heafiaza.png" alt="16594995161.jpg"></p>
+<p>可以看到，b对象与a对象的地址是一致的</p>
+<p>还有一些方法，有需要可以自己去查看源码了解一下，我懒得看了😂</p>
+<pre><code class="c">static PyMethodDef list_methods[] = &#123;
+    &#123;&quot;__getitem__&quot;, (PyCFunction)list_subscript, METH_O|METH_COEXIST, &quot;x.__getitem__(y) &lt;==&gt; x[y]&quot;&#125;,
+    LIST___REVERSED___METHODDEF
+    LIST___SIZEOF___METHODDEF
+    LIST_CLEAR_METHODDEF
+    LIST_COPY_METHODDEF
+    LIST_APPEND_METHODDEF
+    LIST_INSERT_METHODDEF
+    LIST_EXTEND_METHODDEF
+    LIST_POP_METHODDEF
+    LIST_REMOVE_METHODDEF
+    LIST_INDEX_METHODDEF
+    LIST_COUNT_METHODDEF
+    LIST_REVERSE_METHODDEF
+    LIST_SORT_METHODDEF
+    &#123;&quot;__class_getitem__&quot;, (PyCFunction)Py_GenericAlias, METH_O|METH_CLASS, PyDoc_STR(&quot;See PEP 585&quot;)&#125;,
+    &#123;NULL,              NULL&#125;           /* sentinel */
+&#125;;
+</code></pre>
+<div align=center width=100%><iframe class="video-frame" height=500 width=80% frameborder=0 allowfullscreen src="//player.bilibili.com/player.html?aid=514038561&bvid=BV1Fg411275z&cid=790558362&page=1" ></iframe></div>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" data-id="cl9y08lka0007wcuq1yx711br" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Property源码分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Python zip内置类的背后机制</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/">CPython</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/">C</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/Python/">Python</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Office/">Office</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Office/PowerPoint/">PowerPoint</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Python/Django/">Django</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Life/" rel="tag">Life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Office/" rel="tag">Office</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PowerPoint/" rel="tag">PowerPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 20px;">C</a> <a href="/tags/CPython/" style="font-size: 20px;">CPython</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Life/" style="font-size: 10px;">Life</a> <a href="/tags/Office/" style="font-size: 10px;">Office</a> <a href="/tags/PowerPoint/" style="font-size: 10px;">PowerPoint</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/">PPT结构组成（工作中的总结）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/">Python Django服务启动时做了什么?</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">Property源码分析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Python list实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/">Python zip内置类的背后机制</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 小芳芳<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

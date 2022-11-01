@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>哪些Python操作是atomic的？ | 士多啤梨苹果橙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Python字節碼解只在字節碼指令之間的綫程之間切換 全局解釋器鎖（GIL）一次只允許單個綫程執行 許多操作轉換為單個bytecode來執行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哪些Python操作是atomic的？">
+<meta property="og:url" content="http://example.com/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/index.html">
+<meta property="og:site_name" content="士多啤梨苹果橙">
+<meta property="og:description" content="Python字節碼解只在字節碼指令之間的綫程之間切換 全局解釋器鎖（GIL）一次只允許單個綫程執行 許多操作轉換為單個bytecode來執行">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-06T08:36:12.000Z">
+<meta property="article:modified_time" content="2022-11-01T09:08:17.643Z">
+<meta property="article:author" content="小芳芳">
+<meta property="article:tag" content="CPython">
+<meta property="article:tag" content="C">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="士多啤梨苹果橙" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">士多啤梨苹果橙</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-哪些Python操作是atomic的？" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" class="article-date">
+  <time datetime="2022-06-06T08:36:12.000Z" itemprop="datePublished">2022-06-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CPython/">CPython</a>►<a class="article-category-link" href="/categories/CPython/C/">C</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      哪些Python操作是atomic的？
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>Python字節碼解只在字節碼指令之間的綫程之間切換</li>
+<li>全局解釋器鎖（GIL）一次只允許單個綫程執行</li>
+<li>許多操作轉換為單個bytecode來執行</li>
+</ol>
+<span id="more"></span>
+
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1><p>可以使用dis模塊來檢查操作是否編譯為單個字節碼指令</p>
+<pre><code class="python">&gt;&gt;&gt; def update_dict():
+...     d[&#39;a&#39;] = 1
+...
+&gt;&gt;&gt; import dis
+&gt;&gt;&gt; dis.dis(update_dict)
+  3           0 LOAD_CONST               1 (1)      # 將co_consts[1]壓入堆, 也就是1
+              3 LOAD_GLOBAL              0 (d)      # 在全局中加載d符號, 即co_names[0], 壓入堆棧上
+              6 LOAD_CONST               2 (&#39;a&#39;)    # 將co_consts[2]壓入堆, 也就是a符號
+              9 STORE_SUBSCR                        # single bytecode instruction
+             10 LOAD_CONST               0 (None)
+             13 RETURN_VALUE
+</code></pre>
+<h1 id="Python’s-swap-is-not-atomic"><a href="#Python’s-swap-is-not-atomic" class="headerlink" title="Python’s swap is not atomic"></a>Python’s swap is not atomic</h1><p>在PyMongo的連接池中，確保并發的問題之一，如果一個綫程正在重置連接池，而另一個綫程正在使用該池，如何防止它們相互踩踏</p>
+<pre><code class="python">class Pool(object):
+    def __init__(self):
+        self.sockets = set()
+
+    def reset(self):
+        # Close sockets before deleting them
+        sockets, self.sockets = self.sockets, set()
+        for sock_info in sockets: sock_info.close()
+</code></pre>
+<p>這裏有可能會有競爭條件，作者認爲 sockets, self.sockets = self.sockets, set() 是atomic的，即第一個進入的綫程reset()將self.sockets替換為一個空集，但其實并非如此，在測試時，偶爾會發生racing，測試啓動了40個并發綫程，每個綫程查詢MongoDB，調用reset()，然後再次查詢MongoDB</p>
+<pre><code class="python"># 測試失敗原因
+test_disconnect (test.test_pooling.TestPooling) ... Exception in thread Thread-45:
+Traceback (most recent call last):
+ &lt; ... snip ... &gt;
+ File &quot;pymongo/pool.py&quot;, line 159, in reset
+   for sock_info in sockets: sock_info.close()
+RuntimeError: Set changed size during iteration
+</code></pre>
+<p>作者認爲交換兩個對象的賦值操作時atomic的，但實際上它需要6個字節碼指令</p>
+<pre><code class="python">sockets, self.sockets = self.sockets, set()
+</code></pre>
+<p>bytecode為</p>
+<pre><code class="python">            0 LOAD_FAST                0 (self)
+            3 LOAD_ATTR                0 (sockets)
+            6 LOAD_GLOBAL              1 (set)
+            9 CALL_FUNCTION            0
+           12 ROT_TWO          &lt;- this is the swap
+           13 STORE_FAST               1 (sockets)
+           16 LOAD_FAST                0 (self)
+           19 STORE_ATTR               0 (sockets)
+</code></pre>
+<p>假設綫程1（T1）正在執行這個函數，T1將self.sockets和空集加載到它的堆棧上并交換它們，在它執行到STORE_ATTR（self.sockets實際被替換）時，它被T2打斷執行，T2運行連接池代碼的其他部分，如：</p>
+<pre><code class="python">def return_socket(self, sock_info):
+    self.sockets.add(sock_info)
+</code></pre>
+<p>bytecode為</p>
+<pre><code class="python">           24 LOAD_FAST                0 (self)
+           27 LOAD_ATTR                1 (sockets)
+           30 LOAD_ATTR                3 (add)
+           33 LOAD_FAST                1 (sock_info)
+           36 CALL_FUNCTION            1
+</code></pre>
+<p>假設T2執行到 LOAD_ATTR 1 字節碼，現在它的堆棧上有 self.sockets，但它被T1的 reset() 打斷執行，T1將 self.sockets替換為空集，但是，T1的“舊”套接字集合和T2的 self.sockets是同一組，T1開始遍歷舊的套接字集合，并關閉它們</p>
+<pre><code class="python">for sock_info in sockets: sock_info.close()
+</code></pre>
+<p>但是，它再次被T2打斷執行了，它確實通過 self.sockets.add(sock_info) 將集合的大小增加了，下次恢復T1時，它會嘗試繼續迭代，并引發了 “Set changed size during iteration” exception</p>
+<p>你可能會想到，實際上兩個Python綫程不會如此頻繁的相互中斷，Python解釋器在考慮<a target="_blank" rel="noopener" href="https://docs.python.org/3/library/sys.html#sys.setcheckinterval">切換綫程之前一次執行100個字節碼</a>，在T1中是重複調用了socket.close()，查看socketmodule.c的源代碼</p>
+<pre><code class="c">static PyObject *
+sock_close(PySocketSockObject *s, PyObject *Py_UNUSED(ignored))
+&#123;
+    SOCKET_T fd;
+    int res;
+
+    fd = s-&gt;sock_fd;
+    if (fd != INVALID_SOCKET) &#123;
+        s-&gt;sock_fd = INVALID_SOCKET;
+
+        /* We do not want to retry upon EINTR: see
+           http://lwn.net/Articles/576478/ and
+           http://linux.derkeiler.com/Mailing-Lists/Kernel/2005-09/3000.html
+           for more details. */
+        Py_BEGIN_ALLOW_THREADS
+        res = SOCKETCLOSE(fd);
+        Py_END_ALLOW_THREADS
+        /* bpo-30319: The peer can already have closed the connection.
+           Python ignores ECONNRESET on close(). */
+        if (res &lt; 0 &amp;&amp; errno != ECONNRESET) &#123;
+            return s-&gt;errorhandler();
+        &#125;
+    &#125;
+    Py_RETURN_NONE;
+&#125;
+</code></pre>
+<p>該 <strong>Py_BEGIN_ALLOW_THREADS</strong> 宏會釋放<a target="_blank" rel="noopener" href="http://wiki.python.org/moin/GlobalInterpreterLock">GIL</a>并通過 <strong>Py_END_ALLOW_THREADS</strong> 宏等待重新獲取它，在Python多綫程中，釋放GIL很可能會導致另一個正在等待GIL的綫程立即獲取它，所以在循環中調用socket.close()，會使該綫程不斷被中斷，return_socket()中的某個綫程獲得對集合的引用并對其進行修改，與reset()中的其他綫程交錯獲得同一集合，并對其進行迭代</p>
+<blockquote>
+<p>David Beazley關於GIL的演講，<a target="_blank" rel="noopener" href="https://pyvideo.org/chipy/mindblowing-python-gil.html">https://pyvideo.org/chipy/mindblowing-python-gil.html</a></p>
+</blockquote>
+<p>解決方案也很明顯了，在Python層面加鎖，可以保證完整的運行字節碼</p>
+<pre><code class="python">class Pool(object):
+    def __init__(self):
+        self.sockets = set()
+        self.lock = threading.Lock()
+
+    def reset(self):
+        self.lock.acquire()
+        try:
+            # Close sockets before deleting them
+            sockets, self.sockets = self.sockets, set()
+        finally:
+            self.lock.release()
+
+        # Now only this thread can have a reference to this set of sockets
+        for sock_info in sockets: sock_info.close()
+
+   def return_socket(self, sock_info):
+        self.lock.acquire()
+        try:
+            self.sockets.add(sock_info)
+        finally:
+            self.lock.release()
+</code></pre>
+<p>Python中單字節碼指令是atomic的，如果使用這種原子性來避免互斥鎖，那麽代碼不僅更快、更簡單，還可以避免死鎖的風險</p>
+<p>并非所有看起來都是atomic的，有需要時，可以使用dis模塊來檢查字節碼</p>
+<blockquote>
+<p>原文章：<a target="_blank" rel="noopener" href="https://emptysqua.re/blog/pythons-swap-is-not-atomic/">https://emptysqua.re/blog/pythons-swap-is-not-atomic/</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" data-id="cl9y08lkt000lwcuqgpzx3jg1" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          getattr實現原理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">端午节快乐</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/">CPython</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/">C</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/Python/">Python</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Office/">Office</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Office/PowerPoint/">PowerPoint</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Python/Django/">Django</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Life/" rel="tag">Life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Office/" rel="tag">Office</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PowerPoint/" rel="tag">PowerPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 20px;">C</a> <a href="/tags/CPython/" style="font-size: 20px;">CPython</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Life/" style="font-size: 10px;">Life</a> <a href="/tags/Office/" style="font-size: 10px;">Office</a> <a href="/tags/PowerPoint/" style="font-size: 10px;">PowerPoint</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/">PPT结构组成（工作中的总结）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/">Python Django服务启动时做了什么?</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">Property源码分析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Python list实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/">Python zip内置类的背后机制</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 小芳芳<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

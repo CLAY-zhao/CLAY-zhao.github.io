@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Python Django服务启动时做了什么? | 士多啤梨苹果橙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Python Django启动时做了什么 文章仅供参考，我是直接读源码然后写注释的，不一定都正确">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python Django服务启动时做了什么?">
+<meta property="og:url" content="http://example.com/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:site_name" content="士多啤梨苹果橙">
+<meta property="og:description" content="Python Django启动时做了什么 文章仅供参考，我是直接读源码然后写注释的，不一定都正确">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-10-19T08:38:58.000Z">
+<meta property="article:modified_time" content="2022-11-01T09:08:17.639Z">
+<meta property="article:author" content="小芳芳">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Django">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="士多啤梨苹果橙" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">士多啤梨苹果橙</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Python Django服务启动时做了什么" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" class="article-date">
+  <time datetime="2022-10-19T08:38:58.000Z" itemprop="datePublished">2022-10-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Python/">Python</a>►<a class="article-category-link" href="/categories/Python/Django/">Django</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Python Django服务启动时做了什么?
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Python-Django启动时做了什么"><a href="#Python-Django启动时做了什么" class="headerlink" title="Python Django启动时做了什么"></a>Python Django启动时做了什么</h3><blockquote>
+<p>文章仅供参考，我是直接读源码然后写注释的，不一定都正确</p>
+</blockquote>
+<span id="more"></span>
+
+<p>首先了解一下Django项目源码大概包含的一些包：<br>| 包 | 功能描述 |<br>| :–: | :– |<br>| apps | django的app管理器 |<br>| conf | 配置信息，主要有项目模板和app模板等 |<br>| contrib | django默认提供的标准app |<br>| core | django核心功能 |<br>| db | 数据库模型实现 |<br>| dispatch | 信号，用于模块解耦 |<br>| forms | 表单实现 |<br>| http | http协议和服务相关实现 |<br>| middleware | django提供的标准中间件 |<br>| template &amp;&amp; templatetags | 模板功能 |<br>| test | 单元测试的支持 |<br>| urls | 一些url的处理类 |<br>| utils | 工具类 |<br>| views | 视图相关的实现 |</p>
+<p>django.core.management模块提供脚手架的功能实现，在项目的manage.py中也是通过调用management模块来实现项目启动的</p>
+<p>在执行 python manager.py runserver 时，会发生什么，查看manage.py</p>
+<pre><code class="python">#!/usr/bin/env python
+&quot;&quot;&quot;Django&#39;s command-line utility for administrative tasks.&quot;&quot;&quot;
+import os
+import sys
+
+def main():
+    &quot;&quot;&quot;Run administrative tasks.&quot;&quot;&quot;
+    # 这里可以修改为你自定义的配置路径
+    # 一般用于多环境配置
+    os.environ.setdefault(&#39;DJANGO_SETTINGS_MODULE&#39;, &#39;DemoDjango.settings&#39;)
+    try:
+        from django.core.management import execute_from_command_line
+    except ImportError as exc:
+        raise ImportError(
+            &quot;Couldn&#39;t import Django. Are you sure it&#39;s installed and &quot;
+            &quot;available on your PYTHONPATH environment variable? Did you &quot;
+            &quot;forget to activate a virtual environment?&quot;
+        ) from exc
+    execute_from_command_line(sys.argv) # 主要是调用这里
+
+if __name__ == &#39;__main__&#39;:
+    main()
+</code></pre>
+<p>看看execute_from_command_line做了什么，由于代码比较多，我直接在源码里写了注释了</p>
+<pre><code class="python">class ManagementUtility:
+    &quot;&quot;&quot;
+    Encapsulate the logic of the django-admin and manage.py utilities.
+    &quot;&quot;&quot;
+
+    def __init__(self, argv=None):
+    # 析构argv的命令行参数
+        self.argv = argv or sys.argv[:] # [&#39;manage.py&#39;, &#39;runserver&#39;, ...]
+        self.prog_name = os.path.basename(self.argv[0]) # manage.py
+        if self.prog_name == &quot;__main__.py&quot;: # 这个是判断你使用源码启动吗?
+            self.prog_name = &quot;python -m django&quot;
+        self.settings_exception = None # 保存异常信息
+
+    def main_help_text(self, commands_only=False):
+    # 输出命令的帮助信息
+        ......
+
+    def def fetch_command(self, subcommand):
+    # 查找django模块的子命令
+    ......
+
+    def execute(self):
+        &quot;&quot;&quot;
+        Given the command-line arguments, figure out which subcommand is being
+        run, create a parser appropriate to that command, and run it.
+        &quot;&quot;&quot;
+    # 执行子命令
+        try:
+            subcommand = self.argv[1] # 运行项目时, 该参数为runserver
+        except IndexError:
+            subcommand = &quot;help&quot;  # Display help if no arguments were given. # 索引异常, 赋值为help, 提供帮助
+
+        # Preprocess options to extract --settings and --pythonpath.
+        # These options could affect the commands that are available, so they
+        # must be processed early.
+        # django封装了argparse库, 但用法没有变化
+        parser = CommandParser(
+            prog=self.prog_name,
+            usage=&quot;%(prog)s subcommand [options] [args]&quot;,
+            add_help=False,
+            allow_abbrev=False,
+        )
+        parser.add_argument(&quot;--settings&quot;) # 可以指定--settings=xxx.xxx来表示使用哪个配置文件(在多环境下)
+        parser.add_argument(&quot;--pythonpath&quot;) # 我没用过
+        parser.add_argument(&quot;args&quot;, nargs=&quot;*&quot;)  # catch-all
+        try:
+            options, args = parser.parse_known_args(self.argv[2:])
+            handle_default_options(options) # 处理一些默认配置
+        except CommandError:
+            pass  # Ignore any option errors at this point.
+
+        try:
+            # 这里settings点INSTALLED_APP这个属性时, 会触发魔法方法
+            # 可以在django/conf/__init__.py里找到, settings是一个实例化对象
+            settings.INSTALLED_APPS
+        except ImproperlyConfigured as exc:
+            # 配置不正确
+            self.settings_exception = exc
+        except ImportError as exc:
+            # settings.INSTALLED_APPS会触发导入配置模块的动作, 说明你导入失败了
+            self.settings_exception = exc
+
+        # 这里又触发了settings的魔法方法__getattr__
+        # configured在settings里被property装饰为描述符, 主要是判断self._wrapped是否不为object()
+        # 经过上面settings.INSTALLED_APPS触发之后, 不再是object(), 而是Settings实例对象, 所以条件满足
+        if settings.configured:
+            # Start the auto-reloading dev server even if the code is broken.
+            # The hardcoded condition is a code smell but we can&#39;t rely on a
+            # flag on the command class because we haven&#39;t located it yet.
+            if subcommand == &quot;runserver&quot; and &quot;--noreload&quot; not in self.argv:
+                try:
+                    # 一般都会走到这
+                    # autoreload.check_errors是一个装饰器, 传递django.setup并调用
+                    autoreload.check_errors(django.setup)()
+                except Exception:
+                    # The exception will be raised later in the child process
+                    # started by the autoreloader. Pretend it didn&#39;t happen by
+                    # loading an empty list of applications.
+                    apps.all_models = defaultdict(dict)
+                    apps.app_configs = &#123;&#125;
+                    apps.apps_ready = apps.models_ready = apps.ready = True
+
+                    # Remove options not compatible with the built-in runserver
+                    # (e.g. options for the contrib.staticfiles&#39; runserver).
+                    # Changes here require manually testing as described in
+                    # #27522.
+                    _parser = self.fetch_command(&quot;runserver&quot;).create_parser(
+                        &quot;django&quot;, &quot;runserver&quot;
+                    )
+                    _options, _args = _parser.parse_known_args(self.argv[2:])
+                    for _arg in _args:
+                        self.argv.remove(_arg)
+
+            # In all other cases, django.setup() is required to succeed.
+            else:
+                django.setup()
+
+        # 通过调用django.setup()完成了每个APP应用程序下的apps注册(实例AppConfig)
+        # 再导入每个应用的models.py并保存到AppConfig
+        # 然后再调用每个AppConfig下的ready方法(重载的情况下)
+
+        self.autocomplete()
+
+        if subcommand == &quot;help&quot;:
+            if &quot;--commands&quot; in args:
+                sys.stdout.write(self.main_help_text(commands_only=True) + &quot;\n&quot;)
+            elif not options.args:
+                sys.stdout.write(self.main_help_text() + &quot;\n&quot;)
+            else:
+                self.fetch_command(options.args[0]).print_help(
+                    self.prog_name, options.args[0]
+                )
+        # Special-cases: We want &#39;django-admin --version&#39; and
+        # &#39;django-admin --help&#39; to work, for backwards compatibility.
+        elif subcommand == &quot;version&quot; or self.argv[1:] == [&quot;--version&quot;]:
+            sys.stdout.write(django.get_version() + &quot;\n&quot;)
+        elif self.argv[1:] in ([&quot;--help&quot;], [&quot;-h&quot;]):
+            sys.stdout.write(self.main_help_text() + &quot;\n&quot;)
+        else:
+            self.fetch_command(subcommand).run_from_argv(self.argv)
+
+
+def execute_from_command_line(argv=None):
+    &quot;&quot;&quot;Run a ManagementUtility.&quot;&quot;&quot;
+    utility = ManagementUtility(argv) # 项目启动参数传递
+    utility.execute() # 运行项目
+</code></pre>
+<p>在ManagementUtility类中执行execute时，还用到了django的settings对象，通过settings.xxx时，会触发__getattr__魔法方法，在第一次时会调用setup来激活配置</p>
+<pre><code class="python">class LazySettings(LazyObject):
+    &quot;&quot;&quot;
+    A lazy proxy for either global Django settings or a custom settings object.
+    The user can manually configure settings prior to using them. Otherwise,
+    Django uses the settings module pointed to by DJANGO_SETTINGS_MODULE.
+    &quot;&quot;&quot;
+
+    def _setup(self, name=None):
+        &quot;&quot;&quot;
+        Load the settings module pointed to by the environment variable. This
+        is used the first time settings are needed, if the user hasn&#39;t
+        configured settings manually.
+        &quot;&quot;&quot;
+        # 项目启动时, 这里name传递为INSTALLED_APPS
+        # ENVIRONMENT_VARIABLE就是DJANGO_SETTINGS_MODULE字符串
+        # 通过os.environ.get(&quot;DJANGO_SETTINGS_MODULE&quot;)获取我们一开始设置的配置文件位置
+        # 假如我创建了一个文件夹保存每个环境的配置文件, DJANGO_SETTINGS_MODULE=settings.prod
+        # 那么settings_module就是settings.prod
+        settings_module = os.environ.get(ENVIRONMENT_VARIABLE)
+        if not settings_module:
+            # 没有配置文件, 抛异常
+            desc = (&quot;setting %s&quot; % name) if name else &quot;settings&quot;
+            raise ImproperlyConfigured(
+                &quot;Requested %s, but settings are not configured. &quot;
+                &quot;You must either define the environment variable %s &quot;
+                &quot;or call settings.configure() before accessing settings.&quot;
+                % (desc, ENVIRONMENT_VARIABLE)
+            )
+
+        # 将self._wrapped重新赋值, 下一次触发__getattr__就不会再调用_setup了
+        # 实例化了一个Settings对象, 创建配置文件位置
+        self._wrapped = Settings(settings_module)
+
+    def __repr__(self):
+        # Hardcode the class name as otherwise it yields &#39;Settings&#39;.
+        if self._wrapped is empty:
+            return &quot;&lt;LazySettings [Unevaluated]&gt;&quot;
+        return &#39;&lt;LazySettings &quot;%(settings_module)s&quot;&gt;&#39; % &#123;
+            &quot;settings_module&quot;: self._wrapped.SETTINGS_MODULE,
+        &#125;
+
+    def __getattr__(self, name):
+        &quot;&quot;&quot;Return the value of a setting and cache it in self.__dict__.&quot;&quot;&quot;
+        # 在django启动时, 执行了一段settings.INSTALLED_APPS, 由于该类重载了__getattr__, 所以会执行该__getattr__
+        # 而不会执行默认type的__getattr__操作
+        if self._wrapped is empty:
+            # empty是一个object()实例对象, self._wrapped在父类里初始化为empty, 所以这里条件满足, 执行_setup
+            # name就是INSTALLED_APPS
+            self._setup(name)
+
+        # 第1次, 经过_setup调用之后, self._wrapped不再是empty, 而是Settings的实例对象
+        # 通过getattr获取Settings里对应的属性
+
+        # 第2步, 会传递一个configured, 去Settings里边找
+        val = getattr(self._wrapped, name)
+
+        # Special case some settings which require further modification.
+        # This is done here for performance reasons so the modified value is cached.
+        if name in &#123;&quot;MEDIA_URL&quot;, &quot;STATIC_URL&quot;&#125; and val is not None:
+            # 这里是特定配置的一些处理, 一些静态文件啥的
+            val = self._add_script_prefix(val)
+        elif name == &quot;SECRET_KEY&quot; and not val:
+            # 密钥不能为空
+            raise ImproperlyConfigured(&quot;The SECRET_KEY setting must not be empty.&quot;)
+
+        # 获取属性之后, 会更新到自己的__dict__里边
+        self.__dict__[name] = val
+        return val # 返回属性值
+
+    def __setattr__(self, name, value):
+        &quot;&quot;&quot;
+        Set the value of setting. Clear all cached values if _wrapped changes
+        (@override_settings does this) or clear single values when set.
+        &quot;&quot;&quot;
+        if name == &quot;_wrapped&quot;:
+            self.__dict__.clear()
+        else:
+            self.__dict__.pop(name, None)
+        super().__setattr__(name, value)
+
+    def __delattr__(self, name):
+        &quot;&quot;&quot;Delete a setting and clear it from cache if needed.&quot;&quot;&quot;
+        super().__delattr__(name)
+        self.__dict__.pop(name, None)
+
+    def configure(self, default_settings=global_settings, **options):
+        &quot;&quot;&quot;
+        Called to manually configure the settings. The &#39;default_settings&#39;
+        parameter sets where to retrieve any unspecified values from (its
+        argument must support attribute access (__getattr__)).
+        &quot;&quot;&quot;
+        if self._wrapped is not empty:
+            raise RuntimeError(&quot;Settings already configured.&quot;)
+        holder = UserSettingsHolder(default_settings)
+        for name, value in options.items():
+            if not name.isupper():
+                raise TypeError(&quot;Setting %r must be uppercase.&quot; % name)
+            setattr(holder, name, value)
+        self._wrapped = holder
+
+    @staticmethod
+    def _add_script_prefix(value):
+        &quot;&quot;&quot;
+        Add SCRIPT_NAME prefix to relative paths.
+
+        Useful when the app is being served at a subpath and manually prefixing
+        subpath to STATIC_URL and MEDIA_URL in settings is inconvenient.
+        &quot;&quot;&quot;
+        # Don&#39;t apply prefix to absolute paths and URLs.
+        if value.startswith((&quot;http://&quot;, &quot;https://&quot;, &quot;/&quot;)):
+            return value
+        from django.urls import get_script_prefix
+
+        return &quot;%s%s&quot; % (get_script_prefix(), value)
+
+    @property
+    def configured(self):
+        &quot;&quot;&quot;Return True if the settings have already been configured.&quot;&quot;&quot;
+        return self._wrapped is not empty
+
+    @property
+    def USE_L10N(self):
+        stack = traceback.extract_stack()
+        # Show a warning if the setting is used outside of Django.
+        # Stack index: -1 this line, -2 the caller.
+        filename, _, _, _ = stack[-2]
+        if not filename.startswith(os.path.dirname(django.__file__)):
+            warnings.warn(
+                USE_L10N_DEPRECATED_MSG,
+                RemovedInDjango50Warning,
+                stacklevel=2,
+            )
+        return self.__getattr__(&quot;USE_L10N&quot;)
+
+    # RemovedInDjango50Warning.
+    @property
+    def _USE_L10N_INTERNAL(self):
+        # Special hook to avoid checking a traceback in internal use on hot
+        # paths.
+        return self.__getattr__(&quot;USE_L10N&quot;)
+
+class Settings:
+    def __init__(self, settings_module):
+        # update this dict from global settings (but only for ALL_CAPS settings)
+        # settings_module为你指定的配置文件路径
+        # global_settings为导入模块, dir查看里面的所有属性, 通过for loop遍历每个元素
+        # 如果是大写字母, 就通过getattr动态获取该模块的对应属性, 再通过setattr动态设置key-value到Settings本身
+        for setting in dir(global_settings):
+            if setting.isupper():
+                setattr(self, setting, getattr(global_settings, setting))
+
+        # store the settings module in case someone later cares
+        self.SETTINGS_MODULE = settings_module # 保存指定配置文件路径
+
+        mod = importlib.import_module(self.SETTINGS_MODULE) # 动态导入你指定的配置文件
+
+        tuple_settings = (
+            &quot;ALLOWED_HOSTS&quot;,
+            &quot;INSTALLED_APPS&quot;,
+            &quot;TEMPLATE_DIRS&quot;,
+            &quot;LOCALE_PATHS&quot;,
+        )
+        self._explicit_settings = set()
+
+        # for loop操作, 遍历我们指定配置文件模块里的所有属性
+        for setting in dir(mod):
+            # 如果是大写字母(我们指定配置变量时, 一定要用大写)
+            if setting.isupper():
+                # 通过getattr动态获取配置变量的value
+                setting_value = getattr(mod, setting)
+
+                if setting in tuple_settings and not isinstance(
+                    setting_value, (list, tuple)
+                ):
+                    # 如果你的配置文件指定的一些配置变量存在tuple_settings
+                    # 比如INSTALLED_APPS, 用来指定哪些APP, 但你的的value不是list、tuple类型, 就会抛异常
+                    raise ImproperlyConfigured(
+                        &quot;The %s setting must be a list or a tuple.&quot; % setting
+                    )
+                # 设置你的配置变量key-value到Settings类中
+                setattr(self, setting, setting_value)
+                # 配置名添加到集合中, 用于检测是否被覆盖, 因为即使你不配置, django也有默认配置
+                self._explicit_settings.add(setting)
+
+        if self.USE_TZ is False and not self.is_overridden(&quot;USE_TZ&quot;):
+            warnings.warn(
+                &quot;The default value of USE_TZ will change from False to True &quot;
+                &quot;in Django 5.0. Set USE_TZ to False in your project settings &quot;
+                &quot;if you want to keep the current default behavior.&quot;,
+                category=RemovedInDjango50Warning,
+            )
+
+        if self.is_overridden(&quot;USE_DEPRECATED_PYTZ&quot;):
+            warnings.warn(USE_DEPRECATED_PYTZ_DEPRECATED_MSG, RemovedInDjango50Warning)
+
+        if hasattr(time, &quot;tzset&quot;) and self.TIME_ZONE:
+            # When we can, attempt to validate the timezone. If we can&#39;t find
+            # this file, no check happens and it&#39;s harmless.
+            zoneinfo_root = Path(&quot;/usr/share/zoneinfo&quot;)
+            zone_info_file = zoneinfo_root.joinpath(*self.TIME_ZONE.split(&quot;/&quot;))
+            if zoneinfo_root.exists() and not zone_info_file.exists():
+                raise ValueError(&quot;Incorrect timezone setting: %s&quot; % self.TIME_ZONE)
+            # Move the time zone info into os.environ. See ticket #2315 for why
+            # we don&#39;t do this unconditionally (breaks Windows).
+            os.environ[&quot;TZ&quot;] = self.TIME_ZONE
+            time.tzset()
+
+        if self.is_overridden(&quot;USE_L10N&quot;):
+            warnings.warn(USE_L10N_DEPRECATED_MSG, RemovedInDjango50Warning)
+
+    def is_overridden(self, setting):
+        return setting in self._explicit_settings
+
+    def __repr__(self):
+        return &#39;&lt;%(cls)s &quot;%(settings_module)s&quot;&gt;&#39; % &#123;
+            &quot;cls&quot;: self.__class__.__name__,
+            &quot;settings_module&quot;: self.SETTINGS_MODULE,
+        &#125;
+
+# 全局django设置
+settings = LazySettings()
+</code></pre>
+<p>以上代码是settings的主要逻辑，然后在execute中还调用了django.setup方法，来看看做了什么</p>
+<pre><code class="python">from django.utils.version import get_version
+
+VERSION = (4, 0, 5, &quot;final&quot;, 0)
+
+__version__ = get_version(VERSION)
+
+def setup(set_prefix=True):
+    &quot;&quot;&quot;
+    Configure the settings (this happens as a side effect of accessing the
+    first setting), configure logging and populate the app registry.
+    Set the thread-local urlresolvers script prefix if `set_prefix` is True.
+    &quot;&quot;&quot;
+    # 加载模块
+    from django.apps import apps
+    from django.conf import settings
+    from django.urls import set_script_prefix
+    from django.utils.log import configure_logging
+
+    # 你可以在配置文件中指定日志配置, 它会动态导入并调用
+    configure_logging(settings.LOGGING_CONFIG, settings.LOGGING)
+    if set_prefix:
+        # 这个我没有改过, 不清楚
+        set_script_prefix(
+            &quot;/&quot; if settings.FORCE_SCRIPT_NAME is None else settings.FORCE_SCRIPT_NAME
+        )
+    # 这里比较重要, 传递了INSTALLED_APPS, 也就是你在配置文件中指定的APP
+    apps.populate(settings.INSTALLED_APPS)
+</code></pre>
+<p>apps.populate位于django.apps.registry.py中Apps类</p>
+<pre><code class="python">class Apps:
+    &quot;&quot;&quot;
+    A registry that stores the configuration of installed applications.
+
+    It also keeps track of models, e.g. to provide reverse relations.
+    &quot;&quot;&quot;
+
+    def __init__(self, installed_apps=()):
+        # installed_apps is set to None when creating the master registry
+        # because it cannot be populated at that point. Other registries must
+        # provide a list of installed apps and are populated immediately.
+        if installed_apps is None and hasattr(sys.modules[__name__], &quot;apps&quot;):
+            raise RuntimeError(&quot;You must supply an installed_apps argument.&quot;)
+
+        # Mapping of app labels =&gt; model names =&gt; model classes. Every time a
+        # model is imported, ModelBase.__new__ calls apps.register_model which
+        # creates an entry in all_models. All imported models are registered,
+        # regardless of whether they&#39;re defined in an installed application
+        # and whether the registry has been populated. Since it isn&#39;t possible
+        # to reimport a module safely (it could reexecute initialization code)
+        # all_models is never overridden or reset.
+        self.all_models = defaultdict(dict)
+
+        # Mapping of labels to AppConfig instances for installed apps.
+        self.app_configs = &#123;&#125;
+
+        # Stack of app_configs. Used to store the current state in
+        # set_available_apps and set_installed_apps.
+        self.stored_app_configs = []
+
+        # Whether the registry is populated.
+        self.apps_ready = self.models_ready = self.ready = False
+        # For the autoreloader.
+        self.ready_event = threading.Event()
+
+        # Lock for thread-safe population.
+        self._lock = threading.RLock()
+        self.loading = False
+
+        # Maps (&quot;app_label&quot;, &quot;modelname&quot;) tuples to lists of functions to be
+        # called when the corresponding model is ready. Used by this class&#39;s
+        # `lazy_model_operation()` and `do_pending_operations()` methods.
+        self._pending_operations = defaultdict(list)
+
+        # Populate apps and models, unless it&#39;s the master registry.
+        if installed_apps is not None:
+            self.populate(installed_apps)
+
+    def populate(self, installed_apps=None):
+        &quot;&quot;&quot;
+        Load application configurations and models.
+
+        Import each application module and then each model module.
+
+        It is thread-safe and idempotent, but not reentrant.
+        &quot;&quot;&quot;
+        # installed_apps就是我们在配置文件中指定的APP
+
+        if self.ready:
+            return
+
+        # populate() might be called by two threads in parallel on servers
+        # that create threads before initializing the WSGI callable.
+        with self._lock:
+            # 加锁, 在服务器上的两个并行线程可能会调用populate
+            if self.ready:
+                return
+
+            # An RLock prevents other threads from entering this section. The
+            # compare and set operation below is atomic.
+            if self.loading:
+                # Prevent reentrant calls to avoid running AppConfig.ready()
+                # methods twice.
+                raise RuntimeError(&quot;populate() isn&#39;t reentrant&quot;)
+            self.loading = True
+
+            # Phase 1: initialize app configs and import app modules.
+            # 初始化你的应用程序配置并导入应用程序模块
+            # 这里for循环你指定的APP, 先if判断你的每一个APP是否为AppConfig类或者它的子类, 如果满足则直接使用
+            # 否则就调用AppConfig.create创建一个AppConfig实例对象并使用
+            # 无论if还是else, 最终app_config都是一个AppConfig实例对象
+            for entry in installed_apps:
+                if isinstance(entry, AppConfig):
+                    app_config = entry
+                else:
+                    # 调用create之后, 如果成功则返回AppConfig子类实例化对象, 也就是你指定的APP应用程序
+                    # 下的apps模块下的AppConfig子类的实例对象, 比如你在INSTALLED_APPS里添加了一个应用
+                    # 程序叫demo1, demo1是你通过django startapp创建的一个应用程序, 那么在create里会获取
+                    # 到你demo1.apps.Demo1AppConfig这里路径, 最后返回时, 会将Demo1AppConfig初始化并返回
+                    app_config = AppConfig.create(entry)
+                if app_config.label in self.app_configs:
+                    # 每次都会将app_config添加到集合中, 这里会判断, 必须是唯一的, 不能重复
+                    raise ImproperlyConfigured(
+                        &quot;Application labels aren&#39;t unique, &quot;
+                        &quot;duplicates: %s&quot; % app_config.label
+                    )
+
+                self.app_configs[app_config.label] = app_config
+                app_config.apps = self # 每个AppConfig保存Apps的上下文
+
+            # Check for duplicate app names.
+            # 检测重复的应用程序名字, 老版本我好像没见过这段代码
+            counts = Counter(
+                app_config.name for app_config in self.app_configs.values()
+            )
+            duplicates = [name for name, count in counts.most_common() if count &gt; 1]
+            if duplicates:
+                raise ImproperlyConfigured(
+                    &quot;Application names aren&#39;t unique, &quot;
+                    &quot;duplicates: %s&quot; % &quot;, &quot;.join(duplicates)
+                )
+
+            # 走到这, 说明注册的APP应用程序都准备好了
+            self.apps_ready = True
+
+            # Phase 2: import models modules.
+            # self.app_configs保存着我们每个APP应用程序下apps模块的AppConfig实例对象
+            # 通过遍历values()获取每个实例对象并调用它们的import_models方法
+            # 通过import_models(), 会将应用程序下的models.py导入并保存到AppConfig下的models_module属性
+            for app_config in self.app_configs.values():
+                app_config.import_models()
+
+            self.clear_cache()
+
+            self.models_ready = True # 表示models已经准备完毕
+
+            # Phase 3: run ready() methods of app configs.
+            # 如果你的APP应用程序下apps.AppConfig重载了ready方法, 则会在这调用, 相当于项目启动时的预处理
+            # 如果没有重载, 则什么也不会发生
+            for app_config in self.get_app_configs():
+                app_config.ready()
+
+            self.ready = True # 表示一切都准备完毕
+            self.ready_event.set() # flag设置为True, 其它wait它的线程将被唤醒, 不再阻塞
+
+    def check_apps_ready(self):
+        &quot;&quot;&quot;Raise an exception if all apps haven&#39;t been imported yet.&quot;&quot;&quot;
+        if not self.apps_ready:
+            from django.conf import settings
+
+            # If &quot;not ready&quot; is due to unconfigured settings, accessing
+            # INSTALLED_APPS raises a more helpful ImproperlyConfigured
+            # exception.
+            settings.INSTALLED_APPS
+            raise AppRegistryNotReady(&quot;Apps aren&#39;t loaded yet.&quot;)
+
+    def check_models_ready(self):
+        &quot;&quot;&quot;Raise an exception if all models haven&#39;t been imported yet.&quot;&quot;&quot;
+        if not self.models_ready:
+            raise AppRegistryNotReady(&quot;Models aren&#39;t loaded yet.&quot;)
+
+    def get_app_configs(self):
+        &quot;&quot;&quot;Import applications and return an iterable of app configs.&quot;&quot;&quot;
+        self.check_apps_ready()
+        return self.app_configs.values()
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" data-id="cl9y08lk60005wcuq6nqdef81" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          PPT结构组成（工作中的总结）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Property源码分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/">CPython</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/">C</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/Python/">Python</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Office/">Office</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Office/PowerPoint/">PowerPoint</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Python/Django/">Django</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Life/" rel="tag">Life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Office/" rel="tag">Office</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PowerPoint/" rel="tag">PowerPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 20px;">C</a> <a href="/tags/CPython/" style="font-size: 20px;">CPython</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Life/" style="font-size: 10px;">Life</a> <a href="/tags/Office/" style="font-size: 10px;">Office</a> <a href="/tags/PowerPoint/" style="font-size: 10px;">PowerPoint</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/">PPT结构组成（工作中的总结）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/">Python Django服务启动时做了什么?</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">Property源码分析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Python list实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/">Python zip内置类的背后机制</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 小芳芳<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

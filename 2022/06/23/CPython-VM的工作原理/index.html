@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>CPython VM的工作原理 | 士多啤梨苹果橙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="What CPython is and why anyone would want to study itCPython是用C编写的Python解释器，它是Python的实现之一，CPython的独特之处在于它是最原始、维护最多和最流行的一个。 CPython实现了Python，But what is Python？One may simply answer —— Python is a prog">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CPython VM的工作原理">
+<meta property="og:url" content="http://example.com/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="士多啤梨苹果橙">
+<meta property="og:description" content="What CPython is and why anyone would want to study itCPython是用C编写的Python解释器，它是Python的实现之一，CPython的独特之处在于它是最原始、维护最多和最流行的一个。 CPython实现了Python，But what is Python？One may simply answer —— Python is a prog">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-23T09:29:02.000Z">
+<meta property="article:modified_time" content="2022-11-01T09:08:17.638Z">
+<meta property="article:author" content="小芳芳">
+<meta property="article:tag" content="CPython">
+<meta property="article:tag" content="C">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="士多啤梨苹果橙" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">士多啤梨苹果橙</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-CPython-VM的工作原理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" class="article-date">
+  <time datetime="2022-06-23T09:29:02.000Z" itemprop="datePublished">2022-06-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CPython/">CPython</a>►<a class="article-category-link" href="/categories/CPython/C/">C</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CPython VM的工作原理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="What-CPython-is-and-why-anyone-would-want-to-study-it"><a href="#What-CPython-is-and-why-anyone-would-want-to-study-it" class="headerlink" title="What CPython is and why anyone would want to study it"></a>What CPython is and why anyone would want to study it</h3><p>CPython是用C编写的Python解释器，它是Python的实现之一，CPython的独特之处在于它是最原始、维护最多和最流行的一个。</p>
+<p>CPython实现了Python，But what is Python？One may simply answer —— Python is a programming language。什么定义了Python？Python不像C这样的语言，它没有形式规范</p>
+<span id="more"></span>
+
+<blockquote>
+<p>CPython提供了 Python/C API，它允许用C扩展Python并将Python嵌入到C中。要有效地使用这个API，但需要对CPython的工作原理有很好的理解</p>
+</blockquote>
+<h3 id="理解CPython是如何工作的"><a href="#理解CPython是如何工作的" class="headerlink" title="理解CPython是如何工作的"></a>理解CPython是如何工作的</h3><p>CPython被设计为易于维护，能够通过阅读源代码并理解它是做什么的</p>
+<h5 id="Python程序的执行大致由三个阶段组成："><a href="#Python程序的执行大致由三个阶段组成：" class="headerlink" title="Python程序的执行大致由三个阶段组成："></a>Python程序的执行大致由三个阶段组成：</h5><ol>
+<li>初始化</li>
+<li>汇编</li>
+<li>解释</li>
+</ol>
+<p>在初始化阶段，CPython初始化运行Python所需的数据结构。它还准备内置类型、配置和加载内置模块、建立导入系统和许多其它事情</p>
+<p>接下来是编译阶段，从某种意义上，CPython是解释器，而不是编译器，因为它不产生机器码。然而，解释器通常在执行源代码之前，将其源代码转换为某种中间表示形式，CPython也是。这个翻译阶段的工作和典型编译器的工作是一样的：解析源代码并构建AST（抽象语法树），从AST生成字节码，甚至执行一些字节码优化</p>
+<h5 id="首先字节码是什么？"><a href="#首先字节码是什么？" class="headerlink" title="首先字节码是什么？"></a>首先字节码是什么？</h5><p>字节码是一系列指令，每条指令由两个字节组成：一个用于操作码，一个用于参数</p>
+<pre><code class="python">def g(x):
+    return x + 3
+</code></pre>
+<p>CPython将function g的主体转换为以下字节序列：[124, 0, 100, 1, 23, 0, 83, 0]，可以用内置dis module来分解它</p>
+<pre><code class="shell">$ python -m dis example1.py
+...
+2           0 LOAD_FAST            0 (x)
+            2 LOAD_CONST           1 (3)
+            4 BINARY_ADD
+            6 RETURN_VALUE
+</code></pre>
+<p>LOAD_FAST操作码对应于字节124，参数为0。LOAD_CONST操作码对应字节100，参数为1。BINARY_ADD和RETURN_VALUE指令总是分别编码为（23、0）和（83、0），因为它们不需要参数。</p>
+<p>CPython的核心是一个执行字节码的虚拟机，CPython的VM是基于堆栈的。意味着它使用堆栈执行指令来存储和检索数据。LOAD_FAST指令将局部变量推送到堆栈上。LOAD_CONST推送一个常量。BINARY_ADD从堆栈中弹出两个对象，将它们相加并将结果推回，最后，RETURN_VALUE将弹出堆栈上的任何内容，并将结果返回给调用者。</p>
+<p>字节码执行发生在一个巨大的计算循环中，当有指令要执行时，这个循环就会运行。它停下来产生一个值，如果发生错误，它会停止产生值。</p>
+<p>当然还有许多问题：</p>
+<ol>
+<li>参数是什么，还有操作码是什么意思？它们是索引吗？是什么索引？</li>
+<li>VM是否在堆栈上放置对象的值或引用？</li>
+<li>CPython怎么知道是局部变量？</li>
+<li>如果一个参数太大而不能容纳到一个字节中，该怎么办？</li>
+<li>相加两个数字的的指令是否于连接两个字符串的指令相同？如果是，那么虚拟机如何区分这些操作？</li>
+</ol>
+<p>我们需要先了解CPython VM的核心概念</p>
+<h3 id="Code-objects，Function-objects，Frames"><a href="#Code-objects，Function-objects，Frames" class="headerlink" title="Code objects，Function objects，Frames"></a>Code objects，Function objects，Frames</h3><h5 id="code-object"><a href="#code-object" class="headerlink" title="code object"></a>code object</h5><p>我们看到了一个简单函数的字节码是什么样子，但是实际情况下的Python程序是要复杂的多的，VM如何执行包含函数定义并进行函数调用的模块？</p>
+<pre><code class="python">def f(x):
+    return x + 1
+
+print(f(1))
+</code></pre>
+<p>它的字节码是什么样子的？首先这个程序定义了函数f，以1作为参数调用f，并输出调用结果</p>
+<pre><code class="shell">$ python -m dis example2.py
+
+  1           0 LOAD_CONST               0 (&lt;code object f at 0x000001AEEC279150, file &quot;work.py&quot;, line 1&gt;)
+              2 LOAD_CONST               1 (&#39;f&#39;)
+              4 MAKE_FUNCTION            0
+              6 STORE_NAME               0 (f)
+
+  5           8 LOAD_NAME                1 (print)
+             10 LOAD_NAME                0 (f)
+             12 LOAD_CONST               2 (1)
+             14 CALL_FUNCTION            1
+             16 CALL_FUNCTION            1
+             18 POP_TOP
+             20 LOAD_CONST               3 (None)
+             22 RETURN_VALUE
+
+Disassembly of &lt;code object f at 0x000001AEEC279150, file &quot;work.py&quot;, line 1&gt;:
+  2           0 LOAD_FAST                0 (x)
+              2 LOAD_CONST               1 (1)
+              4 BINARY_ADD
+              6 RETURN_VALUE
+</code></pre>
+<p>在第1行，我们定义了函数f，方法是将函数从代码对象（code object）中创建出来，并将名称f绑定到该对象上。</p>
+<p>作为单个单元（如模块或函数体），执行的代码片段成为代码块。CPython存储有关代码块在称为代码对象的结构中，它包含字节和类似于块中使用的变量名列表之类的东西。运行模块或调用函数意味着开始计算相应的代码对象。</p>
+<h5 id="function-object"><a href="#function-object" class="headerlink" title="function object"></a>function object</h5><p>然而，函数不仅仅是一个代码对象，它必须包含其它信息，如函数名、docstring、默认参数和在封闭范围中定义的变量值。此信息与代码对象一起存储在函数对象中。MAKE_FUNCTION指令用于创建它，在CPython源代码中函数对象结构的定义之前有一下注释：</p>
+<blockquote>
+<p>函数对象和代码对象不应该混淆：<br>函数对象是通过 def 语句创建的，它们在其__code__属性中引用一个代码对象，该对象是一个纯语法对象，即仅仅是一些源代码行的编译版本。每个源代码 “fragment” 有一个代码对象，但是每个代码对象可以被零个或多个函数对象引用，这取决于目前为止在源代码中执行 def 语句的次数</p>
+</blockquote>
+<p>几个函数对象怎么会引用一个代码对象呢？</p>
+<pre><code class="python">def make_add_x(x):
+    def add_x(y):
+        return x + y
+
+    return add_x
+
+add_4 = make_add_x(4)
+add_5 = make_add_x(5)
+</code></pre>
+<p>make_add_x函数的字节码包含MAKE_FUNCTION指令，函数add_4()和add_5()是使用与参数相同的代码对象调用此指令的结果，但有一个不同的参数 x 的值。每个函数都有自己的单元格变量机制，允许我们创建像add_4和add_5这样的闭包。</p>
+<p>先看看代码和函数对象的定义，方便理解它是什么</p>
+<pre><code class="c">struct PyCodeObject &#123;
+    PyObject_HEAD
+    int co_argcount;            /* #arguments, except *args */
+    int co_posonlyargcount;     /* #positional only arguments */
+    int co_kwonlyargcount;      /* #keyword only arguments */
+    int co_nlocals;             /* #local variables */
+    int co_stacksize;           /* #entries needed for evaluation stack */
+    int co_flags;               /* CO_..., see below */
+    int co_firstlineno;         /* first source line number */
+    PyObject *co_code;          /* instruction opcodes */
+    PyObject *co_consts;        /* list (constants used) */
+    PyObject *co_names;         /* list of strings (names used) */
+    PyObject *co_varnames;      /* tuple of strings (local variable names) */
+    PyObject *co_freevars;      /* tuple of strings (free variable names) */
+    PyObject *co_cellvars;      /* tuple of strings (cell variable names) */
+
+    Py_ssize_t *co_cell2arg;    /* Maps cell vars which are arguments. */
+    PyObject *co_filename;      /* unicode (where it was loaded from) */
+    PyObject *co_name;          /* unicode (name, for reference) */
+        /* ... more members ... */
+&#125;;
+</code></pre>
+<pre><code class="c">typedef struct &#123;
+    PyObject_HEAD
+    PyObject *func_code;        /* A code object, the __code__ attribute */
+    PyObject *func_globals;     /* A dictionary (other mappings won&#39;t do) */
+    PyObject *func_defaults;    /* NULL or a tuple */
+    PyObject *func_kwdefaults;  /* NULL or a dict */
+    PyObject *func_closure;     /* NULL or a tuple of cell objects */
+    PyObject *func_doc;         /* The __doc__ attribute, can be anything */
+    PyObject *func_name;        /* The __name__ attribute, a string object */
+    PyObject *func_dict;        /* The __dict__ attribute, a dict or NULL */
+    PyObject *func_weakreflist; /* List of weak references */
+    PyObject *func_module;      /* The __module__ attribute, can be anything */
+    PyObject *func_annotations; /* Annotations, a dict or NULL */
+    PyObject *func_qualname;    /* The qualified name */
+    vectorcallfunc vectorcall;
+&#125; PyFunctionObject;
+</code></pre>
+<h5 id="frame-object"><a href="#frame-object" class="headerlink" title="frame object"></a>frame object</h5><p>当VM执行代码对象时，它必须跟踪变量的值和不断变化的值堆栈。它还需要记住在哪里停止执行当前代码对象以执行另一个对象，以及返回时在哪里继续执行。CPython将这些信息存储在一个frameobject中。frame提供了代码对象可以执行的状态</p>
+<pre><code class="c">struct _frame &#123;
+    PyObject_VAR_HEAD
+    struct _frame *f_back;      /* previous frame, or NULL */
+    PyCodeObject *f_code;       /* code segment */
+    PyObject *f_builtins;       /* builtin symbol table (PyDictObject) */
+    PyObject *f_globals;        /* global symbol table (PyDictObject) */
+    PyObject *f_locals;         /* local symbol table (any mapping) */
+    PyObject **f_valuestack;    /* points after the last local */
+
+    PyObject **f_stacktop;          /* Next free slot in f_valuestack.  ... */
+    PyObject *f_trace;          /* Trace function */
+    char f_trace_lines;         /* Emit per-line trace events? */
+    char f_trace_opcodes;       /* Emit per-opcode trace events? */
+
+    /* Borrowed reference to a generator, or NULL */
+    PyObject *f_gen;
+
+    int f_lasti;                /* Last instruction if called */
+    /* ... */
+    int f_lineno;               /* Current line number */
+    int f_iblock;               /* index in f_blockstack */
+    char f_executing;           /* whether the frame is still executing */
+    PyTryBlock f_blockstack[CO_MAXBLOCKS]; /* for try and loop blocks */
+    PyObject *f_localsplus[1];  /* locals+stack, dynamically sized */
+&#125;;
+</code></pre>
+<p>创建一个frame来执行模块的代码对象，每当需要执行另一个代码对象时，CPython都会创建一个新的frameobject，每一帧都有对前一帧的引用，因此，帧形成一个帧堆栈，也称为调用堆栈，当前帧位于对于堆栈顶部，当调用一个函数时，一个新的帧被推送到堆栈上。在从当前正在执行的帧返回时，CPython通过记住其最后处理的指令继续执行前一个帧。在某种意义上，CPython VM除了构造和执行帧之外，什么也不做</p>
+<h5 id="Threads、Interpreters、Runtime"><a href="#Threads、Interpreters、Runtime" class="headerlink" title="Threads、Interpreters、Runtime"></a>Threads、Interpreters、Runtime</h5><p>我们已经看到3个重要的概念：</p>
+<ol>
+<li>code object</li>
+<li>function object</li>
+<li>frame object</li>
+</ol>
+<p>CPython还有3个：</p>
+<ol>
+<li>a thread state</li>
+<li>an interpreter state</li>
+<li>a runtime state</li>
+</ol>
+<h5 id="thread-state"><a href="#thread-state" class="headerlink" title="thread state"></a>thread state</h5><p>线程状态是一种数据结构，它包含特定于线程的数据，包括调用堆栈、异常状态和调试设置。它不应该于操作系统混淆。使用标准线程模块在单独的线程中运行函数时会发生什么</p>
+<pre><code class="python">from threading import Thread
+
+def f():
+    &quot;&quot;&quot;Perform an I/O-bound task&quot;&quot;&quot;
+    pass
+
+t = Thread(target=f)
+t.start()
+t.join()
+</code></pre>
+<p>t.start()实际上是通过调用OS函数（类UNIX系统上的 pthread_create( ) 和Windows上的 _startthreadex( )）来创建一个新的OS线程。新创建的线程从负责调用目标的 _thread 模块调用函数。此函数不仅接收目标和目标的参数，而且还接收新操作系统线程中使用的新线程状态。操作系统线程使用自己的线程状态进入求值循环</p>
+<p>这里还涉及到一个<a target="_blank" rel="noopener" href="https://wiki.python.org/moin/GlobalInterpreterLock">GIL（Global Interpreter Lock）</a>，它可以防止多个线程同时处于求值循环中。这样做的主要目的是，在不引入更细粒度锁的情况下，保护CPython状态不受损坏。Python/C API Reference清楚的解释了GIL</p>
+<blockquote>
+<p>Python解释器不是完全线程安全的，为了支持多线程的Python程序，有一个全局锁，称为GIL，必须由当前线程持有GIL才能安全访问Python对象。如果没有锁，即使简单的操作也可能在多线程中引起问题：例如当两个线程同时增加同一对象的引用计数时，引用计数最终可能只增加一次，而不是两次</p>
+</blockquote>
+<p>要管理多个线程，需要比线程状态更高级的数据结构</p>
+<h5 id="interpreter-and-runtime-states"><a href="#interpreter-and-runtime-states" class="headerlink" title="interpreter and runtime states"></a>interpreter and runtime states</h5><p>实际上，有两种状态：解释器状态和运行时状态</p>
+<p>解释器状态是一组线程以及特定于该组的数据。线程共享一些东西，比如加载的模块（sys.module）、内建（builtins）和导入系统（imoprt lib）。</p>
+<p>运行时状态是一个全局变量，它存储特定于进程的数据，包括CPython的状态（例如，它是否已经初始化？）和GIL机制</p>
+<p>通常，一个进程的所有线程都属于同一个解释器，但是，有些情况下，可能需要创建一个子解释器来隔离一组线程，<a target="_blank" rel="noopener" href="https://modwsgi.readthedocs.io/en/develop/user-guides/processes-and-threading.html#python-sub-interpreters">mod_wsgi</a>就是一个例子，它使用不同的解释器来运行WSGI应用程序。隔离最明显的效果是，每组线程都有自己版本的所有模块，包括__main__，这是一个全局名称空间</p>
+<h5 id="Architecture-summary"><a href="#Architecture-summary" class="headerlink" title="Architecture summary"></a>Architecture summary</h5><p>CPython的体系结构，解释器可以看作是一个分层结构</p>
+<ol>
+<li>Runtime：进程的全局状态，包括GIL和内存分配机制</li>
+<li>Interpreter：一组线程和它们共享的一些数据，例如导入的模块</li>
+<li>Thread：特定于单个操作系统线程的数据，包括调用堆栈</li>
+<li>Frame：调用堆栈的一个元素，frame包含一个代码对象并提供执行它的状态</li>
+<li>Evaluation loop：frameobject执行的位置</li>
+</ol>
+<p>简单的概述了Python如何执行Python程序</p>
+<ol>
+<li>初始化CPython</li>
+<li>将源代码编译为模块的代码对象</li>
+<li>执行代码对象的字节码</li>
+</ol>
+<p>解释器中负责字节码执行的部分成为虚拟机，CPython VM有几个特别重要的概念：code object、frame object、thread states、intepreter states、runtime，这些数据结构构成了CPython体系结构的核心。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" data-id="cl9y08lk00002wcuq9rjbab9a" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Python map对象探究
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Python range的實現原理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/">CPython</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/">C</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/Python/">Python</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Office/">Office</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Office/PowerPoint/">PowerPoint</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Python/Django/">Django</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Life/" rel="tag">Life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Office/" rel="tag">Office</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PowerPoint/" rel="tag">PowerPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 20px;">C</a> <a href="/tags/CPython/" style="font-size: 20px;">CPython</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Life/" style="font-size: 10px;">Life</a> <a href="/tags/Office/" style="font-size: 10px;">Office</a> <a href="/tags/PowerPoint/" style="font-size: 10px;">PowerPoint</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/">PPT结构组成（工作中的总结）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/">Python Django服务启动时做了什么?</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">Property源码分析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Python list实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/">Python zip内置类的背后机制</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 小芳芳<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

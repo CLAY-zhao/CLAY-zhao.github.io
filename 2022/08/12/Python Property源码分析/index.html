@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Property源码分析 | 士多啤梨苹果橙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Python @property的源码分析property在Python中是一种装饰器，可以用来修饰方法 作用我们可以使用@property装饰器来创建只读属性，@property装饰器会将方法转换为相同名称的只读属性，可以与所定义的属性配合使用，以防止属性被修改">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Property源码分析">
+<meta property="og:url" content="http://example.com/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="士多啤梨苹果橙">
+<meta property="og:description" content="Python @property的源码分析property在Python中是一种装饰器，可以用来修饰方法 作用我们可以使用@property装饰器来创建只读属性，@property装饰器会将方法转换为相同名称的只读属性，可以与所定义的属性配合使用，以防止属性被修改">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-08-12T07:52:12.000Z">
+<meta property="article:modified_time" content="2022-11-01T09:08:17.640Z">
+<meta property="article:author" content="小芳芳">
+<meta property="article:tag" content="CPython">
+<meta property="article:tag" content="C">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="士多啤梨苹果橙" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">士多啤梨苹果橙</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Python Property源码分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="article-date">
+  <time datetime="2022-08-12T07:52:12.000Z" itemprop="datePublished">2022-08-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CPython/">CPython</a>►<a class="article-category-link" href="/categories/CPython/C/">C</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Property源码分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Python-property的源码分析"><a href="#Python-property的源码分析" class="headerlink" title="Python @property的源码分析"></a>Python @property的源码分析</h1><p>property在Python中是一种装饰器，可以用来修饰方法</p>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>我们可以使用@property装饰器来创建只读属性，@property装饰器会将方法转换为相同名称的只读属性，可以与所定义的属性配合使用，以防止属性被修改</p>
+<span id="more"></span>
+
+<p>property具体的使用案例可以参考：<a target="_blank" rel="noopener" href="https://www.runoob.com/python/python-func-property.html">https://www.runoob.com/python/python-func-property.html</a>，里面有详细介绍</p>
+<p>以下的用法是最常用的</p>
+<pre><code class="python">class GHost:
+
+    def __init__(self) -&gt; None:
+        self.__name = &quot;刹耶&quot;
+
+    @property
+    def name(self):
+        return self.__name
+    
+    @name.setter
+    def name(self, val):
+        self.__name = val
+
+ghost = GHost()
+</code></pre>
+<p>我们可以直接通过调用ghost.name获取到名称，而不需要（）进行调用，当执行 ghost.name = xxx 时又会触发赋值操作，我们来看看CPython是如何做到的</p>
+<p>首先property是一个内置类，先看看property的结构定义</p>
+<pre><code class="c">PyTypeObject PyProperty_Type = &#123;
+    PyVarObject_HEAD_INIT(&amp;PyType_Type, 0)
+    &quot;property&quot;,                                 /* tp_name */
+    sizeof(propertyobject),                     /* tp_basicsize */
+    0,                                          /* tp_itemsize */
+    /* methods */
+    property_dealloc,                           /* tp_dealloc */
+
+    ...... // 省略, 不需要
+
+    PyObject_GenericGetAttr,                    /* tp_getattro */
+    0,                                          /* tp_setattro */
+    0,                                          /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC |
+        Py_TPFLAGS_BASETYPE,                    /* tp_flags */
+    property_init__doc__,                       /* tp_doc */
+    property_traverse,                          /* tp_traverse */
+    (inquiry)property_clear,                    /* tp_clear */
+    0,                                          /* tp_richcompare */
+    0,                                          /* tp_weaklistoffset */
+    0,                                          /* tp_iter */
+    0,                                          /* tp_iternext */
+    property_methods,                           /* tp_methods */
+    property_members,                           /* tp_members */
+    property_getsetlist,                        /* tp_getset */
+    0,                                          /* tp_base */
+    0,                                          /* tp_dict */
+    property_descr_get,                         /* tp_descr_get */
+    property_descr_set,                         /* tp_descr_set */
+    0,                                          /* tp_dictoffset */
+    property_init,                              /* tp_init */
+    PyType_GenericAlloc,                        /* tp_alloc */
+    PyType_GenericNew,                          /* tp_new */
+    PyObject_GC_Del,                            /* tp_free */
+&#125;;
+</code></pre>
+<p>property定义了tp_descr_get 与tp_descr_set，说明它是一个描述器，先来看看初始化时做了什么，调用的是property_init方法</p>
+<pre><code class="c">static int
+property_init(PyObject *self, PyObject *args, PyObject *kwargs)
+&#123;
+    int return_value = -1; // 返回值
+    static const char * const _keywords[] = &#123;&quot;fget&quot;, &quot;fset&quot;, &quot;fdel&quot;, &quot;doc&quot;, NULL&#125;; // 一些关键字参数
+    static _PyArg_Parser _parser = &#123;NULL, _keywords, &quot;property&quot;, 0&#125;;
+    PyObject *argsbuf[4];
+    PyObject * const *fastargs;
+    Py_ssize_t nargs = PyTuple_GET_SIZE(args); // 传递了多少个位置参数
+    // 可以传递位置参数或者关键字参数，然后如果传递了关键字，就将关键字的数量也相加
+    Py_ssize_t noptargs = nargs + (kwargs ? PyDict_GET_SIZE(kwargs) : 0) - 0;
+    PyObject *fget = NULL; // 获取属性值的方法
+    PyObject *fset = NULL; // 设置属性值的方法
+    PyObject *fdel = NULL; // 删除属性值的方法
+    PyObject *doc = NULL; // 属性描述信息
+
+    // 参数校验
+    fastargs = _PyArg_UnpackKeywords(_PyTuple_CAST(args)-&gt;ob_item, nargs, kwargs, NULL, &amp;_parser, 0, 4, 0, argsbuf);
+    if (!fastargs) &#123;
+        goto exit;
+    &#125;
+    if (!noptargs) &#123;
+        goto skip_optional_pos;
+    &#125;
+
+    // 重点在这边
+    // noptargs是传递了位置参数和关键字参数的数量总和
+    if (fastargs[0]) &#123;
+    // 如果传递了fget参数，就赋值给fget变量
+        fget = fastargs[0];
+        if (!--noptargs) &#123;
+            goto skip_optional_pos;
+        &#125;
+    &#125;
+    if (fastargs[1]) &#123;
+    // 如果传递了fset参数，就赋值fset变量
+        fset = fastargs[1];
+        if (!--noptargs) &#123;
+            goto skip_optional_pos;
+        &#125;
+    &#125;
+    if (fastargs[2]) &#123;
+    // 如果传递了fdel参数，就赋值fdel变量
+        fdel = fastargs[2];
+        if (!--noptargs) &#123;
+            goto skip_optional_pos;
+        &#125;
+    &#125;
+    doc = fastargs[3]; // 属性描述信息
+skip_optional_pos:
+    return_value = property_init_impl((propertyobject *)self, fget, fset, fdel, doc); // property的一些赋值操作
+
+exit:
+    return return_value;
+&#125;
+
+static int
+property_init_impl(propertyobject *self, PyObject *fget, PyObject *fset,
+                   PyObject *fdel, PyObject *doc)
+/*[clinic end generated code: output=01a960742b692b57 input=dfb5dbbffc6932d5]*/
+&#123;
+    if (fget == Py_None)
+        fget = NULL;
+    if (fset == Py_None)
+        fset = NULL;
+    if (fdel == Py_None)
+        fdel = NULL;
+
+    Py_XINCREF(fget); // 引用计数+1，但可以处理空指针
+    Py_XINCREF(fset);
+    Py_XINCREF(fdel);
+    Py_XINCREF(doc);
+
+    Py_XSETREF(self-&gt;prop_get, fget); // 通过Py_XSETREF宏来改变self-&gt;prop_get指针指向fget，下面是一样的
+    Py_XSETREF(self-&gt;prop_set, fset);
+    Py_XSETREF(self-&gt;prop_del, fdel);
+    Py_XSETREF(self-&gt;prop_doc, doc);
+    self-&gt;getter_doc = 0;
+
+    /* if no docstring given and the getter has one, use that one */
+    if ((doc == NULL || doc == Py_None) &amp;&amp; fget != NULL) &#123;
+    // 如果没有给属性描述信息，就会尝试从fget方法从获取docstring赋值到property中
+        _Py_IDENTIFIER(__doc__);
+        PyObject *get_doc;
+        int rc = _PyObject_LookupAttrId(fget, &amp;PyId___doc__, &amp;get_doc); // 在fget中取出__doc__
+        if (rc &lt;= 0) &#123;
+        // 没有__doc__就算了, 直接返回结束
+            return rc;
+        &#125;
+        if (Py_IS_TYPE(self, &amp;PyProperty_Type)) &#123;
+        // 如果__doc__有，判断实例的类型是否为PyProperty_Type，符合就赋值__doc__
+            Py_XSETREF(self-&gt;prop_doc, get_doc);
+        &#125;
+        else &#123;
+            /* If this is a property subclass, put __doc__
+               in dict of the subclass instance instead,
+               otherwise it gets shadowed by __doc__ in the
+               class&#39;s dict. */
+            int err = _PyObject_SetAttrId((PyObject *)self, &amp;PyId___doc__, get_doc); // 否则我就在实例对象里获取__doc__并赋值
+            Py_DECREF(get_doc);
+            if (err &lt; 0)
+                return -1;
+        &#125;
+        self-&gt;getter_doc = 1;
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
+<p>整体逻辑比较简单，调用property之后，将获取、设置、删除等方法取出并设置到property实例对象的属性中，需要注意，当你使用@property装饰一个def name时，name将不再是一个function object，而是变为了property object，所以当你再使用@name.setter来装饰一个name方法来处理赋值操作时，其实并没什么神奇的，因为name此时是一个property object，你调用的实际上是property的setter method，可以看一下property支持什么方法</p>
+<pre><code class="c">static PyMethodDef property_methods[] = &#123;
+    &#123;&quot;getter&quot;, property_getter, METH_O, getter_doc&#125;,
+    &#123;&quot;setter&quot;, property_setter, METH_O, setter_doc&#125;,
+    &#123;&quot;deleter&quot;, property_deleter, METH_O, deleter_doc&#125;,
+    &#123;0&#125;
+&#125;;
+</code></pre>
+<p>先说一下，前面讲到了property是一个描述器，在我们没有使用@property装饰def name时，我们需要执行 name() 才能调用到name方法（需要加双括号），如果使用@property装饰def name后，只需要 .name 就可以调用拿到返回值，它是怎么做到的？</p>
+<p>首先，name是定义在我们的类中，所以name属性会先通过MRO查找，找到之后，判断name是否为一个描述器，那么一开始name只是一个普通的function object，它显然不是一个描述器，但是，我们通过property装饰之后，它就变成了一个描述器，因为property重载了__get__和__set__方法，所以在我们通过 .name 时，就会调用它的__get__方法，也就是property_descr_get方法</p>
+<pre><code class="c">static PyObject *
+property_descr_get(PyObject *self, PyObject *obj, PyObject *type)
+&#123;
+    if (obj == NULL || obj == Py_None) &#123;
+        Py_INCREF(self);
+        return self;
+    &#125;
+
+    propertyobject *gs = (propertyobject *)self;
+    if (gs-&gt;prop_get == NULL) &#123;
+    // 如果fget为空, 抛异常, 比如你是这样定义 name = property(fset=set_name), 那么你的fget就为空, 无法读取属性
+        PyErr_SetString(PyExc_AttributeError, &quot;unreadable attribute&quot;);
+        return NULL;
+    &#125;
+
+    return PyObject_CallOneArg(gs-&gt;prop_get, obj); // 调用获取属性的方法并返回
+&#125;
+</code></pre>
+<p>可以看到，当你调用 .name 时，实际上在property的__get__方法里调用了你指定的获取属性函数并返回的</p>
+<p>当你调用 .name = xxx 时，就会调用property的__set__方法，也就是property_descr_set</p>
+<pre><code class="c">static int
+property_descr_set(PyObject *self, PyObject *obj, PyObject *value)
+&#123;
+    propertyobject *gs = (propertyobject *)self;
+    PyObject *func, *res;
+
+    if (value == NULL)
+    // 当你设置的值为None时，就会调用你的del方法
+        func = gs-&gt;prop_del;
+    else
+    // 当设置的值不为空时，才会调用set方法
+        func = gs-&gt;prop_set;
+    if (func == NULL) &#123;
+    // 如果func为空，说明你既没有设置set也没有设置del, 抛异常
+        PyErr_SetString(PyExc_AttributeError,
+                        value == NULL ?
+                        &quot;can&#39;t delete attribute&quot; :
+                &quot;can&#39;t set attribute&quot;);
+        return -1;
+    &#125;
+    if (value == NULL)
+    // 调用del方法
+        res = PyObject_CallOneArg(func, obj);
+    else
+    // 调用set方法
+        res = PyObject_CallFunctionObjArgs(func, obj, value, NULL);
+    if (res == NULL)
+    // -1为调用异常
+        return -1;
+    Py_DECREF(res);
+    return 0; // 调用成功
+&#125;
+</code></pre>
+<p>可以看到，get与set的实现非常简单，那么来看看，当我们通过 @name.setter 来指定设置操作时，它做了什么事情，首先要记住，在你使用 @name.setter装饰一个函数时，name已经变为了property object，此时调用的是property的setter方法，对应的是property_setter方法</p>
+<pre><code class="c">static PyObject *
+property_getter(PyObject *self, PyObject *getter)
+&#123;
+    return property_copy(self, getter, NULL, NULL);
+&#125;
+
+static PyObject *
+property_setter(PyObject *self, PyObject *setter)
+&#123;
+    // 这里它给fget和fdel传递了NULL，fset传递我们装饰的方法对象
+    // 可以看到property_getter，本质上做的事情是一样的，它将fset和fdel传递NULL，而fget传递我们装饰的方法对象
+    return property_copy(self, NULL, setter, NULL);
+&#125;
+
+static PyObject *
+property_copy(PyObject *old, PyObject *get, PyObject *set, PyObject *del)
+&#123;
+    propertyobject *pold = (propertyobject *)old;
+    PyObject *new, *type, *doc;
+
+    type = PyObject_Type(old); // 获取property object的类型，也就是ob_type
+    if (type == NULL)
+        return NULL;
+
+    if (get == NULL || get == Py_None) &#123;
+    // 如果get参数为空, 并且property object的get方法在不为空的情况下, 就赋值给get参数
+        Py_XDECREF(get);
+        get = pold-&gt;prop_get ? pold-&gt;prop_get : Py_None;
+    &#125;
+    if (set == NULL || set == Py_None) &#123;
+    // 如果set参数为空, 并且property object的set方法在不为空的情况下, 就赋值给set参数
+        Py_XDECREF(set);
+        set = pold-&gt;prop_set ? pold-&gt;prop_set : Py_None;
+    &#125;
+    if (del == NULL || del == Py_None) &#123;
+    // 如果del参数为空, 并且property object的del方法在不为空的情况下, 就赋值给del参数
+        Py_XDECREF(del);
+        del = pold-&gt;prop_del ? pold-&gt;prop_del : Py_None;
+    &#125;
+    if (pold-&gt;getter_doc &amp;&amp; get != Py_None) &#123;
+        /* make _init use __doc__ from getter */
+        doc = Py_None;
+    &#125;
+    else &#123;
+        doc = pold-&gt;prop_doc ? pold-&gt;prop_doc : Py_None;
+    &#125;
+
+    /*
+    可以看到上面做了什么处理, get、set、del三个都进行了判断, 如果各自的参数都为空, 就从property object中取出对应的
+    get、set、del方法，然后通过调用type并传递get、set、del作为参数，实例化新的对象并返回
+    */
+    new =  PyObject_CallFunctionObjArgs(type, get, set, del, doc, NULL);
+    Py_DECREF(type);
+    if (new == NULL)
+        return NULL;
+    return new;
+&#125;
+</code></pre>
+<p>可以看到当我们执行 @name.setter 的时候做了什么，首先获取name的type类型，也就是property，然后获取get、set、del方法，再通过对property调用，实例化一个新的对象并返回，你可以理解为原先我们只装饰了一个function object，如下</p>
+<pre><code class="python">class GHost:
+
+    def __init__(self) -&gt; None:
+        self.__name = &quot;刹耶&quot;
+
+    @property
+    def name(self):
+        return self.__name
+</code></pre>
+<p>上面的类中，在property初始化的时候，这个name方法作为property的fget参数传递进去，property对象只有get方法不为空，set和del都为空，那么当我们再新增一个设置方法的时候</p>
+<pre><code class="python">class GHost:
+
+    def __init__(self) -&gt; None:
+        self.__name = &quot;刹耶&quot;
+
+    @property
+    def name(self):
+        return self.__name
+    
+    @name.setter
+    def name(self, val):
+        self.__name = val
+</code></pre>
+<p>首先判断get方法是否为空，由于我们已经定义了get方法，所以它会将get方法取出，然后通过property的type类型再new一个新的出来，但是这次分别传递了get方法和set方法，这时，你的name对象又被更新了一次</p>
+<p>Python property的内容差不多就这些了，了解一个东西是怎么实现的其实非常有趣，最起码你知道它是怎么跑的🤭</p>
+<div align=center width=100%><iframe class="video-frame" height=500 width=80% frameborder=0 allowfullscreen src="//player.bilibili.com/player.html?aid=561170527&bvid=BV1Ce4y1B7gY&cid=851548804&page=1" ></iframe></div>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" data-id="cl9y08lk80006wcuq4amg1qvz" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Python Django服务启动时做了什么?
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Python list实现原理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/">CPython</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/">C</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/Python/">Python</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Office/">Office</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Office/PowerPoint/">PowerPoint</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Python/Django/">Django</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Life/" rel="tag">Life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Office/" rel="tag">Office</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PowerPoint/" rel="tag">PowerPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 20px;">C</a> <a href="/tags/CPython/" style="font-size: 20px;">CPython</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Life/" style="font-size: 10px;">Life</a> <a href="/tags/Office/" style="font-size: 10px;">Office</a> <a href="/tags/PowerPoint/" style="font-size: 10px;">PowerPoint</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/">PPT结构组成（工作中的总结）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/">Python Django服务启动时做了什么?</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">Property源码分析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Python list实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/">Python zip内置类的背后机制</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 小芳芳<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

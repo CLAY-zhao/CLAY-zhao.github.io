@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Python zip内置类的背后机制 | 士多啤梨苹果橙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Python zip()我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看runoob对zip的描述zip() 用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组，然后返回由这些元素组成的列表。如果各个迭代器的元素个数不一致，则返回的列表长度与最短的对象相同，利用 * 号操作符，可以将元组解压为列表 关于zip的简单用法可以参考：https:&#x2F;&#x2F;www.runoob.c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python zip内置类的背后机制">
+<meta property="og:url" content="http://example.com/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="士多啤梨苹果橙">
+<meta property="og:description" content="Python zip()我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看runoob对zip的描述zip() 用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组，然后返回由这些元素组成的列表。如果各个迭代器的元素个数不一致，则返回的列表长度与最短的对象相同，利用 * 号操作符，可以将元组解压为列表 关于zip的简单用法可以参考：https:&#x2F;&#x2F;www.runoob.c">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-07-06T10:00:15.000Z">
+<meta property="article:modified_time" content="2022-11-01T09:08:17.643Z">
+<meta property="article:author" content="小芳芳">
+<meta property="article:tag" content="CPython">
+<meta property="article:tag" content="C">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="士多啤梨苹果橙" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">士多啤梨苹果橙</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Python zip内置类的背后机制" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" class="article-date">
+  <time datetime="2022-07-06T10:00:15.000Z" itemprop="datePublished">2022-07-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/CPython/">CPython</a>►<a class="article-category-link" href="/categories/CPython/C/">C</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Python zip内置类的背后机制
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Python-zip"><a href="#Python-zip" class="headerlink" title="Python zip()"></a>Python zip()</h3><h6 id="我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看runoob对zip的描述"><a href="#我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看runoob对zip的描述" class="headerlink" title="我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看runoob对zip的描述"></a>我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看runoob对zip的描述</h6><p><strong>zip()</strong> 用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组，然后返回由这些元素组成的列表。如果各个迭代器的元素个数不一致，则返回的列表长度与最短的对象相同，利用 * 号操作符，可以将元组解压为列表</p>
+<p>关于zip的简单用法可以参考：<a target="_blank" rel="noopener" href="https://www.runoob.com/python/python-func-zip.html">https://www.runoob.com/python/python-func-zip.html</a></p>
+<span id="more"></span>
+
+<p>在Python源码中，zip是这样子的</p>
+<pre><code class="python">class zip(object):
+    &quot;&quot;&quot;
+    zip(*iterables) --&gt; zip object
+    
+    Return a zip object whose .__next__() method returns a tuple where
+    the i-th element comes from the i-th iterable argument.  The .__next__()
+    method continues until the shortest iterable in the argument sequence
+    is exhausted and then it raises StopIteration.
+    &quot;&quot;&quot;
+    def __getattribute__(self, *args, **kwargs): # real signature unknown
+        &quot;&quot;&quot; Return getattr(self, name). &quot;&quot;&quot;
+        pass
+
+    def __init__(self, *iterables): # real signature unknown; restored from __doc__
+        pass
+
+    def __iter__(self, *args, **kwargs): # real signature unknown
+        &quot;&quot;&quot; Implement iter(self). &quot;&quot;&quot;
+        pass
+
+    @staticmethod # known case of __new__
+    def __new__(*args, **kwargs): # real signature unknown
+        &quot;&quot;&quot; Create and return a new object.  See help(type) for accurate signature. &quot;&quot;&quot;
+        pass
+
+    def __next__(self, *args, **kwargs): # real signature unknown
+        &quot;&quot;&quot; Implement next(self). &quot;&quot;&quot;
+        pass
+
+    def __reduce__(self, *args, **kwargs): # real signature unknown
+        &quot;&quot;&quot; Return state information for pickling. &quot;&quot;&quot;
+        pass
+</code></pre>
+<p>zip类定义了__iter__、__next__，说明它是支持迭代操作的，注释提到，当调用zip时，它会返回一个zip对象，调用.__next__()方法返回一个元组，其中第i个元素来自第i个可迭代参数，__next__()会一直持续到参数序列中最短的可迭代对象用尽为止，然后引发StopIteration，终止循环</p>
+<p>在调用zip时，我们可以传递多个iterator</p>
+<pre><code class="python">a = [1, 2, 3]
+b = [4, 5, 6]
+c = [7, 8, 9]
+
+r = zip(a, b, c)
+
+for i in r:
+    print(i)
+
+======&gt;&gt;&gt; 打印结果
+(1, 4, 7)
+(2, 5, 8)
+(3, 6, 9)
+======&gt;&gt;&gt;
+</code></pre>
+<h3 id="在CPython中zip的结构"><a href="#在CPython中zip的结构" class="headerlink" title="在CPython中zip的结构"></a>在CPython中zip的结构</h3><pre><code class="c">PyTypeObject PyZip_Type = &#123;
+    PyVarObject_HEAD_INIT(&amp;PyType_Type, 0)
+    &quot;zip&quot;,                              /* tp_name */
+    sizeof(zipobject),                  /* tp_basicsize */
+    ...... /* 忽略，不重要 */
+    PyObject_GenericGetAttr,            /* tp_getattro */
+    0,                                  /* tp_setattro */
+    0,                                  /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC |
+        Py_TPFLAGS_BASETYPE,            /* tp_flags */
+    zip_doc,                            /* tp_doc */
+    (traverseproc)zip_traverse,    /* tp_traverse */
+    0,                                  /* tp_clear */
+    0,                                  /* tp_richcompare */
+    0,                                  /* tp_weaklistoffset */
+    PyObject_SelfIter,                  /* tp_iter */
+    (iternextfunc)zip_next,     /* tp_iternext */
+    zip_methods,                        /* tp_methods */
+    0,                                  /* tp_members */
+    0,                                  /* tp_getset */
+    0,                                  /* tp_base */
+    0,                                  /* tp_dict */
+    0,                                  /* tp_descr_get */
+    0,                                  /* tp_descr_set */
+    0,                                  /* tp_dictoffset */
+    0,                                  /* tp_init */
+    PyType_GenericAlloc,                /* tp_alloc */
+    zip_new,                            /* tp_new */
+    PyObject_GC_Del,                    /* tp_free */
+&#125;;
+</code></pre>
+<p>那在我们调用zip时，是先调用了zip_new方法</p>
+<pre><code class="c">typedef struct &#123;
+    PyObject_HEAD
+    Py_ssize_t          tuplesize;
+    PyObject *ittuple;                  /* tuple of iterators */
+    PyObject *result;
+&#125; zipobject; // zipobject结构体
+
+static PyObject *
+zip_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+&#123;
+    zipobject *lz; // 成功创建则返回对象, 对应Python中的zip object
+    Py_ssize_t i;
+    PyObject *ittuple;  /* tuple of iterators */ // 存储每个迭代器的对象
+    PyObject *result;
+    Py_ssize_t tuplesize;
+
+    if (type == &amp;PyZip_Type &amp;&amp; !_PyArg_NoKeywords(&quot;zip&quot;, kwds))
+    // 类型检查和关键字判断
+        return NULL;
+
+    /* args must be a tuple */
+    assert(PyTuple_Check(args)); // args必须是一个元组
+    tuplesize = PyTuple_GET_SIZE(args); // 获取args的大小
+
+    /* obtain iterators */
+    // 开始获取迭代器
+    /*
+        如果args为空, 也就是zip()没有参数, 那么tuplesize就为0, 会从缓冲池里获取一个空元组
+    如果不为空, 就按照tuplesize申请一个元组，并对其元素都设置为NULL、GC管理
+    */
+    ittuple = PyTuple_New(tuplesize);
+
+    if (ittuple == NULL)
+    // 申请失败
+        return NULL;
+    for (i=0; i &lt; tuplesize; ++i) &#123; // tuplesize循环
+        PyObject *item = PyTuple_GET_ITEM(args, i); // 获取args对应下标的对象
+        PyObject *it = PyObject_GetIter(item); // 调用每个item对象的__iter__方法，获取iterator（item可能是不同类型）
+        if (it == NULL) &#123;
+        // 如果某一个item调用__iter__后返回空, 则运行结束
+            Py_DECREF(ittuple); // 引用计数-1
+            return NULL;
+        &#125;
+        PyTuple_SET_ITEM(ittuple, i, it); // 根据下标i在ittuple中设置it（迭代器对象）
+    &#125;
+
+    /* create a result holder */
+    // 再根据tuplesize创建一个元组, 专门用来存储结果, 而大小和ittuple一样
+    result = PyTuple_New(tuplesize);
+    if (result == NULL) &#123;
+    // 申请失败
+        Py_DECREF(ittuple);
+        return NULL;
+    &#125;
+    for (i=0 ; i &lt; tuplesize ; i++) &#123;
+        Py_INCREF(Py_None); // 空对象
+        PyTuple_SET_ITEM(result, i, Py_None); // 根据下标i在result中设置None
+    &#125;
+
+    /* create zipobject structure */
+    lz = (zipobject *)type-&gt;tp_alloc(type, 0);
+    if (lz == NULL) &#123;
+        Py_DECREF(ittuple);
+        Py_DECREF(result);
+        return NULL;
+    &#125;
+    lz-&gt;ittuple = ittuple; // 设置迭代器元素
+    lz-&gt;tuplesize = tuplesize; // 设置大小
+    lz-&gt;result = result; // 设置存储结果的元组
+
+    return (PyObject *)lz; // 返回zipobject
+&#125;
+</code></pre>
+<p>在调用zip()时，首先根据传递的位置参数args，获取args的大小，然后根据该大小申请两个元组，一个用来存储位置参数中，每个对象调用__iter__()后返回的迭代器对象，一个用来存储调用__next__时返回的结果，一共执行了两次循环，最终返回zipobject</p>
+<pre><code class="python">g = zip()
+print(g)
+
+&lt;zip object at 0x0000020D3976D200&gt;
+</code></pre>
+<p>在对zip object进行迭代时，是如何处理的，首先会先调用zip object的__iter__方法，而它返回了本身</p>
+<pre><code class="c">PyObject *
+PyObject_SelfIter(PyObject *obj)
+&#123;
+    Py_INCREF(obj);
+    return obj;
+&#125;
+</code></pre>
+<p>并对本身不断的调用__next__方法</p>
+<pre><code class="c">static PyObject *
+zip_next(zipobject *lz)
+&#123;
+    Py_ssize_t i;
+    Py_ssize_t tuplesize = lz-&gt;tuplesize; // 元素的大小
+    PyObject *result = lz-&gt;result; // 存储结果的元组
+    PyObject *it;
+    PyObject *item;
+    PyObject *olditem;
+
+    if (tuplesize == 0)
+        return NULL;
+    if (Py_REFCNT(result) == 1) &#123;
+    // 当引用计数为1时
+        Py_INCREF(result); // 引用计数+1
+    // 对tuplesize进行循环
+        for (i=0 ; i &lt; tuplesize ; i++) &#123;
+            it = PyTuple_GET_ITEM(lz-&gt;ittuple, i); // 根据i获取ittuple对应下标的迭代器
+            item = (*Py_TYPE(it)-&gt;tp_iternext)(it); // 调用每个迭代器的__next__方法, 获取第it位置的元素
+            if (item == NULL) &#123;
+        // 如果__next__返回空，表示可迭代对象已用尽，调用结束
+        // 当zip()传递的每个参数长度不一致，就会以最短的迭代完并结束
+        // 比如a = [1,2,3], b = [4,5,6,7,8,9], 当执行第4次时，a已经用尽了, 根据下标4在a中获取会发生异常, 也就会结束
+                Py_DECREF(result);
+                return NULL;
+            &#125;
+        // 根据下标i在result(结果元组)里获取None, 对None进行引用计数-1, 并在它的位置设置每个迭代器返回的元素
+            olditem = PyTuple_GET_ITEM(result, i);
+            PyTuple_SET_ITEM(result, i, item); // 在None的位置设置item
+            Py_DECREF(olditem);
+        &#125;
+        // bpo-42536: The GC may have untracked this result tuple. Since we&#39;re
+        // recycling it, make sure it&#39;s tracked again:
+    // 一些GC的判断处理
+        if (!_PyObject_GC_IS_TRACKED(result)) &#123;
+            _PyObject_GC_TRACK(result);
+        &#125;
+    &#125; else &#123;
+    // 当结果元组的引用计数不为1, 就重新申请一个
+        result = PyTuple_New(tuplesize);
+        if (result == NULL)
+        // 申请失败
+            return NULL;
+        for (i=0 ; i &lt; tuplesize ; i++) &#123; // 这里的循环处理跟上面的相差无几，只是不需要管理None了
+            it = PyTuple_GET_ITEM(lz-&gt;ittuple, i); // 根据i下标在ittuple中获取每个迭代器
+            item = (*Py_TYPE(it)-&gt;tp_iternext)(it); // 调用每个迭代器的__next__方法返回元素
+            if (item == NULL) &#123;
+        // 元素为NULL时表示迭代结束
+                Py_DECREF(result);
+                return NULL;
+            &#125;
+            PyTuple_SET_ITEM(result, i, item); // 根据i下标在结果元组里设置每个item
+        &#125;
+    &#125;
+    return result; // 返回了一个元组对象
+&#125;
+</code></pre>
+<p>这里需要注意，在对zip进行调用__next__时，最终返回了一个PyTupleObject，也就是元组，在元组里边已经将迭代器的元素都设置到了该元组，所以实际上，返回的每个结果是通过对PyTupleObject调用__next__获取的</p>
+<p>首先在调用PyTupleObject的__iter__时，会将it_index设置为0，也就是起始位置，然后返回一个tupleiterobject对象，调用的也正在它的__next__方法</p>
+<pre><code class="c">static PyObject *
+tupleiter_next(tupleiterobject *it)
+&#123;
+    PyTupleObject *seq;
+    PyObject *item;
+
+    assert(it != NULL);
+    seq = it-&gt;it_seq;
+    if (seq == NULL)
+        return NULL;
+    assert(PyTuple_Check(seq));
+
+    // 从0开始, 条件为元组的长度
+    if (it-&gt;it_index &lt; PyTuple_GET_SIZE(seq)) &#123;
+        item = PyTuple_GET_ITEM(seq, it-&gt;it_index); // 根据下标获取我们在zip_next方法中设置好的每个结果元组
+        ++it-&gt;it_index; // 下标+1
+        Py_INCREF(item); // 引用计数+1
+        return item; // 返回元素
+    &#125;
+
+    it-&gt;it_seq = NULL;
+    Py_DECREF(seq);
+    return NULL;
+&#125;
+</code></pre>
+<p>关于zip()的探究就到这了，基本重要的都讲了，有兴趣可以自己翻一翻源码😎</p>
+<iframe src="//player.bilibili.com/player.html?aid=934559716&bvid=BV1WM4y1w7H7&cid=453686633&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" data-id="cl9y08lkm000gwcuq6d409yrb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Python list实现原理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Python map对象探究</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/">CPython</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/">C</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/Python/">Python</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Office/">Office</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Office/PowerPoint/">PowerPoint</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Python/Django/">Django</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Life/" rel="tag">Life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Office/" rel="tag">Office</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PowerPoint/" rel="tag">PowerPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 20px;">C</a> <a href="/tags/CPython/" style="font-size: 20px;">CPython</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Life/" style="font-size: 10px;">Life</a> <a href="/tags/Office/" style="font-size: 10px;">Office</a> <a href="/tags/PowerPoint/" style="font-size: 10px;">PowerPoint</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/">PPT结构组成（工作中的总结）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/">Python Django服务启动时做了什么?</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">Property源码分析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Python list实现原理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/">Python zip内置类的背后机制</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 小芳芳<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
