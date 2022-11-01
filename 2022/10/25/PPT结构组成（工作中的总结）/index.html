@@ -1,127 +1,163 @@
+
+
+
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="士多啤梨苹果橙" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="士多啤梨苹果橙" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="士多啤梨苹果橙" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
 
   
-  <title>PPT结构组成（工作中的总结） | 士多啤梨苹果橙</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="PPT结构组成PPT本质上是一个ZIP压缩包，将PPT改为ZIP之后解压可以看到这些文件：">
-<meta property="og:type" content="article">
-<meta property="og:title" content="PPT结构组成（工作中的总结）">
-<meta property="og:url" content="http://example.com/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/index.html">
-<meta property="og:site_name" content="士多啤梨苹果橙">
-<meta property="og:description" content="PPT结构组成PPT本质上是一个ZIP压缩包，将PPT改为ZIP之后解压可以看到这些文件：">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/8c97ea36d8908052.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/61f7470602c70c6c.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/5fc2a5db26d88a35.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/41b74f8d443d1b00.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/d39a43b83a8be5aa.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/be5f3e1987c66dd2.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/16798418509c3dd9.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/5a4961c202207e5b.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/438a09286fd494c9.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/72fd181077e3f655.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/623518d30c876351.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/d2846ac20037c788.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/c5d651f4cb2c999d.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/fa95124f81f2e3a1.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/a523663e72d3767a.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/73fd80cb6ee0f126.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/2a0790f9e6518c48.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/37e4e52e6ba6c94c.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/f0ccf660620cd262.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/8b91f8d438be21b1.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/be176664e084e30c.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/ee32945181a45822.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/5457fb8ef5c343d8.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/269ff69aa21297bb.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/1b6324ef68e3e991.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/bad584236486d47b.png">
-<meta property="og:image" content="https://s3.bmp.ovh/imgs/2022/10/25/a6dde6ed17c6808a.png">
-<meta property="article:published_time" content="2022-10-25T08:41:06.000Z">
-<meta property="article:modified_time" content="2022-11-01T09:08:17.639Z">
-<meta property="article:author" content="小芳芳">
-<meta property="article:tag" content="Office">
-<meta property="article:tag" content="PowerPoint">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://s3.bmp.ovh/imgs/2022/10/25/8c97ea36d8908052.png">
-  
-    <link rel="alternate" href="/atom.xml" title="士多啤梨苹果橙" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+  <meta name="keywords" content="Office,PowerPoint" />
 
+
+<link rel="canonical" href="http://example.com/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/">
+
+
+
+  <title>
+PPT结构组成（工作中的总结） - PowerPoint - Office |
+Leayoos Chui = 士多啤梨苹果橙</title>
 <meta name="generator" content="Hexo 5.4.2"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">士多啤梨苹果橙</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
       </div>
     </div>
   </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-PPT结构组成（工作中的总结）" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" class="article-date">
-  <time datetime="2022-10-25T08:41:06.000Z" itemprop="datePublished">2022-10-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Office/">Office</a>►<a class="article-category-link" href="/categories/Office/PowerPoint/">PowerPoint</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">PPT结构组成（工作中的总结）
+  </h1>
   
-    <h1 class="article-title" itemprop="name">
-      PPT结构组成（工作中的总结）
-    </h1>
-  
+<div class="meta">
+  <span class="item" title="Created: 2022-10-25 16:41:06">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-10-25T16:41:06+08:00">2022-10-25</time>
+  </span>
+</div>
 
-      </header>
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Leayoos Chui</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipexe4oykj20zk0m87ji.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicivghyooj20zk0m8dir.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclhpw3lwj20zk0m8gvw.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclh0m9pdj20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicli9lfebj20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclj9410cj20zk0m8h12.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="PPT结构组成"><a href="#PPT结构组成" class="headerlink" title="PPT结构组成"></a>PPT结构组成</h3><p>PPT本质上是一个ZIP压缩包，将PPT改为ZIP之后解压可以看到这些文件：</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/8c97ea36d8908052.png"></p>
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Office/" itemprop="item" rel="index" title="In Office"><span itemprop="name">Office</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Office/PowerPoint/" itemprop="item" rel="index" title="In PowerPoint"><span itemprop="name">PowerPoint</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="en">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="小芳芳">
+    <meta itemprop="description" content=", ">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="士多啤梨苹果橙">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h3 id="PPT结构组成"><a href="#PPT结构组成" class="headerlink" title="PPT结构组成"></a>PPT结构组成</h3><p>PPT本质上是一个ZIP压缩包，将PPT改为ZIP之后解压可以看到这些文件：</p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/8c97ea36d8908052.png"></p>
 <span id="more"></span>
 
 <p>里面的文件数量会根据幻灯片的内容所有不同，但肯定会有<br>[Content_Types].xml、.rels、presentation这些文件，如果PPT一页都没有是无法解压缩的</p>
@@ -147,36 +183,36 @@
 <ol>
 <li>首先，如果PPT里套用了图片、媒体文件等，那么PPT目录里就会有一个media目录，里面会存放PPT套用的图片、媒体文件</li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/61f7470602c70c6c.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/61f7470602c70c6c.png"></p>
 <ol start="2">
 <li><p>将我们自己的背景图复制到里面，然后改成不会冲突的名字</p>
 </li>
 <li><p>改背景图不需要修改slideLayouts里面的东西，只需要修改slides目录，也就是每页幻灯片对应的文件</p>
 </li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/5fc2a5db26d88a35.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5fc2a5db26d88a35.png"></p>
 <ol start="4">
 <li>里面一共有slide1~18个xml，也就是有18页</li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/41b74f8d443d1b00.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/41b74f8d443d1b00.png"></p>
 <ol start="5">
 <li>我们将第一页改成自己的背景图，首先在slides目录下有一个_rels的目录</li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/d39a43b83a8be5aa.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/d39a43b83a8be5aa.png"></p>
 <ol start="6">
 <li>它们都定义了每页幻灯片的资源引用关系，打开slide1.xml.rels</li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/be5f3e1987c66dd2.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/be5f3e1987c66dd2.png"></p>
 <ol start="7">
 <li>然后我们自己新增一个标签，定义一个背景图的引用，Id一定不要重复</li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/16798418509c3dd9.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/16798418509c3dd9.png"></p>
 <p>8 .我们再修改一下slide1.xml，给它新增一个背景图设置的标签</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/5a4961c202207e5b.png"></p>
-<p>13.基本上就可以了，我们将所有文件打包成ZIP再改成PPTX后缀名就能打开文件了，背景图已经设置好了，很简单<img src="https://s3.bmp.ovh/imgs/2022/10/25/438a09286fd494c9.png"></p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/72fd181077e3f655.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5a4961c202207e5b.png"></p>
+<p>13.基本上就可以了，我们将所有文件打包成ZIP再改成PPTX后缀名就能打开文件了，背景图已经设置好了，很简单<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/438a09286fd494c9.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/72fd181077e3f655.png"></p>
 <h3 id="将自己的母版替换为其他PPT的母版"><a href="#将自己的母版替换为其他PPT的母版" class="headerlink" title="将自己的母版替换为其他PPT的母版"></a>将自己的母版替换为其他PPT的母版</h3><p>替换母版就非常的麻烦了，要改的东西特别多，来看看如何替换</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/623518d30c876351.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/623518d30c876351.png"></p>
 <ol>
 <li><p>先准备一份自己设置好的PPT母版，还是以这个PPT为例，替换它所有母版为我们</p>
 </li>
@@ -185,197 +221,446 @@
 <li><p>首先分别将A、B两个转为ZIP解压，然后删除B的slideLayouts、slideMasters目录下的所有文件，将A的slideLayouts、slideMasters下的所有文件复制到B文件里</p>
 </li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/d2846ac20037c788.png"></p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/c5d651f4cb2c999d.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/d2846ac20037c788.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/c5d651f4cb2c999d.png"></p>
 <ol start="4">
 <li>复制完之后，修改B文件的[Content_Types].xml文件，它是用来声明的，我们A文件里只有1个slideMaster1.xml文件和11个slideLayout1~11.xml文件，所有我们要删掉[Content_Types].xml里的一些声明</li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/fa95124f81f2e3a1.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/fa95124f81f2e3a1.png"></p>
 <blockquote>
 <p>以上这些超过slideLayouts11的声明都要删掉，不然你声明了一个不存在的东西，PPT打开会报异常</p>
 </blockquote>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/a523663e72d3767a.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/a523663e72d3767a.png"></p>
 <blockquote>
 <p>还有4个slideMaster要删掉，因为A文件只有一个slideMaster，其他东西就不需要修改了</p>
 </blockquote>
 <ol start="5">
 <li>然后进入PPT目录，修改presentation.xml文件</li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/73fd80cb6ee0f126.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/73fd80cb6ee0f126.png"></p>
 <blockquote>
 <p>将多余的4个sldMasterId标签删掉，它是告诉PPT你有多少个主题，看下图，以双横线分开每个主题</p>
 </blockquote>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/2a0790f9e6518c48.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/2a0790f9e6518c48.png"></p>
 <blockquote>
 <p>一共有5个，但我们复制过来的slideMaster主题只有1个</p>
 </blockquote>
 <ol start="6">
 <li>然后在PPT目录下，有一个_rels目录，里面有一个presentation.xml.rels文件，是用来定义presentation.xml里面的引用声明的，将多余的4个slideMaster声明删掉</li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/37e4e52e6ba6c94c.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/37e4e52e6ba6c94c.png"></p>
 <ol start="7">
 <li>处理完以上步骤之后，将你A文件里的media目录下的所有媒体文件都复制到B文件的media，我在B文件的media里创建了一个other目录用来存放A媒体文件，因为PPT的素材命名都是名字加数字，1~n，如果我们A文件也有很多媒体文件，直接复制到B文件里，你还得改名保证不重复名字，特别麻烦</li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/f0ccf660620cd262.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/f0ccf660620cd262.png"></p>
 <ol start="8">
 <li>复制完之后，我们进入slides/_rels目录，修改slide.xml.rel文件</li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/8b91f8d438be21b1.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/8b91f8d438be21b1.png"></p>
 <blockquote>
 <p>统一改成了slideLayout1，因为我们A的母版布局只有11种，而原本B的母版是有18种的，它可能某一页幻灯片使用了11之后的母版布局，不修改的话，打开PPT会报异常，如下图</p>
 </blockquote>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/be176664e084e30c.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/be176664e084e30c.png"></p>
 <ol start="9">
 <li>然后再修改slideMaster1.xml文件</li>
 </ol>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/ee32945181a45822.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/ee32945181a45822.png"></p>
 <p>这时候将所有文件打包成PPT再打开看看效果如何!</p>
-<h6 id="原始文件"><a href="#原始文件" class="headerlink" title="原始文件"></a>原始文件</h6><p><img src="https://s3.bmp.ovh/imgs/2022/10/25/5457fb8ef5c343d8.png"></p>
-<h6 id="替换母版后的文件"><a href="#替换母版后的文件" class="headerlink" title="替换母版后的文件"></a>替换母版后的文件</h6><p><img src="https://s3.bmp.ovh/imgs/2022/10/25/269ff69aa21297bb.png"></p>
+<h6 id="原始文件"><a href="#原始文件" class="headerlink" title="原始文件"></a>原始文件</h6><p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5457fb8ef5c343d8.png"></p>
+<h6 id="替换母版后的文件"><a href="#替换母版后的文件" class="headerlink" title="替换母版后的文件"></a>替换母版后的文件</h6><p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/269ff69aa21297bb.png"></p>
 <p>可以看到母版已经改变为了A文件的母版样式，包括版式都是A文件的，B文件的母版都被删除了</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/1b6324ef68e3e991.png"></p>
-<h6 id="A文件的母版"><a href="#A文件的母版" class="headerlink" title="A文件的母版"></a>A文件的母版</h6><p><img src="https://s3.bmp.ovh/imgs/2022/10/25/bad584236486d47b.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/1b6324ef68e3e991.png"></p>
+<h6 id="A文件的母版"><a href="#A文件的母版" class="headerlink" title="A文件的母版"></a>A文件的母版</h6><p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/bad584236486d47b.png"></p>
 <p>为了弄清楚如何更换背景图和更换母版，整个过程真的非常的枯燥，我必须每次复制、解压缩文件，然后不断的观察、比较两个PPT之间，母版与母版、背景图、资源的声明、调用方式，然后自己尝试着改，每一步修改，再打包成PPT去观察一下，不断的测试，最后直到修改为我要的展现形式，最后再以代码形式实现这些步骤，终于在最后看见了成功的模样，也是带有几分小激动!!!</p>
-<p><img src="https://s3.bmp.ovh/imgs/2022/10/25/a6dde6ed17c6808a.png"></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/a6dde6ed17c6808a.png"></p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" data-id="cl9y08ljt0001wcuq4reb5uea" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Office/" rel="tag">Office</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PowerPoint/" rel="tag">PowerPoint</a></li></ul>
-
-    </footer>
+      <div class="tags">
+          <a href="/tags/Office/" rel="tag"><i class="ic i-tag"></i> Office</a>
+          <a href="/tags/PowerPoint/" rel="tag"><i class="ic i-tag"></i> PowerPoint</a>
+      </div>
   </div>
-  
-    
-<nav id="article-nav">
-  
-  
-    <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Python Django服务启动时做了什么?</div>
-    </a>
-  
-</nav>
 
-  
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2022-11-01 17:08:17" itemprop="dateModified" datetime="2022-11-01T17:08:17+08:00">2022-11-01</time>
+  </span>
+  <span id="2022/10/25/PPT结构组成（工作中的总结）/" class="item leancloud_visitors" data-flag-title="PPT结构组成（工作中的总结）" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> Donate</button>
+  <p>Give me a cup of [coffee]~(￣▽￣)~*</p>
+  <div id="qr">
+      
+      <div>
+        <img data-src="/images/wechatpay.png" alt="小芳芳 WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div>
+        <img data-src="/images/alipay.png" alt="小芳芳 Alipay">
+        <p>Alipay</p>
+      </div>
+      
+      <div>
+        <img data-src="/images/paypal.png" alt="小芳芳 PayPal">
+        <p>PayPal</p>
+      </div>
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>石理一淡 <i class="ic i-at"><em>@</em></i>士多啤梨苹果橙
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" title="PPT结构组成（工作中的总结）">http://example.com/2022/10/25/PPT结构组成（工作中的总结）/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
 </article>
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/">CPython</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/">C</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/Python/">Python</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Office/">Office</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Office/PowerPoint/">PowerPoint</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Python/Django/">Django</a></li></ul></li></ul>
-    </div>
   </div>
-
-
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Life/" rel="tag">Life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Office/" rel="tag">Office</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PowerPoint/" rel="tag">PowerPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giciuja1j1j20zk0m8kjl.jpg" title="Python Django服务启动时做了什么?">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> Django</span>
+  <h3>Python Django服务启动时做了什么?</h3>
+  </a>
+
     </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/C/" style="font-size: 20px;">C</a> <a href="/tags/CPython/" style="font-size: 20px;">CPython</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Life/" style="font-size: 10px;">Life</a> <a href="/tags/Office/" style="font-size: 10px;">Office</a> <a href="/tags/PowerPoint/" style="font-size: 10px;">PowerPoint</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a>
+    <div class="item right">
     </div>
-  </div>
+</div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
-    </div>
-  </div>
+  <div class="wrap" id="comments"></div>
 
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/">PPT结构组成（工作中的总结）</a>
-          </li>
-        
-          <li>
-            <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/">Python Django服务启动时做了什么?</a>
-          </li>
-        
-          <li>
-            <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">Property源码分析</a>
-          </li>
-        
-          <li>
-            <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Python list实现原理</a>
-          </li>
-        
-          <li>
-            <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/">Python zip内置类的背后机制</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
+        </div>
+        <div id="sidebar">
+          
 
-  
-</aside>
-        
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90"><span class="toc-number">1.</span> <span class="toc-text">PPT结构组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2%E8%83%8C%E6%99%AF%E5%9B%BE"><span class="toc-number">2.</span> <span class="toc-text">替换背景图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E8%87%AA%E5%B7%B1%E7%9A%84%E6%AF%8D%E7%89%88%E6%9B%BF%E6%8D%A2%E4%B8%BA%E5%85%B6%E4%BB%96PPT%E7%9A%84%E6%AF%8D%E7%89%88"><span class="toc-number">3.</span> <span class="toc-text">将自己的母版替换为其他PPT的母版</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%8E%9F%E5%A7%8B%E6%96%87%E4%BB%B6"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">原始文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2%E6%AF%8D%E7%89%88%E5%90%8E%E7%9A%84%E6%96%87%E4%BB%B6"><span class="toc-number">3.0.0.2.</span> <span class="toc-text">替换母版后的文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#A%E6%96%87%E4%BB%B6%E7%9A%84%E6%AF%8D%E7%89%88"><span class="toc-number">3.0.0.3.</span> <span class="toc-text">A文件的母版</span></a></li></ol></li></ol></li></ol></li></ol>
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2022 小芳芳<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      <div class="related panel pjax" data-title="Related">
+        <ul>
+          <li class="active"><a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" rel="bookmark" title="PPT结构组成（工作中的总结）">PPT结构组成（工作中的总结）</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="小芳芳"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">小芳芳</p>
+  <div class="description" itemprop="description"></div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">12</span>
+        <span class="name">posts</span>
+      </a>
     </div>
-  </div>
-</footer>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">8</span>
+        <span class="name">categories</span>
+      </a>
     </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">7</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
 </nav>
+
+<div class="social">
+</div>
+
+<ul class="menu">
+  
     
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>Home</a>
+  </li>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>About</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>Archives</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>Categories</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>Tags</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>friends</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/links/" rel="section"><i class="ic i-magic"></i>links</a>
+  </li>
 
 
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+</ul>
 
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
+      </div>
+    </div>
   </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Life/" title="In Life">Life</a>
+</div>
+
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
+</div>
+
+    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Office/" title="In Office">Office</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Office/PowerPoint/" title="In PowerPoint">PowerPoint</a>
+</div>
+
+    <span><a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" title="PPT结构组成（工作中的总结）">PPT结构组成（工作中的总结）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小芳芳 @ Leayoos Chui</span>
+  </div>
+  <div class="powered-by">
+    Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2022/10/25/PPT结构组成（工作中的总结）/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
 </body>
 </html>

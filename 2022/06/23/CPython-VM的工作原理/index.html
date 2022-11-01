@@ -1,98 +1,162 @@
+
+
+
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="士多啤梨苹果橙" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="士多啤梨苹果橙" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="士多啤梨苹果橙" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
 
   
-  <title>CPython VM的工作原理 | 士多啤梨苹果橙</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="What CPython is and why anyone would want to study itCPython是用C编写的Python解释器，它是Python的实现之一，CPython的独特之处在于它是最原始、维护最多和最流行的一个。 CPython实现了Python，But what is Python？One may simply answer —— Python is a prog">
-<meta property="og:type" content="article">
-<meta property="og:title" content="CPython VM的工作原理">
-<meta property="og:url" content="http://example.com/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/index.html">
-<meta property="og:site_name" content="士多啤梨苹果橙">
-<meta property="og:description" content="What CPython is and why anyone would want to study itCPython是用C编写的Python解释器，它是Python的实现之一，CPython的独特之处在于它是最原始、维护最多和最流行的一个。 CPython实现了Python，But what is Python？One may simply answer —— Python is a prog">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-06-23T09:29:02.000Z">
-<meta property="article:modified_time" content="2022-11-01T09:08:17.638Z">
-<meta property="article:author" content="小芳芳">
-<meta property="article:tag" content="CPython">
-<meta property="article:tag" content="C">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="士多啤梨苹果橙" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+  <meta name="keywords" content="CPython,C" />
 
+
+<link rel="canonical" href="http://example.com/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
+
+
+
+  <title>
+CPython VM的工作原理 - C - CPython |
+Leayoos Chui = 士多啤梨苹果橙</title>
 <meta name="generator" content="Hexo 5.4.2"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">士多啤梨苹果橙</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
       </div>
     </div>
   </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-CPython-VM的工作原理" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" class="article-date">
-  <time datetime="2022-06-23T09:29:02.000Z" itemprop="datePublished">2022-06-23</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/CPython/">CPython</a>►<a class="article-category-link" href="/categories/CPython/C/">C</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">CPython VM的工作原理
+  </h1>
   
-    <h1 class="article-title" itemprop="name">
-      CPython VM的工作原理
-    </h1>
-  
+<div class="meta">
+  <span class="item" title="Created: 2022-06-23 17:29:02">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-06-23T17:29:02+08:00">2022-06-23</time>
+  </span>
+</div>
 
-      </header>
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Leayoos Chui</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclhtuo6nj20zk0m8ttm.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclxfdlttj20zk0m8npd.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclfdu6exj20zk0m87hw.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipesrnqv3j20zk0m8ava.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipevgoki5j20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicitht3xtj20zk0m8k5v.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="What-CPython-is-and-why-anyone-would-want-to-study-it"><a href="#What-CPython-is-and-why-anyone-would-want-to-study-it" class="headerlink" title="What CPython is and why anyone would want to study it"></a>What CPython is and why anyone would want to study it</h3><p>CPython是用C编写的Python解释器，它是Python的实现之一，CPython的独特之处在于它是最原始、维护最多和最流行的一个。</p>
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span><i class="ic i-angle-right"></i>
+<span  itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/CPython/" itemprop="item" rel="index" title="In CPython"><span itemprop="name">CPython</span></a>
+<meta itemprop="position" content="1" /></span>
+<i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/CPython/C/" itemprop="item" rel="index" title="In C"><span itemprop="name">C</span></a>
+<meta itemprop="position" content="2" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="en">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="小芳芳">
+    <meta itemprop="description" content=", ">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="士多啤梨苹果橙">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h3 id="What-CPython-is-and-why-anyone-would-want-to-study-it"><a href="#What-CPython-is-and-why-anyone-would-want-to-study-it" class="headerlink" title="What CPython is and why anyone would want to study it"></a>What CPython is and why anyone would want to study it</h3><p>CPython是用C编写的Python解释器，它是Python的实现之一，CPython的独特之处在于它是最原始、维护最多和最流行的一个。</p>
 <p>CPython实现了Python，But what is Python？One may simply answer —— Python is a programming language。什么定义了Python？Python不像C这样的语言，它没有形式规范</p>
 <span id="more"></span>
 
@@ -269,7 +333,7 @@ t.start()
 t.join()
 </code></pre>
 <p>t.start()实际上是通过调用OS函数（类UNIX系统上的 pthread_create( ) 和Windows上的 _startthreadex( )）来创建一个新的OS线程。新创建的线程从负责调用目标的 _thread 模块调用函数。此函数不仅接收目标和目标的参数，而且还接收新操作系统线程中使用的新线程状态。操作系统线程使用自己的线程状态进入求值循环</p>
-<p>这里还涉及到一个<a target="_blank" rel="noopener" href="https://wiki.python.org/moin/GlobalInterpreterLock">GIL（Global Interpreter Lock）</a>，它可以防止多个线程同时处于求值循环中。这样做的主要目的是，在不引入更细粒度锁的情况下，保护CPython状态不受损坏。Python/C API Reference清楚的解释了GIL</p>
+<p>这里还涉及到一个<span class="exturl" data-url="aHR0cHM6Ly93aWtpLnB5dGhvbi5vcmcvbW9pbi9HbG9iYWxJbnRlcnByZXRlckxvY2s=">GIL（Global Interpreter Lock）</span>，它可以防止多个线程同时处于求值循环中。这样做的主要目的是，在不引入更细粒度锁的情况下，保护CPython状态不受损坏。Python/C API Reference清楚的解释了GIL</p>
 <blockquote>
 <p>Python解释器不是完全线程安全的，为了支持多线程的Python程序，有一个全局锁，称为GIL，必须由当前线程持有GIL才能安全访问Python对象。如果没有锁，即使简单的操作也可能在多线程中引起问题：例如当两个线程同时增加同一对象的引用计数时，引用计数最终可能只增加一次，而不是两次</p>
 </blockquote>
@@ -277,7 +341,7 @@ t.join()
 <h5 id="interpreter-and-runtime-states"><a href="#interpreter-and-runtime-states" class="headerlink" title="interpreter and runtime states"></a>interpreter and runtime states</h5><p>实际上，有两种状态：解释器状态和运行时状态</p>
 <p>解释器状态是一组线程以及特定于该组的数据。线程共享一些东西，比如加载的模块（sys.module）、内建（builtins）和导入系统（imoprt lib）。</p>
 <p>运行时状态是一个全局变量，它存储特定于进程的数据，包括CPython的状态（例如，它是否已经初始化？）和GIL机制</p>
-<p>通常，一个进程的所有线程都属于同一个解释器，但是，有些情况下，可能需要创建一个子解释器来隔离一组线程，<a target="_blank" rel="noopener" href="https://modwsgi.readthedocs.io/en/develop/user-guides/processes-and-threading.html#python-sub-interpreters">mod_wsgi</a>就是一个例子，它使用不同的解释器来运行WSGI应用程序。隔离最明显的效果是，每组线程都有自己版本的所有模块，包括__main__，这是一个全局名称空间</p>
+<p>通常，一个进程的所有线程都属于同一个解释器，但是，有些情况下，可能需要创建一个子解释器来隔离一组线程，<span class="exturl" data-url="aHR0cHM6Ly9tb2R3c2dpLnJlYWR0aGVkb2NzLmlvL2VuL2RldmVsb3AvdXNlci1ndWlkZXMvcHJvY2Vzc2VzLWFuZC10aHJlYWRpbmcuaHRtbCNweXRob24tc3ViLWludGVycHJldGVycw==">mod_wsgi</span>就是一个例子，它使用不同的解释器来运行WSGI应用程序。隔离最明显的效果是，每组线程都有自己版本的所有模块，包括__main__，这是一个全局名称空间</p>
 <h5 id="Architecture-summary"><a href="#Architecture-summary" class="headerlink" title="Architecture summary"></a>Architecture summary</h5><p>CPython的体系结构，解释器可以看作是一个分层结构</p>
 <ol>
 <li>Runtime：进程的全局状态，包括GIL和内存分配机制</li>
@@ -294,153 +358,401 @@ t.join()
 </ol>
 <p>解释器中负责字节码执行的部分成为虚拟机，CPython VM有几个特别重要的概念：code object、frame object、thread states、intepreter states、runtime，这些数据结构构成了CPython体系结构的核心。</p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" data-id="cl9y08lk00002wcuq9rjbab9a" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li></ul>
-
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Python map对象探究
-        
+      <div class="tags">
+          <a href="/tags/CPython/" rel="tag"><i class="ic i-tag"></i> CPython</a>
+          <a href="/tags/C/" rel="tag"><i class="ic i-tag"></i> C</a>
       </div>
-    </a>
-  
-  
-    <a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Python range的實現原理</div>
-    </a>
-  
-</nav>
+  </div>
 
-  
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2022-11-01 17:08:17" itemprop="dateModified" datetime="2022-11-01T17:08:17+08:00">2022-11-01</time>
+  </span>
+  <span id="2022/06/23/CPython-VM的工作原理/" class="item leancloud_visitors" data-flag-title="CPython VM的工作原理" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> Donate</button>
+  <p>Give me a cup of [coffee]~(￣▽￣)~*</p>
+  <div id="qr">
+      
+      <div>
+        <img data-src="/images/wechatpay.png" alt="小芳芳 WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div>
+        <img data-src="/images/alipay.png" alt="小芳芳 Alipay">
+        <p>Alipay</p>
+      </div>
+      
+      <div>
+        <img data-src="/images/paypal.png" alt="小芳芳 PayPal">
+        <p>PayPal</p>
+      </div>
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>石理一淡 <i class="ic i-at"><em>@</em></i>士多啤梨苹果橙
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">http://example.com/2022/06/23/CPython-VM的工作原理/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
 </article>
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/">CPython</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/">C</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/CPython/C/Python/">Python</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Office/">Office</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Office/PowerPoint/">PowerPoint</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Python/Django/">Django</a></li></ul></li></ul>
-    </div>
   </div>
-
-
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CPython/" rel="tag">CPython</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Django/" rel="tag">Django</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Life/" rel="tag">Life</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Office/" rel="tag">Office</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PowerPoint/" rel="tag">PowerPoint</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li></ul>
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicm07ih54j20zk0m84qp.jpg" title="Python range的實現原理">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> Python</span>
+  <h3>Python range的實現原理</h3>
+  </a>
+
     </div>
-  </div>
+    <div class="item right">
+      
 
+  <a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeubcbajj20zk0m8h1h.jpg" title="Python map对象探究">
+  <span class="type">Next Post</span>
+  <span class="category"><i class="ic i-flag"></i> C</span>
+  <h3>Python map对象探究</h3>
+  </a>
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/C/" style="font-size: 20px;">C</a> <a href="/tags/CPython/" style="font-size: 20px;">CPython</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Life/" style="font-size: 10px;">Life</a> <a href="/tags/Office/" style="font-size: 10px;">Office</a> <a href="/tags/PowerPoint/" style="font-size: 10px;">PowerPoint</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a>
     </div>
-  </div>
+</div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">June 2022</a></li></ul>
-    </div>
-  </div>
+  <div class="wrap" id="comments"></div>
 
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/">PPT结构组成（工作中的总结）</a>
-          </li>
-        
-          <li>
-            <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/">Python Django服务启动时做了什么?</a>
-          </li>
-        
-          <li>
-            <a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">Property源码分析</a>
-          </li>
-        
-          <li>
-            <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">Python list实现原理</a>
-          </li>
-        
-          <li>
-            <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/">Python zip内置类的背后机制</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
+        </div>
+        <div id="sidebar">
+          
 
-  
-</aside>
-        
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#What-CPython-is-and-why-anyone-would-want-to-study-it"><span class="toc-number">1.</span> <span class="toc-text">What CPython is and why anyone would want to study it</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%A7%A3CPython%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="toc-number">2.</span> <span class="toc-text">理解CPython是如何工作的</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Python%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%A7%E8%A1%8C%E5%A4%A7%E8%87%B4%E7%94%B1%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5%E7%BB%84%E6%88%90%EF%BC%9A"><span class="toc-number">2.0.1.</span> <span class="toc-text">Python程序的执行大致由三个阶段组成：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A6%96%E5%85%88%E5%AD%97%E8%8A%82%E7%A0%81%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">2.0.2.</span> <span class="toc-text">首先字节码是什么？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Code-objects%EF%BC%8CFunction-objects%EF%BC%8CFrames"><span class="toc-number">3.</span> <span class="toc-text">Code objects，Function objects，Frames</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#code-object"><span class="toc-number">3.0.1.</span> <span class="toc-text">code object</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#function-object"><span class="toc-number">3.0.2.</span> <span class="toc-text">function object</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#frame-object"><span class="toc-number">3.0.3.</span> <span class="toc-text">frame object</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Threads%E3%80%81Interpreters%E3%80%81Runtime"><span class="toc-number">3.0.4.</span> <span class="toc-text">Threads、Interpreters、Runtime</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#thread-state"><span class="toc-number">3.0.5.</span> <span class="toc-text">thread state</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#interpreter-and-runtime-states"><span class="toc-number">3.0.6.</span> <span class="toc-text">interpreter and runtime states</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Architecture-summary"><span class="toc-number">3.0.7.</span> <span class="toc-text">Architecture summary</span></a></li></ol></li></ol></li></ol>
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2022 小芳芳<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      <div class="related panel pjax" data-title="Related">
+        <ul>
+          <li><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" rel="bookmark" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></li><li><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" rel="bookmark" title="getattr實現原理">getattr實現原理</a></li><li><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" rel="bookmark" title="Python Tuple實現原理">Python Tuple實現原理</a></li><li><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" rel="bookmark" title="Python range的實現原理">Python range的實現原理</a></li><li class="active"><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" rel="bookmark" title="CPython VM的工作原理">CPython VM的工作原理</a></li><li><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" rel="bookmark" title="Python map对象探究">Python map对象探究</a></li><li><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" rel="bookmark" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></li><li><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" rel="bookmark" title="Python list实现原理">Python list实现原理</a></li><li><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="bookmark" title="Property源码分析">Property源码分析</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="小芳芳"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">小芳芳</p>
+  <div class="description" itemprop="description"></div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">12</span>
+        <span class="name">posts</span>
+      </a>
     </div>
-  </div>
-</footer>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">8</span>
+        <span class="name">categories</span>
+      </a>
     </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">7</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
 </nav>
+
+<div class="social">
+</div>
+
+<ul class="menu">
+  
     
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>Home</a>
+  </li>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>About</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>Archives</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>Categories</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>Tags</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>friends</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/links/" rel="section"><i class="ic i-magic"></i>links</a>
+  </li>
 
 
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+</ul>
 
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
+      </div>
+    </div>
   </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" rel="prev" title="Previous Post"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" rel="next" title="Next Post"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Life/" title="In Life">Life</a>
+</div>
+
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Python/" title="In Python">Python</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Python/Django/" title="In Django">Django</a>
+</div>
+
+    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小芳芳 @ Leayoos Chui</span>
+  </div>
+  <div class="powered-by">
+    Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2022/06/23/CPython-VM的工作原理/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
 </body>
 </html>
