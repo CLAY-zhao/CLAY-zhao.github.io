@@ -102,12 +102,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipewf5l51j20zk0m8b29.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclize41wj20zk0m87gk.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipey0a334j20zk0m8qpt.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclgrvbd6j20zk0m8qv5.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclj61ylzj20zk0m8b29.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicis3attqj20zk0m8k7l.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giph4fomxoj20zk0m8axp.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclxfdlttj20zk0m8npd.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giph4lm9i7j20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipex2cdtbj20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclxp31goj20zk0m8qv5.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicliierfjj20zk0m8npd.jpg"></li>
         </ul>
       </div>
     </header>
@@ -156,262 +156,15 @@ Leayoos Chui = 士多啤梨苹果橙</title>
   <div class="body md" itemprop="articleBody">
     
 
-    <h3 id="Python-map"><a href="#Python-map" class="headerlink" title="Python map"></a>Python map</h3><p>map在Python中是一个内置类，在初始化时，第一个参数传递function对象，后面可以跟一个或多个序列参数</p>
+    <h3 id="python-map"><a class="markdownIt-Anchor" href="#python-map">#</a> Python map</h3>
+<p>map 在 Python 中是一个内置类，在初始化时，第一个参数传递 function 对象，后面可以跟一个或多个序列参数</p>
 <span id="more"></span>
-
-<pre><code class="python">class map(object):
-    &quot;&quot;&quot;
-    map(func, *iterables) --&gt; map object
-    
-    Make an iterator that computes the function using arguments from
-    each of the iterables.  Stops when the shortest iterable is exhausted.
-    &quot;&quot;&quot;
-    def __getattribute__(self, *args, **kwargs): # real signature unknown
-        &quot;&quot;&quot; Return getattr(self, name). &quot;&quot;&quot;
-        pass
-
-    def __init__(self, func, *iterables): # real signature unknown; restored from __doc__
-    # 在初始化时, 必须传递一个function object, 后面跟一个或者多个序列对象
-        pass
-
-    def __iter__(self, *args, **kwargs): # real signature unknown
-        &quot;&quot;&quot; Implement iter(self). &quot;&quot;&quot;
-    # 支持迭代操作
-        pass
-
-    @staticmethod # known case of __new__
-    def __new__(*args, **kwargs): # real signature unknown
-        &quot;&quot;&quot; Create and return a new object.  See help(type) for accurate signature. &quot;&quot;&quot;
-        pass
-
-    def __next__(self, *args, **kwargs): # real signature unknown
-        &quot;&quot;&quot; Implement next(self). &quot;&quot;&quot;
-        pass
-
-    def __reduce__(self, *args, **kwargs): # real signature unknown
-        &quot;&quot;&quot; Return state information for pickling. &quot;&quot;&quot;
-        pass
-</code></pre>
-<p>代码注释说明，创建一个迭代器，使用来自每个可迭代对象的参数计算函数。当最短的迭代用完时停止，可以测试一下</p>
-<pre><code class="python">def f(x, y):
-    # 返回每个列表的元素相加结果
-    return x + y
-
-array1 = [1, 2, 3]
-array2 = [1, 2, 3, 4, 5]
-
-r = map(f, array1, array2)
-
-for i in r:
-    print(i)
-
-########################## 打印结果 ##########################
-&gt;&gt;&gt; 2
-&gt;&gt;&gt; 4
-&gt;&gt;&gt; 6
-</code></pre>
-<p>先来看看map在CPython中的结构，位于源代码中==Python/bltinmodule.c==</p>
-<pre><code class="c">PyTypeObject PyMap_Type = &#123;
-    PyVarObject_HEAD_INIT(&amp;PyType_Type, 0)
-    &quot;map&quot;,                              /* tp_name */
-    sizeof(mapobject),                  /* tp_basicsize */
-    0,                                  /* tp_itemsize */
-    /* methods */
-    (destructor)map_dealloc,            /* tp_dealloc */
-    0,                                  /* tp_vectorcall_offset */
-    0,                                  /* tp_getattr */
-    0,                                  /* tp_setattr */
-    0,                                  /* tp_as_async */
-    0,                                  /* tp_repr */
-    0,                                  /* tp_as_number */
-    0,                                  /* tp_as_sequence */
-    0,                                  /* tp_as_mapping */
-    0,                                  /* tp_hash */
-    0,                                  /* tp_call */
-    0,                                  /* tp_str */
-    PyObject_GenericGetAttr,            /* tp_getattro */
-    0,                                  /* tp_setattro */
-    0,                                  /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC |
-        Py_TPFLAGS_BASETYPE,            /* tp_flags */
-    map_doc,                            /* tp_doc */
-    (traverseproc)map_traverse,         /* tp_traverse */
-    0,                                  /* tp_clear */
-    0,                                  /* tp_richcompare */
-    0,                                  /* tp_weaklistoffset */
-    PyObject_SelfIter,                  /* tp_iter */
-    (iternextfunc)map_next,     /* tp_iternext */
-    map_methods,                        /* tp_methods */
-    0,                                  /* tp_members */
-    0,                                  /* tp_getset */
-    0,                                  /* tp_base */
-    0,                                  /* tp_dict */
-    0,                                  /* tp_descr_get */
-    0,                                  /* tp_descr_set */
-    0,                                  /* tp_dictoffset */
-    0,                                  /* tp_init */
-    PyType_GenericAlloc,                /* tp_alloc */
-    map_new,                            /* tp_new */
-    PyObject_GC_Del,                    /* tp_free */
-&#125;;
-</code></pre>
-<p>在我们比如调用map(func, array1, array2)时, 首先调用了map_new方法</p>
-<pre><code class="c">static PyObject *
-map_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
-&#123;
-    PyObject *it, *iters, *func;
-    mapobject *lz;
-    Py_ssize_t numargs, i;
-
-    if (type == &amp;PyMap_Type &amp;&amp; !_PyArg_NoKeywords(&quot;map&quot;, kwds))
-    // 判断类型是否为PyMap_Type并且校验是否传递了关键字参数, 如果传递了就抛异常, map是不接受关键字参数的
-        return NULL;
-
-    numargs = PyTuple_Size(args); // 获取位置参数的个数
-    if (numargs &lt; 2) &#123;
-    // 如果位置参数小于2，抛异常，map必须接收一个func，至少一个可迭代对象
-        PyErr_SetString(PyExc_TypeError,
-           &quot;map() must have at least two arguments.&quot;);
-        return NULL;
-    &#125;
-
-    // 申请一个元组, 容量为numargs - 1, 用于存放传递的所有可迭代对象的iterator
-    iters = PyTuple_New(numargs-1);
-    if (iters == NULL)
-    // 申请失败
-        return NULL;
-
-    // 根据传递的可迭代对象个数进行for循环
-    for (i=1 ; i&lt;numargs ; i++) &#123;
-        /* Get iterator. */
-    // PyTuple_GET_ITEM根据下标获取对应i位置的可迭代对象
-    // PyObject_GetIter通过调用对象的tp_iter方法, 返回一个iterator
-        it = PyObject_GetIter(PyTuple_GET_ITEM(args, i));
-        if (it == NULL) &#123;
-        // 当对象没有定义不是可迭代对象, 或者没有定义__iter__, 或者__iter__返回空, 就会抛异常
-            Py_DECREF(iters);
-            return NULL;
-        &#125;
-    // 在iters指定的下标插入iterator, 与PyTuple_SetItem不同, PyTuple_SET_ITEM不会检查错误, 只用于填充元组
-        PyTuple_SET_ITEM(iters, i-1, it);
-    &#125;
-
-    /* create mapobject structure */
-    lz = (mapobject *)type-&gt;tp_alloc(type, 0); // 调用PyMap_Type的tp_alloc, 为其实例对象申请空间
-    if (lz == NULL) &#123;
-    // 申请失败
-        Py_DECREF(iters); 引用计数-1
-        return NULL;
-    &#125;
-    lz-&gt;iters = iters; // 赋值iters
-    func = PyTuple_GET_ITEM(args, 0); // 获取第一个参数, 也就是传递的function object
-    Py_INCREF(func); // 引用计数+1, function object被当作参数传递给mapobject了
-    lz-&gt;func = func; // 赋值func
-
-    return (PyObject *)lz; // 返回mapobject
-&#125;
-</code></pre>
-<p>当调用map(func, array1, array2)时，CPython返回了一个mapobject对象</p>
-<pre><code class="python">&gt;&gt;&gt; map(lambda x: print(x), [1,2,3])
-&lt;map object at 0x000002771D500F70&gt;
-</code></pre>
-<p>当对mapobject进行迭代时, 会调用PyObject_SelfIter返回本身, 然后不断调用__next__，逐步迭代，对应的是map_next方法</p>
-<pre><code class="c">PyObject *
-PyObject_SelfIter(PyObject *obj)
-&#123;
-    Py_INCREF(obj);
-    return obj;
-&#125;
-
-static PyObject *
-map_next(mapobject *lz)
-&#123;
-    /*
-    _PY_FASTCALL_SMALL_STACK是一个宏定义，默认为5
-    在C堆栈上分配的PyObject数组的建议大小（位置参数的数量）以避免在堆内存上分配内存
-    如果参数个数小于5，small_stack数组会先尝试在栈区分配，就可以在栈中申请，然后通过传递位置参数的方式对函数进行调用
-    通过PyObject_Vectorcall函数来对函数进行调用
-    */
-    PyObject *small_stack[_PY_FASTCALL_SMALL_STACK];
-    PyObject **stack;
-    PyObject *result = NULL; // 调用返回值
-    PyThreadState *tstate = _PyThreadState_GET(); // 获取当前线程状态对象
-
-    const Py_ssize_t niters = PyTuple_GET_SIZE(lz-&gt;iters); // iters是一个元组, 存放着多个迭代器，迭代器的数量
-    if (niters &lt;= (Py_ssize_t)Py_ARRAY_LENGTH(small_stack)) &#123;
-    // 如果参数小于等于5，那么获取这些迭代器中的元素时，可以直接使用在C栈中申请的数组进行存储
-        stack = small_stack;
-    &#125;
-    else &#123;
-    // 如果大于5，只能在堆区重新申请
-        stack = PyMem_Malloc(niters * sizeof(stack[0]));
-        if (stack == NULL) &#123;
-        // 申请失败, 传入线程状态对象，设置异常信息
-            _PyErr_NoMemory(tstate);
-            return NULL;
-        &#125;
-    &#125;
-
-    Py_ssize_t nargs = 0;
-    // 根据存储的迭代器数量进行循环操作
-    for (Py_ssize_t i=0; i &lt; niters; i++) &#123;
-        PyObject *it = PyTuple_GET_ITEM(lz-&gt;iters, i); // 获取iters对应下标中的迭代器
-        PyObject *val = Py_TYPE(it)-&gt;tp_iternext(it); // 执行每个迭代器的__next__函数，比如它是list或者tuple，就分别执行各自的__next__函数    
-        if (val == NULL) &#123;    
-        /*
-        调用__next__函数返回了空，调用完毕
-            在前面说到：当最短的迭代用完时停止，也就是说，假如传递了map(func, [1,2,3],[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;,&quot;e&quot;])，
-        当进行第4次调用时，第一个迭代器会返回空，就直接结束了，第二个迭代器的&quot;d&quot;.&quot;e&quot;就不会返回了
-        */
-            goto exit;c
-        &#125;
-    // 将val设置在数组索引为i的位置，继续下一次循环，获取下一个迭代器中的元素设置在数组stack中
-        stack[i] = val;
-    // nargs与迭代器的个数相同，假如迭代器对象为3个，小于5，stack会申请在栈区，因为长度为5，所以后面两个元素是无效的
-    // 所以在调用时，需要指定有效的参数个数
-        nargs++;
-    &#125;
-    // 开始调用获取结果，这个函数是Python3.9新增的，Python3.8调用的是_PyObject_FastCall
-    result = _PyObject_VectorcallTstate(tstate, lz-&gt;func, stack, nargs, NULL);
-
-exit:
-    for (Py_ssize_t i=0; i &lt; nargs; i++) &#123;
-    // 将stack中指针指向的对象引用计数-1
-        Py_DECREF(stack[i]);
-    &#125;
-    if (stack != small_stack) &#123;
-    // 不相等, 说明stack是在堆区申请的, 需要释放
-        PyMem_Free(stack);
-    &#125;
-    return result; // 返回调用结果
-&#125;
-
-static inline PyObject *
-_PyObject_VectorcallTstate(PyThreadState *tstate, PyObject *callable,
-                           PyObject *const *args, size_t nargsf,
-                           PyObject *kwnames)
-&#123;
-    vectorcallfunc func;
-    PyObject *res;
-
-    // kwnames传递为NULL，PyTuple_Check表示如果kwnames是元组对象或者子类, 则返回True
-    assert(kwnames == NULL || PyTuple_Check(kwnames));
-    // 位置参数不为空，PyVectorcall_NARGS会返回参数的实际数量
-    assert(args != NULL || PyVectorcall_NARGS(nargsf) == 0);
-
-    // 返回callable中vectorcall函数指针，如果不支持vectorcall协议（要么类型不支持，要么具体实例不支持），返回NULL
-    func = PyVectorcall_Function(callable);
-    if (func == NULL) &#123;
-        Py_ssize_t nargs = PyVectorcall_NARGS(nargsf); // 返回参数的实际数量
-    // 如果func为NULL, 可能类型不支持, 那么就会尝试在callable中获取tp_call调用callback, 因为它可能是其它对象
-    // 但最后还是会调用_Py_CheckFunctionResult
-        return _PyObject_MakeTpCall(tstate, callable, args, nargs, kwnames);
-    &#125;
-    res = func(callable, args, nargsf, kwnames); // 函数调用
-    return _Py_CheckFunctionResult(tstate, callable, res, NULL); // 返回结果
-&#125;
-</code></pre>
-<p>map的内容还是比较少的，基本比较核心的都探究完了😴</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">map</span><span class="token punctuation">(</span><span class="token builtin">object</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token triple-quoted-string string">"""</pre></td></tr><tr><td data-num="3"></td><td><pre>    map(func, *iterables) --> map object</pre></td></tr><tr><td data-num="4"></td><td><pre>    </pre></td></tr><tr><td data-num="5"></td><td><pre>    Make an iterator that computes the function using arguments from</pre></td></tr><tr><td data-num="6"></td><td><pre>    each of the iterables.  Stops when the shortest iterable is exhausted.</pre></td></tr><tr><td data-num="7"></td><td><pre>    """</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__getattribute__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token triple-quoted-string string">""" Return getattr(self, name). """</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> func<span class="token punctuation">,</span> <span class="token operator">*</span>iterables<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown; restored from __doc__</span></pre></td></tr><tr><td data-num="13"></td><td><pre>	<span class="token comment"># 在初始化时，必须传递一个 function object, 后面跟一个或者多个序列对象</span></pre></td></tr><tr><td data-num="14"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__iter__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token triple-quoted-string string">""" Implement iter(self). """</span></pre></td></tr><tr><td data-num="18"></td><td><pre>	<span class="token comment"># 支持迭代操作</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token decorator annotation punctuation">@staticmethod</span> <span class="token comment"># known case of __new__</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__new__</span><span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token triple-quoted-string string">""" Create and return a new object.  See help(type) for accurate signature. """</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="25"></td><td><pre></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__next__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown</span></pre></td></tr><tr><td data-num="27"></td><td><pre>        <span class="token triple-quoted-string string">""" Implement next(self). """</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="29"></td><td><pre></pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__reduce__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown</span></pre></td></tr><tr><td data-num="31"></td><td><pre>        <span class="token triple-quoted-string string">""" Return state information for pickling. """</span></pre></td></tr><tr><td data-num="32"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr></table></figure><p>代码注释说明，创建一个迭代器，使用来自每个可迭代对象的参数计算函数。当最短的迭代用完时停止，可以测试一下</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token comment"># 返回每个列表的元素相加结果</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">return</span> x <span class="token operator">+</span> y</pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>array1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="6"></td><td><pre>array2 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>r <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span>f<span class="token punctuation">,</span> array1<span class="token punctuation">,</span> array2<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token keyword">for</span> i <span class="token keyword">in</span> r<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token comment">########################## 打印结果 ##########################</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token number">2</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token number">4</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token number">6</span></pre></td></tr></table></figure><p>先来看看 map 在 CPython 中的结构，位于源代码中<mark> Python/bltinmodule.c</mark></p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>PyTypeObject PyMap_Type <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token function">PyVarObject_HEAD_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>PyType_Type<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token string">"map"</span><span class="token punctuation">,</span>                              <span class="token comment">/* tp_name */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">sizeof</span><span class="token punctuation">(</span>mapobject<span class="token punctuation">)</span><span class="token punctuation">,</span>                  <span class="token comment">/* tp_basicsize */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_itemsize */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token comment">/* methods */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token punctuation">(</span>destructor<span class="token punctuation">)</span>map_dealloc<span class="token punctuation">,</span>            <span class="token comment">/* tp_dealloc */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_vectorcall_offset */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_getattr */</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_setattr */</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_as_async */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_repr */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_as_number */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_as_sequence */</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_as_mapping */</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_hash */</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_call */</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_str */</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    PyObject_GenericGetAttr<span class="token punctuation">,</span>            <span class="token comment">/* tp_getattro */</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_setattro */</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_as_buffer */</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    Py_TPFLAGS_DEFAULT <span class="token operator">|</span> Py_TPFLAGS_HAVE_GC <span class="token operator">|</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        Py_TPFLAGS_BASETYPE<span class="token punctuation">,</span>            <span class="token comment">/* tp_flags */</span></pre></td></tr><tr><td data-num="24"></td><td><pre>    map_doc<span class="token punctuation">,</span>                            <span class="token comment">/* tp_doc */</span></pre></td></tr><tr><td data-num="25"></td><td><pre>    <span class="token punctuation">(</span>traverseproc<span class="token punctuation">)</span>map_traverse<span class="token punctuation">,</span>         <span class="token comment">/* tp_traverse */</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_clear */</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_richcompare */</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_weaklistoffset */</span></pre></td></tr><tr><td data-num="29"></td><td><pre>    PyObject_SelfIter<span class="token punctuation">,</span>                  <span class="token comment">/* tp_iter */</span></pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token punctuation">(</span>iternextfunc<span class="token punctuation">)</span>map_next<span class="token punctuation">,</span>     <span class="token comment">/* tp_iternext */</span></pre></td></tr><tr><td data-num="31"></td><td><pre>    map_methods<span class="token punctuation">,</span>                        <span class="token comment">/* tp_methods */</span></pre></td></tr><tr><td data-num="32"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_members */</span></pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_getset */</span></pre></td></tr><tr><td data-num="34"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_base */</span></pre></td></tr><tr><td data-num="35"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_dict */</span></pre></td></tr><tr><td data-num="36"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_descr_get */</span></pre></td></tr><tr><td data-num="37"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_descr_set */</span></pre></td></tr><tr><td data-num="38"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_dictoffset */</span></pre></td></tr><tr><td data-num="39"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_init */</span></pre></td></tr><tr><td data-num="40"></td><td><pre>    PyType_GenericAlloc<span class="token punctuation">,</span>                <span class="token comment">/* tp_alloc */</span></pre></td></tr><tr><td data-num="41"></td><td><pre>    map_new<span class="token punctuation">,</span>                            <span class="token comment">/* tp_new */</span></pre></td></tr><tr><td data-num="42"></td><td><pre>    PyObject_GC_Del<span class="token punctuation">,</span>                    <span class="token comment">/* tp_free */</span></pre></td></tr><tr><td data-num="43"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>在我们比如调用 map (func, array1, array2) 时，首先调用了 map_new 方法</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">map_new</span><span class="token punctuation">(</span>PyTypeObject <span class="token operator">*</span>type<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>args<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>kwds<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyObject <span class="token operator">*</span>it<span class="token punctuation">,</span> <span class="token operator">*</span>iters<span class="token punctuation">,</span> <span class="token operator">*</span>func<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    mapobject <span class="token operator">*</span>lz<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    Py_ssize_t numargs<span class="token punctuation">,</span> i<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>type <span class="token operator">==</span> <span class="token operator">&amp;</span>PyMap_Type <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token function">_PyArg_NoKeywords</span><span class="token punctuation">(</span><span class="token string">"map"</span><span class="token punctuation">,</span> kwds<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>	<span class="token comment">// 判断类型是否为 PyMap_Type 并且校验是否传递了关键字参数，如果传递了就抛异常，map 是不接受关键字参数的</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre>    numargs <span class="token operator">=</span> <span class="token function">PyTuple_Size</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 获取位置参数的个数</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>numargs <span class="token operator">&lt;</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>	<span class="token comment">// 如果位置参数小于 2，抛异常，map 必须接收一个 func，至少一个可迭代对象</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token function">PyErr_SetString</span><span class="token punctuation">(</span>PyExc_TypeError<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="16"></td><td><pre>           <span class="token string">"map() must have at least two arguments."</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="19"></td><td><pre></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token comment">// 申请一个元组，容量为 numargs - 1, 用于存放传递的所有可迭代对象的 iterator</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    iters <span class="token operator">=</span> <span class="token function">PyTuple_New</span><span class="token punctuation">(</span>numargs<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>iters <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="23"></td><td><pre>	<span class="token comment">// 申请失败</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="25"></td><td><pre></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token comment">// 根据传递的可迭代对象个数进行 for 循环</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">1</span> <span class="token punctuation">;</span> i<span class="token operator">&lt;</span>numargs <span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        <span class="token comment">/* Get iterator. */</span></pre></td></tr><tr><td data-num="29"></td><td><pre>	<span class="token comment">// PyTuple_GET_ITEM 根据下标获取对应 i 位置的可迭代对象</span></pre></td></tr><tr><td data-num="30"></td><td><pre>	<span class="token comment">// PyObject_GetIter 通过调用对象的 tp_iter 方法，返回一个 iterator</span></pre></td></tr><tr><td data-num="31"></td><td><pre>        it <span class="token operator">=</span> <span class="token function">PyObject_GetIter</span><span class="token punctuation">(</span><span class="token function">PyTuple_GET_ITEM</span><span class="token punctuation">(</span>args<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="32"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>it <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="33"></td><td><pre>	    <span class="token comment">// 当对象没有定义不是可迭代对象，或者没有定义__iter__, 或者__iter__返回空，就会抛异常</span></pre></td></tr><tr><td data-num="34"></td><td><pre>            <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>iters<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="35"></td><td><pre>            <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="36"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="37"></td><td><pre>	<span class="token comment">// 在 iters 指定的下标插入 iterator, 与 PyTuple_SetItem 不同，PyTuple_SET_ITEM 不会检查错误，只用于填充元组</span></pre></td></tr><tr><td data-num="38"></td><td><pre>        <span class="token function">PyTuple_SET_ITEM</span><span class="token punctuation">(</span>iters<span class="token punctuation">,</span> i<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> it<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="39"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="40"></td><td><pre></pre></td></tr><tr><td data-num="41"></td><td><pre>    <span class="token comment">/* create mapobject structure */</span></pre></td></tr><tr><td data-num="42"></td><td><pre>    lz <span class="token operator">=</span> <span class="token punctuation">(</span>mapobject <span class="token operator">*</span><span class="token punctuation">)</span>type<span class="token operator">-></span><span class="token function">tp_alloc</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 调用 PyMap_Type 的 tp_alloc, 为其实例对象申请空间</span></pre></td></tr><tr><td data-num="43"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>lz <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="44"></td><td><pre>	<span class="token comment">// 申请失败</span></pre></td></tr><tr><td data-num="45"></td><td><pre>        <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>iters<span class="token punctuation">)</span><span class="token punctuation">;</span> 引用计数<span class="token operator">-</span><span class="token number">1</span></pre></td></tr><tr><td data-num="46"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="47"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="48"></td><td><pre>    lz<span class="token operator">-></span>iters <span class="token operator">=</span> iters<span class="token punctuation">;</span> <span class="token comment">// 赋值 iters</span></pre></td></tr><tr><td data-num="49"></td><td><pre>    func <span class="token operator">=</span> <span class="token function">PyTuple_GET_ITEM</span><span class="token punctuation">(</span>args<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 获取第一个参数，也就是传递的 function object</span></pre></td></tr><tr><td data-num="50"></td><td><pre>    <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 引用计数 + 1, function object 被当作参数传递给 mapobject 了</span></pre></td></tr><tr><td data-num="51"></td><td><pre>    lz<span class="token operator">-></span>func <span class="token operator">=</span> func<span class="token punctuation">;</span> <span class="token comment">// 赋值 func</span></pre></td></tr><tr><td data-num="52"></td><td><pre></pre></td></tr><tr><td data-num="53"></td><td><pre>    <span class="token keyword">return</span> <span class="token punctuation">(</span>PyObject <span class="token operator">*</span><span class="token punctuation">)</span>lz<span class="token punctuation">;</span> <span class="token comment">// 返回 mapobject</span></pre></td></tr><tr><td data-num="54"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>当调用 map (func, array1, array2) 时，CPython 返回了一个 mapobject 对象</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> <span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">&lt;</span><span class="token builtin">map</span> <span class="token builtin">object</span> at <span class="token number">0x000002771D500F70</span><span class="token operator">></span></pre></td></tr></table></figure><p>当对 mapobject 进行迭代时，会调用 PyObject_SelfIter 返回本身，然后不断调用__next__，逐步迭代，对应的是 map_next 方法</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">PyObject_SelfIter</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>obj<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">return</span> obj<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token function">map_next</span><span class="token punctuation">(</span>mapobject <span class="token operator">*</span>lz<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token comment">/*</pre></td></tr><tr><td data-num="12"></td><td><pre>	_PY_FASTCALL_SMALL_STACK 是一个宏定义，默认为 5</pre></td></tr><tr><td data-num="13"></td><td><pre>	在 C 堆栈上分配的 PyObject 数组的建议大小（位置参数的数量）以避免在堆内存上分配内存</pre></td></tr><tr><td data-num="14"></td><td><pre>	如果参数个数小于 5，small_stack 数组会先尝试在栈区分配，就可以在栈中申请，然后通过传递位置参数的方式对函数进行调用</pre></td></tr><tr><td data-num="15"></td><td><pre>	通过 PyObject_Vectorcall 函数来对函数进行调用</pre></td></tr><tr><td data-num="16"></td><td><pre>    */</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    PyObject <span class="token operator">*</span>small_stack<span class="token punctuation">[</span>_PY_FASTCALL_SMALL_STACK<span class="token punctuation">]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    PyObject <span class="token operator">*</span><span class="token operator">*</span>stack<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    PyObject <span class="token operator">*</span>result <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span> <span class="token comment">// 调用返回值</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    PyThreadState <span class="token operator">*</span>tstate <span class="token operator">=</span> <span class="token function">_PyThreadState_GET</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 获取当前线程状态对象</span></pre></td></tr><tr><td data-num="21"></td><td><pre></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">const</span> Py_ssize_t niters <span class="token operator">=</span> <span class="token function">PyTuple_GET_SIZE</span><span class="token punctuation">(</span>lz<span class="token operator">-></span>iters<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//iters 是一个元组，存放着多个迭代器，迭代器的数量</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>niters <span class="token operator">&lt;=</span> <span class="token punctuation">(</span>Py_ssize_t<span class="token punctuation">)</span><span class="token function">Py_ARRAY_LENGTH</span><span class="token punctuation">(</span>small_stack<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>	<span class="token comment">// 如果参数小于等于 5，那么获取这些迭代器中的元素时，可以直接使用在 C 栈中申请的数组进行存储</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        stack <span class="token operator">=</span> small_stack<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="28"></td><td><pre>	<span class="token comment">// 如果大于 5，只能在堆区重新申请</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        stack <span class="token operator">=</span> <span class="token function">PyMem_Malloc</span><span class="token punctuation">(</span>niters <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>stack<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="30"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>stack <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="31"></td><td><pre>	    <span class="token comment">// 申请失败，传入线程状态对象，设置异常信息</span></pre></td></tr><tr><td data-num="32"></td><td><pre>            <span class="token function">_PyErr_NoMemory</span><span class="token punctuation">(</span>tstate<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="33"></td><td><pre>            <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="34"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="35"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="36"></td><td><pre></pre></td></tr><tr><td data-num="37"></td><td><pre>    Py_ssize_t nargs <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="38"></td><td><pre>    <span class="token comment">// 根据存储的迭代器数量进行循环操作</span></pre></td></tr><tr><td data-num="39"></td><td><pre>    <span class="token keyword">for</span> <span class="token punctuation">(</span>Py_ssize_t i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> niters<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="40"></td><td><pre>        PyObject <span class="token operator">*</span>it <span class="token operator">=</span> <span class="token function">PyTuple_GET_ITEM</span><span class="token punctuation">(</span>lz<span class="token operator">-></span>iters<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 获取 iters 对应下标中的迭代器</span></pre></td></tr><tr><td data-num="41"></td><td><pre>        PyObject <span class="token operator">*</span>val <span class="token operator">=</span> <span class="token function">Py_TYPE</span><span class="token punctuation">(</span>it<span class="token punctuation">)</span><span class="token operator">-></span><span class="token function">tp_iternext</span><span class="token punctuation">(</span>it<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 执行每个迭代器的__next__函数，比如它是 list 或者 tuple，就分别执行各自的__next__函数	</span></pre></td></tr><tr><td data-num="42"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>val <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>	</pre></td></tr><tr><td data-num="43"></td><td><pre>	    <span class="token comment">/*</pre></td></tr><tr><td data-num="44"></td><td><pre>		调用__next__函数返回了空，调用完毕</pre></td></tr><tr><td data-num="45"></td><td><pre>	        在前面说到：当最短的迭代用完时停止，也就是说，假如传递了 map (func, [1,2,3],["a","b","c","d","e"])，</pre></td></tr><tr><td data-num="46"></td><td><pre>		当进行第 4 次调用时，第一个迭代器会返回空，就直接结束了，第二个迭代器的 "d"."e" 就不会返回了</pre></td></tr><tr><td data-num="47"></td><td><pre>	    */</span></pre></td></tr><tr><td data-num="48"></td><td><pre>            <span class="token keyword">goto</span> exit<span class="token punctuation">;</span>c</pre></td></tr><tr><td data-num="49"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="50"></td><td><pre>	<span class="token comment">// 将 val 设置在数组索引为 i 的位置，继续下一次循环，获取下一个迭代器中的元素设置在数组 stack 中</span></pre></td></tr><tr><td data-num="51"></td><td><pre>        stack<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> val<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="52"></td><td><pre>	<span class="token comment">//nargs 与迭代器的个数相同，假如迭代器对象为 3 个，小于 5，stack 会申请在栈区，因为长度为 5，所以后面两个元素是无效的</span></pre></td></tr><tr><td data-num="53"></td><td><pre>	<span class="token comment">// 所以在调用时，需要指定有效的参数个数</span></pre></td></tr><tr><td data-num="54"></td><td><pre>        nargs<span class="token operator">++</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="55"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="56"></td><td><pre>    <span class="token comment">// 开始调用获取结果，这个函数是 Python3.9 新增的，Python3.8 调用的是_PyObject_FastCall</span></pre></td></tr><tr><td data-num="57"></td><td><pre>    result <span class="token operator">=</span> <span class="token function">_PyObject_VectorcallTstate</span><span class="token punctuation">(</span>tstate<span class="token punctuation">,</span> lz<span class="token operator">-></span>func<span class="token punctuation">,</span> stack<span class="token punctuation">,</span> nargs<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="58"></td><td><pre></pre></td></tr><tr><td data-num="59"></td><td><pre>exit<span class="token operator">:</span></pre></td></tr><tr><td data-num="60"></td><td><pre>    <span class="token keyword">for</span> <span class="token punctuation">(</span>Py_ssize_t i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> nargs<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="61"></td><td><pre>	<span class="token comment">// 将 stack 中指针指向的对象引用计数 - 1</span></pre></td></tr><tr><td data-num="62"></td><td><pre>        <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>stack<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="63"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="64"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>stack <span class="token operator">!=</span> small_stack<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="65"></td><td><pre>	<span class="token comment">// 不相等，说明 stack 是在堆区申请的，需要释放</span></pre></td></tr><tr><td data-num="66"></td><td><pre>        <span class="token function">PyMem_Free</span><span class="token punctuation">(</span>stack<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="67"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="68"></td><td><pre>    <span class="token keyword">return</span> result<span class="token punctuation">;</span> <span class="token comment">// 返回调用结果</span></pre></td></tr><tr><td data-num="69"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="70"></td><td><pre></pre></td></tr><tr><td data-num="71"></td><td><pre><span class="token keyword">static</span> <span class="token keyword">inline</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="72"></td><td><pre><span class="token function">_PyObject_VectorcallTstate</span><span class="token punctuation">(</span>PyThreadState <span class="token operator">*</span>tstate<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>callable<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="73"></td><td><pre>                           PyObject <span class="token operator">*</span><span class="token keyword">const</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token class-name">size_t</span> nargsf<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="74"></td><td><pre>                           PyObject <span class="token operator">*</span>kwnames<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="75"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="76"></td><td><pre>    vectorcallfunc func<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="77"></td><td><pre>    PyObject <span class="token operator">*</span>res<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="78"></td><td><pre></pre></td></tr><tr><td data-num="79"></td><td><pre>    <span class="token comment">//kwnames 传递为 NULL，PyTuple_Check 表示如果 kwnames 是元组对象或者子类，则返回 True</span></pre></td></tr><tr><td data-num="80"></td><td><pre>    <span class="token function">assert</span><span class="token punctuation">(</span>kwnames <span class="token operator">==</span> <span class="token constant">NULL</span> <span class="token operator">||</span> <span class="token function">PyTuple_Check</span><span class="token punctuation">(</span>kwnames<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="81"></td><td><pre>    <span class="token comment">// 位置参数不为空，PyVectorcall_NARGS 会返回参数的实际数量</span></pre></td></tr><tr><td data-num="82"></td><td><pre>    <span class="token function">assert</span><span class="token punctuation">(</span>args <span class="token operator">!=</span> <span class="token constant">NULL</span> <span class="token operator">||</span> <span class="token function">PyVectorcall_NARGS</span><span class="token punctuation">(</span>nargsf<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="83"></td><td><pre></pre></td></tr><tr><td data-num="84"></td><td><pre>    <span class="token comment">// 返回 callable 中 vectorcall 函数指针，如果不支持 vectorcall 协议（要么类型不支持，要么具体实例不支持），返回 NULL</span></pre></td></tr><tr><td data-num="85"></td><td><pre>    func <span class="token operator">=</span> <span class="token function">PyVectorcall_Function</span><span class="token punctuation">(</span>callable<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="86"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>func <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="87"></td><td><pre>        Py_ssize_t nargs <span class="token operator">=</span> <span class="token function">PyVectorcall_NARGS</span><span class="token punctuation">(</span>nargsf<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 返回参数的实际数量</span></pre></td></tr><tr><td data-num="88"></td><td><pre>	<span class="token comment">// 如果 func 为 NULL, 可能类型不支持，那么就会尝试在 callable 中获取 tp_call 调用 callback, 因为它可能是其它对象</span></pre></td></tr><tr><td data-num="89"></td><td><pre>	<span class="token comment">// 但最后还是会调用_Py_CheckFunctionResult</span></pre></td></tr><tr><td data-num="90"></td><td><pre>        <span class="token keyword">return</span> <span class="token function">_PyObject_MakeTpCall</span><span class="token punctuation">(</span>tstate<span class="token punctuation">,</span> callable<span class="token punctuation">,</span> args<span class="token punctuation">,</span> nargs<span class="token punctuation">,</span> kwnames<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="91"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="92"></td><td><pre>    res <span class="token operator">=</span> <span class="token function">func</span><span class="token punctuation">(</span>callable<span class="token punctuation">,</span> args<span class="token punctuation">,</span> nargsf<span class="token punctuation">,</span> kwnames<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 函数调用</span></pre></td></tr><tr><td data-num="93"></td><td><pre>    <span class="token keyword">return</span> <span class="token function">_Py_CheckFunctionResult</span><span class="token punctuation">(</span>tstate<span class="token punctuation">,</span> callable<span class="token punctuation">,</span> res<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 返回结果</span></pre></td></tr><tr><td data-num="94"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>map 的内容还是比较少的，基本比较核心的都探究完了😴</p>
 
       <div class="tags">
           <a href="/tags/CPython/" rel="tag"><i class="ic i-tag"></i> CPython</a>
@@ -490,7 +243,7 @@ _PyObject_VectorcallTstate(PyThreadState *tstate, PyObject *callable,
     <div class="item left">
       
 
-  <a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicljgocqbj20zk0m8e81.jpg" title="CPython VM的工作原理">
+  <a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeyvx1d4j20zk0m8hdt.jpg" title="CPython VM的工作原理">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>CPython VM的工作原理</h3>
@@ -500,7 +253,7 @@ _PyObject_VectorcallTstate(PyThreadState *tstate, PyObject *callable,
     <div class="item right">
       
 
-  <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipesng5oej20zk0m87d4.jpg" title="Python zip内置类的背后机制">
+  <a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giciuja1j1j20zk0m8kjl.jpg" title="Python zip内置类的背后机制">
   <span class="type">Next Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>Python zip内置类的背后机制</h3>
@@ -522,7 +275,7 @@ _PyObject_VectorcallTstate(PyThreadState *tstate, PyObject *callable,
   <div class="panels">
     <div class="inner">
       <div class="contents panel pjax" data-title="Contents">
-          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python-map"><span class="toc-number">1.</span> <span class="toc-text">Python map</span></a></li></ol>
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#python-map"><span class="toc-number">1.</span> <span class="toc-text"> Python map</span></a></li></ol>
       </div>
       <div class="related panel pjax" data-title="Related">
         <ul>
@@ -635,6 +388,78 @@ _PyObject_VectorcallTstate(PyThreadState *tstate, PyObject *callable,
   <li class="item">
     
 <div class="breadcrumb">
+<a href="/categories/Life/" title="In Life">Life</a>
+</div>
+
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Office/" title="In Office">Office</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Office/PowerPoint/" title="In PowerPoint">PowerPoint</a>
+</div>
+
+    <span><a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" title="PPT结构组成（工作中的总结）">PPT结构组成（工作中的总结）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Python/" title="In Python">Python</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Python/Django/" title="In Django">Django</a>
+</div>
+
+    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
+</div>
+
+    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
@@ -659,78 +484,6 @@ _PyObject_VectorcallTstate(PyThreadState *tstate, PyObject *callable,
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/Life/" title="In Life">Life</a>
-</div>
-
-    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Python/" title="In Python">Python</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/Python/Django/" title="In Django">Django</a>
-</div>
-
-    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
-</div>
-
-    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Office/" title="In Office">Office</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/Office/PowerPoint/" title="In PowerPoint">PowerPoint</a>
-</div>
-
-    <span><a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" title="PPT结构组成（工作中的总结）">PPT结构组成（工作中的总结）</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
@@ -748,7 +501,7 @@ _PyObject_VectorcallTstate(PyThreadState *tstate, PyObject *callable,
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
   </li>
 
   </ul>

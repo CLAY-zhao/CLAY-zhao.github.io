@@ -102,12 +102,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclx29mstj20zk0m8hdt.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipeu1usa7j20zk0m8b29.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giciundwu5j20zk0m8n9e.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclfdu6exj20zk0m87hw.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giph4lm9i7j20zk0m84qp.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclhpw3lwj20zk0m8gvw.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclhnx9glj20zk0m8npd.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclip4jbpj20zk0m87cv.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicli9lfebj20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicljgocqbj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicis081o9j20zk0m8dmr.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipesrnqv3j20zk0m8ava.jpg"></li>
         </ul>
       </div>
     </header>
@@ -157,129 +157,30 @@ Leayoos Chui = 士多啤梨苹果橙</title>
     
 
     <ol>
-<li>Python字節碼解只在字節碼指令之間的綫程之間切換</li>
+<li>Python 字節碼解只在字節碼指令之間的綫程之間切換</li>
 <li>全局解釋器鎖（GIL）一次只允許單個綫程執行</li>
-<li>許多操作轉換為單個bytecode來執行</li>
+<li>許多操作轉換為單個 bytecode 來執行</li>
 </ol>
 <span id="more"></span>
-
-<h1 id=""><a href="#" class="headerlink" title=""></a></h1><p>可以使用dis模塊來檢查操作是否編譯為單個字節碼指令</p>
-<pre><code class="python">&gt;&gt;&gt; def update_dict():
-...     d[&#39;a&#39;] = 1
-...
-&gt;&gt;&gt; import dis
-&gt;&gt;&gt; dis.dis(update_dict)
-  3           0 LOAD_CONST               1 (1)      # 將co_consts[1]壓入堆, 也就是1
-              3 LOAD_GLOBAL              0 (d)      # 在全局中加載d符號, 即co_names[0], 壓入堆棧上
-              6 LOAD_CONST               2 (&#39;a&#39;)    # 將co_consts[2]壓入堆, 也就是a符號
-              9 STORE_SUBSCR                        # single bytecode instruction
-             10 LOAD_CONST               0 (None)
-             13 RETURN_VALUE
-</code></pre>
-<h1 id="Python’s-swap-is-not-atomic"><a href="#Python’s-swap-is-not-atomic" class="headerlink" title="Python’s swap is not atomic"></a>Python’s swap is not atomic</h1><p>在PyMongo的連接池中，確保并發的問題之一，如果一個綫程正在重置連接池，而另一個綫程正在使用該池，如何防止它們相互踩踏</p>
-<pre><code class="python">class Pool(object):
-    def __init__(self):
-        self.sockets = set()
-
-    def reset(self):
-        # Close sockets before deleting them
-        sockets, self.sockets = self.sockets, set()
-        for sock_info in sockets: sock_info.close()
-</code></pre>
-<p>這裏有可能會有競爭條件，作者認爲 sockets, self.sockets = self.sockets, set() 是atomic的，即第一個進入的綫程reset()將self.sockets替換為一個空集，但其實并非如此，在測試時，偶爾會發生racing，測試啓動了40個并發綫程，每個綫程查詢MongoDB，調用reset()，然後再次查詢MongoDB</p>
-<pre><code class="python"># 測試失敗原因
-test_disconnect (test.test_pooling.TestPooling) ... Exception in thread Thread-45:
-Traceback (most recent call last):
- &lt; ... snip ... &gt;
- File &quot;pymongo/pool.py&quot;, line 159, in reset
-   for sock_info in sockets: sock_info.close()
-RuntimeError: Set changed size during iteration
-</code></pre>
-<p>作者認爲交換兩個對象的賦值操作時atomic的，但實際上它需要6個字節碼指令</p>
-<pre><code class="python">sockets, self.sockets = self.sockets, set()
-</code></pre>
-<p>bytecode為</p>
-<pre><code class="python">            0 LOAD_FAST                0 (self)
-            3 LOAD_ATTR                0 (sockets)
-            6 LOAD_GLOBAL              1 (set)
-            9 CALL_FUNCTION            0
-           12 ROT_TWO          &lt;- this is the swap
-           13 STORE_FAST               1 (sockets)
-           16 LOAD_FAST                0 (self)
-           19 STORE_ATTR               0 (sockets)
-</code></pre>
-<p>假設綫程1（T1）正在執行這個函數，T1將self.sockets和空集加載到它的堆棧上并交換它們，在它執行到STORE_ATTR（self.sockets實際被替換）時，它被T2打斷執行，T2運行連接池代碼的其他部分，如：</p>
-<pre><code class="python">def return_socket(self, sock_info):
-    self.sockets.add(sock_info)
-</code></pre>
-<p>bytecode為</p>
-<pre><code class="python">           24 LOAD_FAST                0 (self)
-           27 LOAD_ATTR                1 (sockets)
-           30 LOAD_ATTR                3 (add)
-           33 LOAD_FAST                1 (sock_info)
-           36 CALL_FUNCTION            1
-</code></pre>
-<p>假設T2執行到 LOAD_ATTR 1 字節碼，現在它的堆棧上有 self.sockets，但它被T1的 reset() 打斷執行，T1將 self.sockets替換為空集，但是，T1的“舊”套接字集合和T2的 self.sockets是同一組，T1開始遍歷舊的套接字集合，并關閉它們</p>
-<pre><code class="python">for sock_info in sockets: sock_info.close()
-</code></pre>
-<p>但是，它再次被T2打斷執行了，它確實通過 self.sockets.add(sock_info) 將集合的大小增加了，下次恢復T1時，它會嘗試繼續迭代，并引發了 “Set changed size during iteration” exception</p>
-<p>你可能會想到，實際上兩個Python綫程不會如此頻繁的相互中斷，Python解釋器在考慮<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLnB5dGhvbi5vcmcvMy9saWJyYXJ5L3N5cy5odG1sI3N5cy5zZXRjaGVja2ludGVydmFs">切換綫程之前一次執行100個字節碼</span>，在T1中是重複調用了socket.close()，查看socketmodule.c的源代碼</p>
-<pre><code class="c">static PyObject *
-sock_close(PySocketSockObject *s, PyObject *Py_UNUSED(ignored))
-&#123;
-    SOCKET_T fd;
-    int res;
-
-    fd = s-&gt;sock_fd;
-    if (fd != INVALID_SOCKET) &#123;
-        s-&gt;sock_fd = INVALID_SOCKET;
-
-        /* We do not want to retry upon EINTR: see
-           http://lwn.net/Articles/576478/ and
-           http://linux.derkeiler.com/Mailing-Lists/Kernel/2005-09/3000.html
-           for more details. */
-        Py_BEGIN_ALLOW_THREADS
-        res = SOCKETCLOSE(fd);
-        Py_END_ALLOW_THREADS
-        /* bpo-30319: The peer can already have closed the connection.
-           Python ignores ECONNRESET on close(). */
-        if (res &lt; 0 &amp;&amp; errno != ECONNRESET) &#123;
-            return s-&gt;errorhandler();
-        &#125;
-    &#125;
-    Py_RETURN_NONE;
-&#125;
-</code></pre>
-<p>該 <strong>Py_BEGIN_ALLOW_THREADS</strong> 宏會釋放<span class="exturl" data-url="aHR0cDovL3dpa2kucHl0aG9uLm9yZy9tb2luL0dsb2JhbEludGVycHJldGVyTG9jaw==">GIL</span>并通過 <strong>Py_END_ALLOW_THREADS</strong> 宏等待重新獲取它，在Python多綫程中，釋放GIL很可能會導致另一個正在等待GIL的綫程立即獲取它，所以在循環中調用socket.close()，會使該綫程不斷被中斷，return_socket()中的某個綫程獲得對集合的引用并對其進行修改，與reset()中的其他綫程交錯獲得同一集合，并對其進行迭代</p>
+<h1 id=""><a class="markdownIt-Anchor" href="#">#</a> </h1>
+<p>可以使用 dis 模塊來檢查操作是否編譯為單個字節碼指令</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">def</span> <span class="token function">update_dict</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>     d<span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">import</span> dis</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> dis<span class="token punctuation">.</span>dis<span class="token punctuation">(</span>update_dict<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>  <span class="token number">3</span>           <span class="token number">0</span> LOAD_CONST               <span class="token number">1</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>      <span class="token comment"># 將 co_consts [1] 壓入堆，也就是 1</span></pre></td></tr><tr><td data-num="7"></td><td><pre>              <span class="token number">3</span> LOAD_GLOBAL              <span class="token number">0</span> <span class="token punctuation">(</span>d<span class="token punctuation">)</span>      <span class="token comment"># 在全局中加載 d 符號，即 co_names [0], 壓入堆棧上</span></pre></td></tr><tr><td data-num="8"></td><td><pre>              <span class="token number">6</span> LOAD_CONST               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span>    <span class="token comment"># 將 co_consts [2] 壓入堆，也就是 a 符號</span></pre></td></tr><tr><td data-num="9"></td><td><pre>              <span class="token number">9</span> STORE_SUBSCR                        <span class="token comment"># single bytecode instruction</span></pre></td></tr><tr><td data-num="10"></td><td><pre>             <span class="token number">10</span> LOAD_CONST               <span class="token number">0</span> <span class="token punctuation">(</span><span class="token boolean">None</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>             <span class="token number">13</span> RETURN_VALUE</pre></td></tr></table></figure><h1 id="pythons-swap-is-not-atomic"><a class="markdownIt-Anchor" href="#pythons-swap-is-not-atomic">#</a> Python’s swap is not atomic</h1>
+<p>在 PyMongo 的連接池中，確保并發的問題之一，如果一個綫程正在重置連接池，而另一個綫程正在使用該池，如何防止它們相互踩踏</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">Pool</span><span class="token punctuation">(</span><span class="token builtin">object</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        self<span class="token punctuation">.</span>sockets <span class="token operator">=</span> <span class="token builtin">set</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">reset</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token comment"># Close sockets before deleting them</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        sockets<span class="token punctuation">,</span> self<span class="token punctuation">.</span>sockets <span class="token operator">=</span> self<span class="token punctuation">.</span>sockets<span class="token punctuation">,</span> <span class="token builtin">set</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">for</span> sock_info <span class="token keyword">in</span> sockets<span class="token punctuation">:</span> sock_info<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>這裏有可能會有競爭條件，作者認爲 sockets, self.sockets = self.sockets, set () 是 atomic 的，即第一個進入的綫程 reset () 將 self.sockets 替換為一個空集，但其實并非如此，在測試時，偶爾會發生 racing，測試啓動了 40 個并發綫程，每個綫程查詢 MongoDB，調用 reset ()，然後再次查詢 MongoDB</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 測試失敗原因</span></pre></td></tr><tr><td data-num="2"></td><td><pre>test_disconnect <span class="token punctuation">(</span>test<span class="token punctuation">.</span>test_pooling<span class="token punctuation">.</span>TestPooling<span class="token punctuation">)</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> Exception <span class="token keyword">in</span> thread Thread<span class="token operator">-</span><span class="token number">45</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>Traceback <span class="token punctuation">(</span>most recent call last<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre> <span class="token operator">&lt;</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> snip <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token operator">></span></pre></td></tr><tr><td data-num="5"></td><td><pre> File <span class="token string">"pymongo/pool.py"</span><span class="token punctuation">,</span> line <span class="token number">159</span><span class="token punctuation">,</span> <span class="token keyword">in</span> reset</pre></td></tr><tr><td data-num="6"></td><td><pre>   <span class="token keyword">for</span> sock_info <span class="token keyword">in</span> sockets<span class="token punctuation">:</span> sock_info<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>RuntimeError<span class="token punctuation">:</span> Set changed size during iteration</pre></td></tr></table></figure><p>作者認爲交換兩個對象的賦值操作時 atomic 的，但實際上它需要 6 個字節碼指令</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre>sockets<span class="token punctuation">,</span> self<span class="token punctuation">.</span>sockets <span class="token operator">=</span> self<span class="token punctuation">.</span>sockets<span class="token punctuation">,</span> <span class="token builtin">set</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>bytecode 為</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token number">0</span> LOAD_FAST                <span class="token number">0</span> <span class="token punctuation">(</span>self<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre>            <span class="token number">3</span> LOAD_ATTR                <span class="token number">0</span> <span class="token punctuation">(</span>sockets<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>            <span class="token number">6</span> LOAD_GLOBAL              <span class="token number">1</span> <span class="token punctuation">(</span><span class="token builtin">set</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>            <span class="token number">9</span> CALL_FUNCTION            <span class="token number">0</span></pre></td></tr><tr><td data-num="5"></td><td><pre>           <span class="token number">12</span> ROT_TWO          <span class="token operator">&lt;</span><span class="token operator">-</span> this <span class="token keyword">is</span> the swap</pre></td></tr><tr><td data-num="6"></td><td><pre>           <span class="token number">13</span> STORE_FAST               <span class="token number">1</span> <span class="token punctuation">(</span>sockets<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>           <span class="token number">16</span> LOAD_FAST                <span class="token number">0</span> <span class="token punctuation">(</span>self<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>           <span class="token number">19</span> STORE_ATTR               <span class="token number">0</span> <span class="token punctuation">(</span>sockets<span class="token punctuation">)</span></pre></td></tr></table></figure><p>假設綫程 1（T1）正在執行這個函數，T1 將 self.sockets 和空集加載到它的堆棧上并交換它們，在它執行到 STORE_ATTR（self.sockets 實際被替換）時，它被 T2 打斷執行，T2 運行連接池代碼的其他部分，如：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">return_socket</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> sock_info<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    self<span class="token punctuation">.</span>sockets<span class="token punctuation">.</span>add<span class="token punctuation">(</span>sock_info<span class="token punctuation">)</span></pre></td></tr></table></figure><p>bytecode 為</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token number">24</span> LOAD_FAST                <span class="token number">0</span> <span class="token punctuation">(</span>self<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre>           <span class="token number">27</span> LOAD_ATTR                <span class="token number">1</span> <span class="token punctuation">(</span>sockets<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>           <span class="token number">30</span> LOAD_ATTR                <span class="token number">3</span> <span class="token punctuation">(</span>add<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>           <span class="token number">33</span> LOAD_FAST                <span class="token number">1</span> <span class="token punctuation">(</span>sock_info<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>           <span class="token number">36</span> CALL_FUNCTION            <span class="token number">1</span></pre></td></tr></table></figure><p>假設 T2 執行到 LOAD_ATTR 1 字節碼，現在它的堆棧上有 self.sockets，但它被 T1 的 reset () 打斷執行，T1 將 self.sockets 替換為空集，但是，T1 的 “舊” 套接字集合和 T2 的 self.sockets 是同一組，T1 開始遍歷舊的套接字集合，并關閉它們</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">for</span> sock_info <span class="token keyword">in</span> sockets<span class="token punctuation">:</span> sock_info<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>但是，它再次被 T2 打斷執行了，它確實通過 self.sockets.add (sock_info) 將集合的大小增加了，下次恢復 T1 時，它會嘗試繼續迭代，并引發了 “Set changed size during iteration” exception</p>
+<p>你可能會想到，實際上兩個 Python 綫程不會如此頻繁的相互中斷，Python 解釋器在考慮<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLnB5dGhvbi5vcmcvMy9saWJyYXJ5L3N5cy5odG1sI3N5cy5zZXRjaGVja2ludGVydmFs">切換綫程之前一次執行 100 個字節碼</span>，在 T1 中是重複調用了 socket.close ()，查看 socketmodule.c 的源代碼</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">sock_close</span><span class="token punctuation">(</span>PySocketSockObject <span class="token operator">*</span>s<span class="token punctuation">,</span> PyObject <span class="token operator">*</span><span class="token function">Py_UNUSED</span><span class="token punctuation">(</span>ignored<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    SOCKET_T fd<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">int</span> res<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>    fd <span class="token operator">=</span> s<span class="token operator">-></span>sock_fd<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>fd <span class="token operator">!=</span> INVALID_SOCKET<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        s<span class="token operator">-></span>sock_fd <span class="token operator">=</span> INVALID_SOCKET<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>        <span class="token comment">/* We do not want to retry upon EINTR: see</pre></td></tr><tr><td data-num="12"></td><td><pre>           http://lwn.net/Articles/576478/ and</pre></td></tr><tr><td data-num="13"></td><td><pre>           http://linux.derkeiler.com/Mailing-Lists/Kernel/2005-09/3000.html</pre></td></tr><tr><td data-num="14"></td><td><pre>           for more details. */</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        Py_BEGIN_ALLOW_THREADS</pre></td></tr><tr><td data-num="16"></td><td><pre>        res <span class="token operator">=</span> <span class="token function">SOCKETCLOSE</span><span class="token punctuation">(</span>fd<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        Py_END_ALLOW_THREADS</pre></td></tr><tr><td data-num="18"></td><td><pre>        <span class="token comment">/* bpo-30319: The peer can already have closed the connection.</pre></td></tr><tr><td data-num="19"></td><td><pre>           Python ignores ECONNRESET on close(). */</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>res <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> errno <span class="token operator">!=</span> ECONNRESET<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>            <span class="token keyword">return</span> s<span class="token operator">-></span><span class="token function">errorhandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>    Py_RETURN_NONE<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="25"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>該 <strong>Py_BEGIN_ALLOW_THREADS</strong> 宏會釋放<span class="exturl" data-url="aHR0cDovL3dpa2kucHl0aG9uLm9yZy9tb2luL0dsb2JhbEludGVycHJldGVyTG9jaw=="> GIL</span> 并通過 <strong>Py_END_ALLOW_THREADS</strong> 宏等待重新獲取它，在 Python 多綫程中，釋放 GIL 很可能會導致另一個正在等待 GIL 的綫程立即獲取它，所以在循環中調用 socket.close ()，會使該綫程不斷被中斷，return_socket () 中的某個綫程獲得對集合的引用并對其進行修改，與 reset () 中的其他綫程交錯獲得同一集合，并對其進行迭代</p>
 <blockquote>
-<p>David Beazley關於GIL的演講，<span class="exturl" data-url="aHR0cHM6Ly9weXZpZGVvLm9yZy9jaGlweS9taW5kYmxvd2luZy1weXRob24tZ2lsLmh0bWw=">https://pyvideo.org/chipy/mindblowing-python-gil.html</span></p>
+<p>David Beazley 關於 GIL 的演講，<span class="exturl" data-url="aHR0cHM6Ly9weXZpZGVvLm9yZy9jaGlweS9taW5kYmxvd2luZy1weXRob24tZ2lsLmh0bWw=">https://pyvideo.org/chipy/mindblowing-python-gil.html</span></p>
 </blockquote>
-<p>解決方案也很明顯了，在Python層面加鎖，可以保證完整的運行字節碼</p>
-<pre><code class="python">class Pool(object):
-    def __init__(self):
-        self.sockets = set()
-        self.lock = threading.Lock()
-
-    def reset(self):
-        self.lock.acquire()
-        try:
-            # Close sockets before deleting them
-            sockets, self.sockets = self.sockets, set()
-        finally:
-            self.lock.release()
-
-        # Now only this thread can have a reference to this set of sockets
-        for sock_info in sockets: sock_info.close()
-
-   def return_socket(self, sock_info):
-        self.lock.acquire()
-        try:
-            self.sockets.add(sock_info)
-        finally:
-            self.lock.release()
-</code></pre>
-<p>Python中單字節碼指令是atomic的，如果使用這種原子性來避免互斥鎖，那麽代碼不僅更快、更簡單，還可以避免死鎖的風險</p>
-<p>并非所有看起來都是atomic的，有需要時，可以使用dis模塊來檢查字節碼</p>
+<p>解決方案也很明顯了，在 Python 層面加鎖，可以保證完整的運行字節碼</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">Pool</span><span class="token punctuation">(</span><span class="token builtin">object</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        self<span class="token punctuation">.</span>sockets <span class="token operator">=</span> <span class="token builtin">set</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        self<span class="token punctuation">.</span>lock <span class="token operator">=</span> threading<span class="token punctuation">.</span>Lock<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">reset</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        self<span class="token punctuation">.</span>lock<span class="token punctuation">.</span>acquire<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">try</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="9"></td><td><pre>            <span class="token comment"># Close sockets before deleting them</span></pre></td></tr><tr><td data-num="10"></td><td><pre>            sockets<span class="token punctuation">,</span> self<span class="token punctuation">.</span>sockets <span class="token operator">=</span> self<span class="token punctuation">.</span>sockets<span class="token punctuation">,</span> <span class="token builtin">set</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        <span class="token keyword">finally</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="12"></td><td><pre>            self<span class="token punctuation">.</span>lock<span class="token punctuation">.</span>release<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre>        <span class="token comment"># Now only this thread can have a reference to this set of sockets</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token keyword">for</span> sock_info <span class="token keyword">in</span> sockets<span class="token punctuation">:</span> sock_info<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>   <span class="token keyword">def</span> <span class="token function">return_socket</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> sock_info<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        self<span class="token punctuation">.</span>lock<span class="token punctuation">.</span>acquire<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token keyword">try</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="20"></td><td><pre>            self<span class="token punctuation">.</span>sockets<span class="token punctuation">.</span>add<span class="token punctuation">(</span>sock_info<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="21"></td><td><pre>        <span class="token keyword">finally</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="22"></td><td><pre>            self<span class="token punctuation">.</span>lock<span class="token punctuation">.</span>release<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>Python 中單字節碼指令是 atomic 的，如果使用這種原子性來避免互斥鎖，那麽代碼不僅更快、更簡單，還可以避免死鎖的風險</p>
+<p>并非所有看起來都是 atomic 的，有需要時，可以使用 dis 模塊來檢查字節碼</p>
 <blockquote>
 <p>原文章：<span class="exturl" data-url="aHR0cHM6Ly9lbXB0eXNxdWEucmUvYmxvZy9weXRob25zLXN3YXAtaXMtbm90LWF0b21pYy8=">https://emptysqua.re/blog/pythons-swap-is-not-atomic/</span></p>
 </blockquote>
@@ -361,7 +262,7 @@ sock_close(PySocketSockObject *s, PyObject *Py_UNUSED(ignored))
     <div class="item left">
       
 
-  <a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclh3brzpj20zk0m8ann.jpg" title="端午节快乐">
+  <a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipet4bz0yj20zk0m8e81.jpg" title="端午节快乐">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> Life</span>
   <h3>端午节快乐</h3>
@@ -371,7 +272,7 @@ sock_close(PySocketSockObject *s, PyObject *Py_UNUSED(ignored))
     <div class="item right">
       
 
-  <a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeun65urj20zk0m81ii.jpg" title="getattr實現原理">
+  <a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicitcxhpij20zk0m8hdt.jpg" title="getattr實現原理">
   <span class="type">Next Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>getattr實現原理</h3>
@@ -393,7 +294,7 @@ sock_close(PySocketSockObject *s, PyObject *Py_UNUSED(ignored))
   <div class="panels">
     <div class="inner">
       <div class="contents panel pjax" data-title="Contents">
-          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python%E2%80%99s-swap-is-not-atomic"><span class="toc-number">2.</span> <span class="toc-text">Python’s swap is not atomic</span></a></li></ol>
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"> </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pythons-swap-is-not-atomic"><span class="toc-number">2.</span> <span class="toc-text"> Python’s swap is not atomic</span></a></li></ol>
       </div>
       <div class="related panel pjax" data-title="Related">
         <ul>
@@ -511,7 +412,67 @@ sock_close(PySocketSockObject *s, PyObject *Py_UNUSED(ignored))
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
+</div>
+
+    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Life/" title="In Life">Life</a>
+</div>
+
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
   </li>
 
       
@@ -547,30 +508,6 @@ sock_close(PySocketSockObject *s, PyObject *Py_UNUSED(ignored))
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
     <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
   </li>
 
@@ -578,46 +515,12 @@ sock_close(PySocketSockObject *s, PyObject *Py_UNUSED(ignored))
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/Life/" title="In Life">Life</a>
-</div>
-
-    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
   </li>
 
   </ul>

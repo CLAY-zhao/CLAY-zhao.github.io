@@ -102,12 +102,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclize41wj20zk0m87gk.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipesrnqv3j20zk0m8ava.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclfb3vzhj20zk0m8wny.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipeun65urj20zk0m81ii.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclgi503lj20zk0m8hdt.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipexoj0moj20zk0m8kgu.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giciuv0socj20zk0m8qes.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclj9410cj20zk0m8h12.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipetfk5zwj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclxp31goj20zk0m8qv5.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipevgoki5j20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclh3brzpj20zk0m8ann.jpg"></li>
         </ul>
       </div>
     </header>
@@ -156,323 +156,26 @@ Leayoos Chui = 士多啤梨苹果橙</title>
   <div class="body md" itemprop="articleBody">
     
 
-    <h1 id="Python-property的源码分析"><a href="#Python-property的源码分析" class="headerlink" title="Python @property的源码分析"></a>Python @property的源码分析</h1><p>property在Python中是一种装饰器，可以用来修饰方法</p>
-<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>我们可以使用@property装饰器来创建只读属性，@property装饰器会将方法转换为相同名称的只读属性，可以与所定义的属性配合使用，以防止属性被修改</p>
+    <h1 id="python-property的源码分析"><a class="markdownIt-Anchor" href="#python-property的源码分析">#</a> Python @property 的源码分析</h1>
+<p>property 在 Python 中是一种装饰器，可以用来修饰方法</p>
+<h3 id="作用"><a class="markdownIt-Anchor" href="#作用">#</a> 作用</h3>
+<p>我们可以使用 @property 装饰器来创建只读属性，@property 装饰器会将方法转换为相同名称的只读属性，可以与所定义的属性配合使用，以防止属性被修改</p>
 <span id="more"></span>
-
-<p>property具体的使用案例可以参考：<span class="exturl" data-url="aHR0cHM6Ly93d3cucnVub29iLmNvbS9weXRob24vcHl0aG9uLWZ1bmMtcHJvcGVydHkuaHRtbA==">https://www.runoob.com/python/python-func-property.html</span>，里面有详细介绍</p>
+<p>property 具体的使用案例可以参考：<span class="exturl" data-url="aHR0cHM6Ly93d3cucnVub29iLmNvbS9weXRob24vcHl0aG9uLWZ1bmMtcHJvcGVydHkuaHRtbA==">https://www.runoob.com/python/python-func-property.html</span>，里面有详细介绍</p>
 <p>以下的用法是最常用的</p>
-<pre><code class="python">class GHost:
-
-    def __init__(self) -&gt; None:
-        self.__name = &quot;刹耶&quot;
-
-    @property
-    def name(self):
-        return self.__name
-    
-    @name.setter
-    def name(self, val):
-        self.__name = val
-
-ghost = GHost()
-</code></pre>
-<p>我们可以直接通过调用ghost.name获取到名称，而不需要（）进行调用，当执行 ghost.name = xxx 时又会触发赋值操作，我们来看看CPython是如何做到的</p>
-<p>首先property是一个内置类，先看看property的结构定义</p>
-<pre><code class="c">PyTypeObject PyProperty_Type = &#123;
-    PyVarObject_HEAD_INIT(&amp;PyType_Type, 0)
-    &quot;property&quot;,                                 /* tp_name */
-    sizeof(propertyobject),                     /* tp_basicsize */
-    0,                                          /* tp_itemsize */
-    /* methods */
-    property_dealloc,                           /* tp_dealloc */
-
-    ...... // 省略, 不需要
-
-    PyObject_GenericGetAttr,                    /* tp_getattro */
-    0,                                          /* tp_setattro */
-    0,                                          /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC |
-        Py_TPFLAGS_BASETYPE,                    /* tp_flags */
-    property_init__doc__,                       /* tp_doc */
-    property_traverse,                          /* tp_traverse */
-    (inquiry)property_clear,                    /* tp_clear */
-    0,                                          /* tp_richcompare */
-    0,                                          /* tp_weaklistoffset */
-    0,                                          /* tp_iter */
-    0,                                          /* tp_iternext */
-    property_methods,                           /* tp_methods */
-    property_members,                           /* tp_members */
-    property_getsetlist,                        /* tp_getset */
-    0,                                          /* tp_base */
-    0,                                          /* tp_dict */
-    property_descr_get,                         /* tp_descr_get */
-    property_descr_set,                         /* tp_descr_set */
-    0,                                          /* tp_dictoffset */
-    property_init,                              /* tp_init */
-    PyType_GenericAlloc,                        /* tp_alloc */
-    PyType_GenericNew,                          /* tp_new */
-    PyObject_GC_Del,                            /* tp_free */
-&#125;;
-</code></pre>
-<p>property定义了tp_descr_get 与tp_descr_set，说明它是一个描述器，先来看看初始化时做了什么，调用的是property_init方法</p>
-<pre><code class="c">static int
-property_init(PyObject *self, PyObject *args, PyObject *kwargs)
-&#123;
-    int return_value = -1; // 返回值
-    static const char * const _keywords[] = &#123;&quot;fget&quot;, &quot;fset&quot;, &quot;fdel&quot;, &quot;doc&quot;, NULL&#125;; // 一些关键字参数
-    static _PyArg_Parser _parser = &#123;NULL, _keywords, &quot;property&quot;, 0&#125;;
-    PyObject *argsbuf[4];
-    PyObject * const *fastargs;
-    Py_ssize_t nargs = PyTuple_GET_SIZE(args); // 传递了多少个位置参数
-    // 可以传递位置参数或者关键字参数，然后如果传递了关键字，就将关键字的数量也相加
-    Py_ssize_t noptargs = nargs + (kwargs ? PyDict_GET_SIZE(kwargs) : 0) - 0;
-    PyObject *fget = NULL; // 获取属性值的方法
-    PyObject *fset = NULL; // 设置属性值的方法
-    PyObject *fdel = NULL; // 删除属性值的方法
-    PyObject *doc = NULL; // 属性描述信息
-
-    // 参数校验
-    fastargs = _PyArg_UnpackKeywords(_PyTuple_CAST(args)-&gt;ob_item, nargs, kwargs, NULL, &amp;_parser, 0, 4, 0, argsbuf);
-    if (!fastargs) &#123;
-        goto exit;
-    &#125;
-    if (!noptargs) &#123;
-        goto skip_optional_pos;
-    &#125;
-
-    // 重点在这边
-    // noptargs是传递了位置参数和关键字参数的数量总和
-    if (fastargs[0]) &#123;
-    // 如果传递了fget参数，就赋值给fget变量
-        fget = fastargs[0];
-        if (!--noptargs) &#123;
-            goto skip_optional_pos;
-        &#125;
-    &#125;
-    if (fastargs[1]) &#123;
-    // 如果传递了fset参数，就赋值fset变量
-        fset = fastargs[1];
-        if (!--noptargs) &#123;
-            goto skip_optional_pos;
-        &#125;
-    &#125;
-    if (fastargs[2]) &#123;
-    // 如果传递了fdel参数，就赋值fdel变量
-        fdel = fastargs[2];
-        if (!--noptargs) &#123;
-            goto skip_optional_pos;
-        &#125;
-    &#125;
-    doc = fastargs[3]; // 属性描述信息
-skip_optional_pos:
-    return_value = property_init_impl((propertyobject *)self, fget, fset, fdel, doc); // property的一些赋值操作
-
-exit:
-    return return_value;
-&#125;
-
-static int
-property_init_impl(propertyobject *self, PyObject *fget, PyObject *fset,
-                   PyObject *fdel, PyObject *doc)
-/*[clinic end generated code: output=01a960742b692b57 input=dfb5dbbffc6932d5]*/
-&#123;
-    if (fget == Py_None)
-        fget = NULL;
-    if (fset == Py_None)
-        fset = NULL;
-    if (fdel == Py_None)
-        fdel = NULL;
-
-    Py_XINCREF(fget); // 引用计数+1，但可以处理空指针
-    Py_XINCREF(fset);
-    Py_XINCREF(fdel);
-    Py_XINCREF(doc);
-
-    Py_XSETREF(self-&gt;prop_get, fget); // 通过Py_XSETREF宏来改变self-&gt;prop_get指针指向fget，下面是一样的
-    Py_XSETREF(self-&gt;prop_set, fset);
-    Py_XSETREF(self-&gt;prop_del, fdel);
-    Py_XSETREF(self-&gt;prop_doc, doc);
-    self-&gt;getter_doc = 0;
-
-    /* if no docstring given and the getter has one, use that one */
-    if ((doc == NULL || doc == Py_None) &amp;&amp; fget != NULL) &#123;
-    // 如果没有给属性描述信息，就会尝试从fget方法从获取docstring赋值到property中
-        _Py_IDENTIFIER(__doc__);
-        PyObject *get_doc;
-        int rc = _PyObject_LookupAttrId(fget, &amp;PyId___doc__, &amp;get_doc); // 在fget中取出__doc__
-        if (rc &lt;= 0) &#123;
-        // 没有__doc__就算了, 直接返回结束
-            return rc;
-        &#125;
-        if (Py_IS_TYPE(self, &amp;PyProperty_Type)) &#123;
-        // 如果__doc__有，判断实例的类型是否为PyProperty_Type，符合就赋值__doc__
-            Py_XSETREF(self-&gt;prop_doc, get_doc);
-        &#125;
-        else &#123;
-            /* If this is a property subclass, put __doc__
-               in dict of the subclass instance instead,
-               otherwise it gets shadowed by __doc__ in the
-               class&#39;s dict. */
-            int err = _PyObject_SetAttrId((PyObject *)self, &amp;PyId___doc__, get_doc); // 否则我就在实例对象里获取__doc__并赋值
-            Py_DECREF(get_doc);
-            if (err &lt; 0)
-                return -1;
-        &#125;
-        self-&gt;getter_doc = 1;
-    &#125;
-
-    return 0;
-&#125;
-</code></pre>
-<p>整体逻辑比较简单，调用property之后，将获取、设置、删除等方法取出并设置到property实例对象的属性中，需要注意，当你使用@property装饰一个def name时，name将不再是一个function object，而是变为了property object，所以当你再使用@name.setter来装饰一个name方法来处理赋值操作时，其实并没什么神奇的，因为name此时是一个property object，你调用的实际上是property的setter method，可以看一下property支持什么方法</p>
-<pre><code class="c">static PyMethodDef property_methods[] = &#123;
-    &#123;&quot;getter&quot;, property_getter, METH_O, getter_doc&#125;,
-    &#123;&quot;setter&quot;, property_setter, METH_O, setter_doc&#125;,
-    &#123;&quot;deleter&quot;, property_deleter, METH_O, deleter_doc&#125;,
-    &#123;0&#125;
-&#125;;
-</code></pre>
-<p>先说一下，前面讲到了property是一个描述器，在我们没有使用@property装饰def name时，我们需要执行 name() 才能调用到name方法（需要加双括号），如果使用@property装饰def name后，只需要 .name 就可以调用拿到返回值，它是怎么做到的？</p>
-<p>首先，name是定义在我们的类中，所以name属性会先通过MRO查找，找到之后，判断name是否为一个描述器，那么一开始name只是一个普通的function object，它显然不是一个描述器，但是，我们通过property装饰之后，它就变成了一个描述器，因为property重载了__get__和__set__方法，所以在我们通过 .name 时，就会调用它的__get__方法，也就是property_descr_get方法</p>
-<pre><code class="c">static PyObject *
-property_descr_get(PyObject *self, PyObject *obj, PyObject *type)
-&#123;
-    if (obj == NULL || obj == Py_None) &#123;
-        Py_INCREF(self);
-        return self;
-    &#125;
-
-    propertyobject *gs = (propertyobject *)self;
-    if (gs-&gt;prop_get == NULL) &#123;
-    // 如果fget为空, 抛异常, 比如你是这样定义 name = property(fset=set_name), 那么你的fget就为空, 无法读取属性
-        PyErr_SetString(PyExc_AttributeError, &quot;unreadable attribute&quot;);
-        return NULL;
-    &#125;
-
-    return PyObject_CallOneArg(gs-&gt;prop_get, obj); // 调用获取属性的方法并返回
-&#125;
-</code></pre>
-<p>可以看到，当你调用 .name 时，实际上在property的__get__方法里调用了你指定的获取属性函数并返回的</p>
-<p>当你调用 .name = xxx 时，就会调用property的__set__方法，也就是property_descr_set</p>
-<pre><code class="c">static int
-property_descr_set(PyObject *self, PyObject *obj, PyObject *value)
-&#123;
-    propertyobject *gs = (propertyobject *)self;
-    PyObject *func, *res;
-
-    if (value == NULL)
-    // 当你设置的值为None时，就会调用你的del方法
-        func = gs-&gt;prop_del;
-    else
-    // 当设置的值不为空时，才会调用set方法
-        func = gs-&gt;prop_set;
-    if (func == NULL) &#123;
-    // 如果func为空，说明你既没有设置set也没有设置del, 抛异常
-        PyErr_SetString(PyExc_AttributeError,
-                        value == NULL ?
-                        &quot;can&#39;t delete attribute&quot; :
-                &quot;can&#39;t set attribute&quot;);
-        return -1;
-    &#125;
-    if (value == NULL)
-    // 调用del方法
-        res = PyObject_CallOneArg(func, obj);
-    else
-    // 调用set方法
-        res = PyObject_CallFunctionObjArgs(func, obj, value, NULL);
-    if (res == NULL)
-    // -1为调用异常
-        return -1;
-    Py_DECREF(res);
-    return 0; // 调用成功
-&#125;
-</code></pre>
-<p>可以看到，get与set的实现非常简单，那么来看看，当我们通过 @name.setter 来指定设置操作时，它做了什么事情，首先要记住，在你使用 @name.setter装饰一个函数时，name已经变为了property object，此时调用的是property的setter方法，对应的是property_setter方法</p>
-<pre><code class="c">static PyObject *
-property_getter(PyObject *self, PyObject *getter)
-&#123;
-    return property_copy(self, getter, NULL, NULL);
-&#125;
-
-static PyObject *
-property_setter(PyObject *self, PyObject *setter)
-&#123;
-    // 这里它给fget和fdel传递了NULL，fset传递我们装饰的方法对象
-    // 可以看到property_getter，本质上做的事情是一样的，它将fset和fdel传递NULL，而fget传递我们装饰的方法对象
-    return property_copy(self, NULL, setter, NULL);
-&#125;
-
-static PyObject *
-property_copy(PyObject *old, PyObject *get, PyObject *set, PyObject *del)
-&#123;
-    propertyobject *pold = (propertyobject *)old;
-    PyObject *new, *type, *doc;
-
-    type = PyObject_Type(old); // 获取property object的类型，也就是ob_type
-    if (type == NULL)
-        return NULL;
-
-    if (get == NULL || get == Py_None) &#123;
-    // 如果get参数为空, 并且property object的get方法在不为空的情况下, 就赋值给get参数
-        Py_XDECREF(get);
-        get = pold-&gt;prop_get ? pold-&gt;prop_get : Py_None;
-    &#125;
-    if (set == NULL || set == Py_None) &#123;
-    // 如果set参数为空, 并且property object的set方法在不为空的情况下, 就赋值给set参数
-        Py_XDECREF(set);
-        set = pold-&gt;prop_set ? pold-&gt;prop_set : Py_None;
-    &#125;
-    if (del == NULL || del == Py_None) &#123;
-    // 如果del参数为空, 并且property object的del方法在不为空的情况下, 就赋值给del参数
-        Py_XDECREF(del);
-        del = pold-&gt;prop_del ? pold-&gt;prop_del : Py_None;
-    &#125;
-    if (pold-&gt;getter_doc &amp;&amp; get != Py_None) &#123;
-        /* make _init use __doc__ from getter */
-        doc = Py_None;
-    &#125;
-    else &#123;
-        doc = pold-&gt;prop_doc ? pold-&gt;prop_doc : Py_None;
-    &#125;
-
-    /*
-    可以看到上面做了什么处理, get、set、del三个都进行了判断, 如果各自的参数都为空, 就从property object中取出对应的
-    get、set、del方法，然后通过调用type并传递get、set、del作为参数，实例化新的对象并返回
-    */
-    new =  PyObject_CallFunctionObjArgs(type, get, set, del, doc, NULL);
-    Py_DECREF(type);
-    if (new == NULL)
-        return NULL;
-    return new;
-&#125;
-</code></pre>
-<p>可以看到当我们执行 @name.setter 的时候做了什么，首先获取name的type类型，也就是property，然后获取get、set、del方法，再通过对property调用，实例化一个新的对象并返回，你可以理解为原先我们只装饰了一个function object，如下</p>
-<pre><code class="python">class GHost:
-
-    def __init__(self) -&gt; None:
-        self.__name = &quot;刹耶&quot;
-
-    @property
-    def name(self):
-        return self.__name
-</code></pre>
-<p>上面的类中，在property初始化的时候，这个name方法作为property的fget参数传递进去，property对象只有get方法不为空，set和del都为空，那么当我们再新增一个设置方法的时候</p>
-<pre><code class="python">class GHost:
-
-    def __init__(self) -&gt; None:
-        self.__name = &quot;刹耶&quot;
-
-    @property
-    def name(self):
-        return self.__name
-    
-    @name.setter
-    def name(self, val):
-        self.__name = val
-</code></pre>
-<p>首先判断get方法是否为空，由于我们已经定义了get方法，所以它会将get方法取出，然后通过property的type类型再new一个新的出来，但是这次分别传递了get方法和set方法，这时，你的name对象又被更新了一次</p>
-<p>Python property的内容差不多就这些了，了解一个东西是怎么实现的其实非常有趣，最起码你知道它是怎么跑的🤭</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">GHost</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        self<span class="token punctuation">.</span>__name <span class="token operator">=</span> <span class="token string">"刹耶"</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token decorator annotation punctuation">@property</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">name</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">return</span> self<span class="token punctuation">.</span>__name</pre></td></tr><tr><td data-num="9"></td><td><pre>    </pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token decorator annotation punctuation">@name<span class="token punctuation">.</span>setter</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">name</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> val<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        self<span class="token punctuation">.</span>__name <span class="token operator">=</span> val</pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre>ghost <span class="token operator">=</span> GHost<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>我们可以直接通过调用 ghost.name 获取到名称，而不需要（）进行调用，当执行 <span class="exturl" data-url="aHR0cDovL2dob3N0Lm5hbWU=">ghost.name</span> = xxx 时又会触发赋值操作，我们来看看 CPython 是如何做到的</p>
+<p>首先 property 是一个内置类，先看看 property 的结构定义</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>PyTypeObject PyProperty_Type <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token function">PyVarObject_HEAD_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>PyType_Type<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token string">"property"</span><span class="token punctuation">,</span>                                 <span class="token comment">/* tp_name */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">sizeof</span><span class="token punctuation">(</span>propertyobject<span class="token punctuation">)</span><span class="token punctuation">,</span>                     <span class="token comment">/* tp_basicsize */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_itemsize */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token comment">/* methods */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    property_dealloc<span class="token punctuation">,</span>                           <span class="token comment">/* tp_dealloc */</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token comment">// 省略，不需要</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>    PyObject_GenericGetAttr<span class="token punctuation">,</span>                    <span class="token comment">/* tp_getattro */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_setattro */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_as_buffer */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    Py_TPFLAGS_DEFAULT <span class="token operator">|</span> Py_TPFLAGS_HAVE_GC <span class="token operator">|</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        Py_TPFLAGS_BASETYPE<span class="token punctuation">,</span>                    <span class="token comment">/* tp_flags */</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    property_init__doc__<span class="token punctuation">,</span>                       <span class="token comment">/* tp_doc */</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    property_traverse<span class="token punctuation">,</span>                          <span class="token comment">/* tp_traverse */</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token punctuation">(</span>inquiry<span class="token punctuation">)</span>property_clear<span class="token punctuation">,</span>                    <span class="token comment">/* tp_clear */</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_richcompare */</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_weaklistoffset */</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_iter */</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_iternext */</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    property_methods<span class="token punctuation">,</span>                           <span class="token comment">/* tp_methods */</span></pre></td></tr><tr><td data-num="24"></td><td><pre>    property_members<span class="token punctuation">,</span>                           <span class="token comment">/* tp_members */</span></pre></td></tr><tr><td data-num="25"></td><td><pre>    property_getsetlist<span class="token punctuation">,</span>                        <span class="token comment">/* tp_getset */</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_base */</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_dict */</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    property_descr_get<span class="token punctuation">,</span>                         <span class="token comment">/* tp_descr_get */</span></pre></td></tr><tr><td data-num="29"></td><td><pre>    property_descr_set<span class="token punctuation">,</span>                         <span class="token comment">/* tp_descr_set */</span></pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_dictoffset */</span></pre></td></tr><tr><td data-num="31"></td><td><pre>    property_init<span class="token punctuation">,</span>                              <span class="token comment">/* tp_init */</span></pre></td></tr><tr><td data-num="32"></td><td><pre>    PyType_GenericAlloc<span class="token punctuation">,</span>                        <span class="token comment">/* tp_alloc */</span></pre></td></tr><tr><td data-num="33"></td><td><pre>    PyType_GenericNew<span class="token punctuation">,</span>                          <span class="token comment">/* tp_new */</span></pre></td></tr><tr><td data-num="34"></td><td><pre>    PyObject_GC_Del<span class="token punctuation">,</span>                            <span class="token comment">/* tp_free */</span></pre></td></tr><tr><td data-num="35"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>property 定义了 tp_descr_get 与 tp_descr_set，说明它是一个描述器，先来看看初始化时做了什么，调用的是 property_init 方法</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> <span class="token keyword">int</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">property_init</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>self<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>args<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>kwargs<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">int</span> return_value <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">// 返回值</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">static</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span> <span class="token keyword">const</span> _keywords<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">"fget"</span><span class="token punctuation">,</span> <span class="token string">"fset"</span><span class="token punctuation">,</span> <span class="token string">"fdel"</span><span class="token punctuation">,</span> <span class="token string">"doc"</span><span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span> <span class="token comment">// 一些关键字参数</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">static</span> _PyArg_Parser _parser <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token constant">NULL</span><span class="token punctuation">,</span> _keywords<span class="token punctuation">,</span> <span class="token string">"property"</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    PyObject <span class="token operator">*</span>argsbuf<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    PyObject <span class="token operator">*</span> <span class="token keyword">const</span> <span class="token operator">*</span>fastargs<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    Py_ssize_t nargs <span class="token operator">=</span> <span class="token function">PyTuple_GET_SIZE</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 传递了多少个位置参数</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token comment">// 可以传递位置参数或者关键字参数，然后如果传递了关键字，就将关键字的数量也相加</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    Py_ssize_t noptargs <span class="token operator">=</span> nargs <span class="token operator">+</span> <span class="token punctuation">(</span>kwargs <span class="token operator">?</span> <span class="token function">PyDict_GET_SIZE</span><span class="token punctuation">(</span>kwargs<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">0</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    PyObject <span class="token operator">*</span>fget <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span> <span class="token comment">// 获取属性值的方法</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    PyObject <span class="token operator">*</span>fset <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span> <span class="token comment">// 设置属性值的方法</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    PyObject <span class="token operator">*</span>fdel <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span> <span class="token comment">// 删除属性值的方法</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    PyObject <span class="token operator">*</span>doc <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span> <span class="token comment">// 属性描述信息</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token comment">// 参数校验</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    fastargs <span class="token operator">=</span> <span class="token function">_PyArg_UnpackKeywords</span><span class="token punctuation">(</span><span class="token function">_PyTuple_CAST</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token operator">-></span>ob_item<span class="token punctuation">,</span> nargs<span class="token punctuation">,</span> kwargs<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>_parser<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> argsbuf<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>fastargs<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        <span class="token keyword">goto</span> exit<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>noptargs<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token keyword">goto</span> skip_optional_pos<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="25"></td><td><pre></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token comment">// 重点在这边</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token comment">//noptargs 是传递了位置参数和关键字参数的数量总和</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>fastargs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>	<span class="token comment">// 如果传递了 fget 参数，就赋值给 fget 变量</span></pre></td></tr><tr><td data-num="30"></td><td><pre>        fget <span class="token operator">=</span> fastargs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="31"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token operator">--</span>noptargs<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="32"></td><td><pre>            <span class="token keyword">goto</span> skip_optional_pos<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="34"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="35"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>fastargs<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="36"></td><td><pre>	<span class="token comment">// 如果传递了 fset 参数，就赋值 fset 变量</span></pre></td></tr><tr><td data-num="37"></td><td><pre>        fset <span class="token operator">=</span> fastargs<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="38"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token operator">--</span>noptargs<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="39"></td><td><pre>            <span class="token keyword">goto</span> skip_optional_pos<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="40"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="41"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="42"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>fastargs<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="43"></td><td><pre>	<span class="token comment">// 如果传递了 fdel 参数，就赋值 fdel 变量</span></pre></td></tr><tr><td data-num="44"></td><td><pre>        fdel <span class="token operator">=</span> fastargs<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="45"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token operator">--</span>noptargs<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="46"></td><td><pre>            <span class="token keyword">goto</span> skip_optional_pos<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="47"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="48"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="49"></td><td><pre>    doc <span class="token operator">=</span> fastargs<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// 属性描述信息</span></pre></td></tr><tr><td data-num="50"></td><td><pre>skip_optional_pos<span class="token operator">:</span></pre></td></tr><tr><td data-num="51"></td><td><pre>    return_value <span class="token operator">=</span> <span class="token function">property_init_impl</span><span class="token punctuation">(</span><span class="token punctuation">(</span>propertyobject <span class="token operator">*</span><span class="token punctuation">)</span>self<span class="token punctuation">,</span> fget<span class="token punctuation">,</span> fset<span class="token punctuation">,</span> fdel<span class="token punctuation">,</span> doc<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//property 的一些赋值操作</span></pre></td></tr><tr><td data-num="52"></td><td><pre></pre></td></tr><tr><td data-num="53"></td><td><pre>exit<span class="token operator">:</span></pre></td></tr><tr><td data-num="54"></td><td><pre>    <span class="token keyword">return</span> return_value<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="55"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="56"></td><td><pre></pre></td></tr><tr><td data-num="57"></td><td><pre><span class="token keyword">static</span> <span class="token keyword">int</span></pre></td></tr><tr><td data-num="58"></td><td><pre><span class="token function">property_init_impl</span><span class="token punctuation">(</span>propertyobject <span class="token operator">*</span>self<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>fget<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>fset<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="59"></td><td><pre>                   PyObject <span class="token operator">*</span>fdel<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>doc<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="60"></td><td><pre><span class="token comment">/*[clinic end generated code: output=01a960742b692b57 input=dfb5dbbffc6932d5]*/</span></pre></td></tr><tr><td data-num="61"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="62"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>fget <span class="token operator">==</span> Py_None<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="63"></td><td><pre>        fget <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="64"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>fset <span class="token operator">==</span> Py_None<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="65"></td><td><pre>        fset <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="66"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>fdel <span class="token operator">==</span> Py_None<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="67"></td><td><pre>        fdel <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="68"></td><td><pre></pre></td></tr><tr><td data-num="69"></td><td><pre>    <span class="token function">Py_XINCREF</span><span class="token punctuation">(</span>fget<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 引用计数 + 1，但可以处理空指针</span></pre></td></tr><tr><td data-num="70"></td><td><pre>    <span class="token function">Py_XINCREF</span><span class="token punctuation">(</span>fset<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="71"></td><td><pre>    <span class="token function">Py_XINCREF</span><span class="token punctuation">(</span>fdel<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="72"></td><td><pre>    <span class="token function">Py_XINCREF</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="73"></td><td><pre></pre></td></tr><tr><td data-num="74"></td><td><pre>    <span class="token function">Py_XSETREF</span><span class="token punctuation">(</span>self<span class="token operator">-></span>prop_get<span class="token punctuation">,</span> fget<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 通过 Py_XSETREF 宏来改变 self->prop_get 指针指向 fget，下面是一样的</span></pre></td></tr><tr><td data-num="75"></td><td><pre>    <span class="token function">Py_XSETREF</span><span class="token punctuation">(</span>self<span class="token operator">-></span>prop_set<span class="token punctuation">,</span> fset<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="76"></td><td><pre>    <span class="token function">Py_XSETREF</span><span class="token punctuation">(</span>self<span class="token operator">-></span>prop_del<span class="token punctuation">,</span> fdel<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="77"></td><td><pre>    <span class="token function">Py_XSETREF</span><span class="token punctuation">(</span>self<span class="token operator">-></span>prop_doc<span class="token punctuation">,</span> doc<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="78"></td><td><pre>    self<span class="token operator">-></span>getter_doc <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="79"></td><td><pre></pre></td></tr><tr><td data-num="80"></td><td><pre>    <span class="token comment">/* if no docstring given and the getter has one, use that one */</span></pre></td></tr><tr><td data-num="81"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>doc <span class="token operator">==</span> <span class="token constant">NULL</span> <span class="token operator">||</span> doc <span class="token operator">==</span> Py_None<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> fget <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="82"></td><td><pre>	<span class="token comment">// 如果没有给属性描述信息，就会尝试从 fget 方法从获取 docstring 赋值到 property 中</span></pre></td></tr><tr><td data-num="83"></td><td><pre>        <span class="token function">_Py_IDENTIFIER</span><span class="token punctuation">(</span>__doc__<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="84"></td><td><pre>        PyObject <span class="token operator">*</span>get_doc<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="85"></td><td><pre>        <span class="token keyword">int</span> rc <span class="token operator">=</span> <span class="token function">_PyObject_LookupAttrId</span><span class="token punctuation">(</span>fget<span class="token punctuation">,</span> <span class="token operator">&amp;</span>PyId___doc__<span class="token punctuation">,</span> <span class="token operator">&amp;</span>get_doc<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 在 fget 中取出__doc__</span></pre></td></tr><tr><td data-num="86"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>rc <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="87"></td><td><pre>	    <span class="token comment">// 没有__doc__就算了，直接返回结束</span></pre></td></tr><tr><td data-num="88"></td><td><pre>            <span class="token keyword">return</span> rc<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="89"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="90"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">Py_IS_TYPE</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">&amp;</span>PyProperty_Type<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="91"></td><td><pre>	    <span class="token comment">// 如果__doc__有，判断实例的类型是否为 PyProperty_Type，符合就赋值__doc__</span></pre></td></tr><tr><td data-num="92"></td><td><pre>            <span class="token function">Py_XSETREF</span><span class="token punctuation">(</span>self<span class="token operator">-></span>prop_doc<span class="token punctuation">,</span> get_doc<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="93"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="94"></td><td><pre>        <span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="95"></td><td><pre>            <span class="token comment">/* If this is a property subclass, put __doc__</pre></td></tr><tr><td data-num="96"></td><td><pre>               in dict of the subclass instance instead,</pre></td></tr><tr><td data-num="97"></td><td><pre>               otherwise it gets shadowed by __doc__ in the</pre></td></tr><tr><td data-num="98"></td><td><pre>               class's dict. */</span></pre></td></tr><tr><td data-num="99"></td><td><pre>            <span class="token keyword">int</span> err <span class="token operator">=</span> <span class="token function">_PyObject_SetAttrId</span><span class="token punctuation">(</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span><span class="token punctuation">)</span>self<span class="token punctuation">,</span> <span class="token operator">&amp;</span>PyId___doc__<span class="token punctuation">,</span> get_doc<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 否则我就在实例对象里获取__doc__并赋值</span></pre></td></tr><tr><td data-num="100"></td><td><pre>            <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>get_doc<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="101"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="102"></td><td><pre>                <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="103"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="104"></td><td><pre>        self<span class="token operator">-></span>getter_doc <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="105"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="106"></td><td><pre></pre></td></tr><tr><td data-num="107"></td><td><pre>    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="108"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>整体逻辑比较简单，调用 property 之后，将获取、设置、删除等方法取出并设置到 property 实例对象的属性中，需要注意，当你使用 @property 装饰一个 def name 时，name 将不再是一个 function object，而是变为了 property object，所以当你再使用 @name.setter 来装饰一个 name 方法来处理赋值操作时，其实并没什么神奇的，因为 name 此时是一个 property object，你调用的实际上是 property 的 setter method，可以看一下 property 支持什么方法</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> PyMethodDef property_methods<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token punctuation">&#123;</span><span class="token string">"getter"</span><span class="token punctuation">,</span> property_getter<span class="token punctuation">,</span> METH_O<span class="token punctuation">,</span> getter_doc<span class="token punctuation">&#125;</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token punctuation">&#123;</span><span class="token string">"setter"</span><span class="token punctuation">,</span> property_setter<span class="token punctuation">,</span> METH_O<span class="token punctuation">,</span> setter_doc<span class="token punctuation">&#125;</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token punctuation">&#123;</span><span class="token string">"deleter"</span><span class="token punctuation">,</span> property_deleter<span class="token punctuation">,</span> METH_O<span class="token punctuation">,</span> deleter_doc<span class="token punctuation">&#125;</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token punctuation">&#123;</span><span class="token number">0</span><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>先说一下，前面讲到了 property 是一个描述器，在我们没有使用 @property 装饰 def name 时，我们需要执行 name () 才能调用到 name 方法（需要加双括号），如果使用 @property 装饰 def name 后，只需要 .name 就可以调用拿到返回值，它是怎么做到的？</p>
+<p>首先，name 是定义在我们的类中，所以 name 属性会先通过 MRO 查找，找到之后，判断 name 是否为一个描述器，那么一开始 name 只是一个普通的 function object，它显然不是一个描述器，但是，我们通过 property 装饰之后，它就变成了一个描述器，因为 property 重载了__get__和__set__方法，所以在我们通过 .name 时，就会调用它的__get__方法，也就是 property_descr_get 方法</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">property_descr_get</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>self<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>obj<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>type<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>obj <span class="token operator">==</span> <span class="token constant">NULL</span> <span class="token operator">||</span> obj <span class="token operator">==</span> Py_None<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token keyword">return</span> self<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre>    propertyobject <span class="token operator">*</span>gs <span class="token operator">=</span> <span class="token punctuation">(</span>propertyobject <span class="token operator">*</span><span class="token punctuation">)</span>self<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>gs<span class="token operator">-></span>prop_get <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>	<span class="token comment">// 如果 fget 为空，抛异常，比如你是这样定义 name = property (fset=set_name), 那么你的 fget 就为空，无法读取属性</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        <span class="token function">PyErr_SetString</span><span class="token punctuation">(</span>PyExc_AttributeError<span class="token punctuation">,</span> <span class="token string">"unreadable attribute"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token keyword">return</span> <span class="token function">PyObject_CallOneArg</span><span class="token punctuation">(</span>gs<span class="token operator">-></span>prop_get<span class="token punctuation">,</span> obj<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 调用获取属性的方法并返回</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>可以看到，当你调用 .name 时，实际上在 property 的__get__方法里调用了你指定的获取属性函数并返回的</p>
+<p>当你调用 .name = xxx 时，就会调用 property 的__set__方法，也就是 property_descr_set</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> <span class="token keyword">int</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">property_descr_set</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>self<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>obj<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>value<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    propertyobject <span class="token operator">*</span>gs <span class="token operator">=</span> <span class="token punctuation">(</span>propertyobject <span class="token operator">*</span><span class="token punctuation">)</span>self<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    PyObject <span class="token operator">*</span>func<span class="token punctuation">,</span> <span class="token operator">*</span>res<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>value <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>	<span class="token comment">// 当你设置的值为 None 时，就会调用你的 del 方法</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        func <span class="token operator">=</span> gs<span class="token operator">-></span>prop_del<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token keyword">else</span></pre></td></tr><tr><td data-num="11"></td><td><pre>	<span class="token comment">// 当设置的值不为空时，才会调用 set 方法</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        func <span class="token operator">=</span> gs<span class="token operator">-></span>prop_set<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>func <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>	<span class="token comment">// 如果 func 为空，说明你既没有设置 set 也没有设置 del, 抛异常</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token function">PyErr_SetString</span><span class="token punctuation">(</span>PyExc_AttributeError<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="16"></td><td><pre>                        value <span class="token operator">==</span> <span class="token constant">NULL</span> <span class="token operator">?</span></pre></td></tr><tr><td data-num="17"></td><td><pre>                        <span class="token string">"can't delete attribute"</span> <span class="token operator">:</span></pre></td></tr><tr><td data-num="18"></td><td><pre>                <span class="token string">"can't set attribute"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>value <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="22"></td><td><pre>	<span class="token comment">// 调用 del 方法</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        res <span class="token operator">=</span> <span class="token function">PyObject_CallOneArg</span><span class="token punctuation">(</span>func<span class="token punctuation">,</span> obj<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>    <span class="token keyword">else</span></pre></td></tr><tr><td data-num="25"></td><td><pre>	<span class="token comment">// 调用 set 方法</span></pre></td></tr><tr><td data-num="26"></td><td><pre>        res <span class="token operator">=</span> <span class="token function">PyObject_CallFunctionObjArgs</span><span class="token punctuation">(</span>func<span class="token punctuation">,</span> obj<span class="token punctuation">,</span> value<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>res <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="28"></td><td><pre>	<span class="token comment">//-1 为调用异常</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="31"></td><td><pre>    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token comment">// 调用成功</span></pre></td></tr><tr><td data-num="32"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>可以看到，get 与 set 的实现非常简单，那么来看看，当我们通过 @name.setter 来指定设置操作时，它做了什么事情，首先要记住，在你使用 @name.setter 装饰一个函数时，name 已经变为了 property object，此时调用的是 property 的 setter 方法，对应的是 property_setter 方法</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">property_getter</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>self<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>getter<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">return</span> <span class="token function">property_copy</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> getter<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token function">property_setter</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>self<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>setter<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token comment">// 这里它给 fget 和 fdel 传递了 NULL，fset 传递我们装饰的方法对象</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token comment">// 可以看到 property_getter，本质上做的事情是一样的，它将 fset 和 fdel 传递 NULL，而 fget 传递我们装饰的方法对象</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token keyword">return</span> <span class="token function">property_copy</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> setter<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token function">property_copy</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>old<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>get<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>set<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>del<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    propertyobject <span class="token operator">*</span>pold <span class="token operator">=</span> <span class="token punctuation">(</span>propertyobject <span class="token operator">*</span><span class="token punctuation">)</span>old<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    PyObject <span class="token operator">*</span>new<span class="token punctuation">,</span> <span class="token operator">*</span>type<span class="token punctuation">,</span> <span class="token operator">*</span>doc<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>    type <span class="token operator">=</span> <span class="token function">PyObject_Type</span><span class="token punctuation">(</span>old<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 获取 property object 的类型，也就是 ob_type</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>type <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="24"></td><td><pre></pre></td></tr><tr><td data-num="25"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>get <span class="token operator">==</span> <span class="token constant">NULL</span> <span class="token operator">||</span> get <span class="token operator">==</span> Py_None<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>	<span class="token comment">// 如果 get 参数为空，并且 property object 的 get 方法在不为空的情况下，就赋值给 get 参数</span></pre></td></tr><tr><td data-num="27"></td><td><pre>        <span class="token function">Py_XDECREF</span><span class="token punctuation">(</span>get<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        get <span class="token operator">=</span> pold<span class="token operator">-></span>prop_get <span class="token operator">?</span> pold<span class="token operator">-></span>prop_get <span class="token operator">:</span> Py_None<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>set <span class="token operator">==</span> <span class="token constant">NULL</span> <span class="token operator">||</span> set <span class="token operator">==</span> Py_None<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="31"></td><td><pre>	<span class="token comment">// 如果 set 参数为空，并且 property object 的 set 方法在不为空的情况下，就赋值给 set 参数</span></pre></td></tr><tr><td data-num="32"></td><td><pre>        <span class="token function">Py_XDECREF</span><span class="token punctuation">(</span>set<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        set <span class="token operator">=</span> pold<span class="token operator">-></span>prop_set <span class="token operator">?</span> pold<span class="token operator">-></span>prop_set <span class="token operator">:</span> Py_None<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="34"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="35"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>del <span class="token operator">==</span> <span class="token constant">NULL</span> <span class="token operator">||</span> del <span class="token operator">==</span> Py_None<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="36"></td><td><pre>	<span class="token comment">// 如果 del 参数为空，并且 property object 的 del 方法在不为空的情况下，就赋值给 del 参数</span></pre></td></tr><tr><td data-num="37"></td><td><pre>        <span class="token function">Py_XDECREF</span><span class="token punctuation">(</span>del<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="38"></td><td><pre>        del <span class="token operator">=</span> pold<span class="token operator">-></span>prop_del <span class="token operator">?</span> pold<span class="token operator">-></span>prop_del <span class="token operator">:</span> Py_None<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="39"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="40"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>pold<span class="token operator">-></span>getter_doc <span class="token operator">&amp;&amp;</span> get <span class="token operator">!=</span> Py_None<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="41"></td><td><pre>        <span class="token comment">/* make _init use __doc__ from getter */</span></pre></td></tr><tr><td data-num="42"></td><td><pre>        doc <span class="token operator">=</span> Py_None<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="43"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="44"></td><td><pre>    <span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="45"></td><td><pre>        doc <span class="token operator">=</span> pold<span class="token operator">-></span>prop_doc <span class="token operator">?</span> pold<span class="token operator">-></span>prop_doc <span class="token operator">:</span> Py_None<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="46"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="47"></td><td><pre></pre></td></tr><tr><td data-num="48"></td><td><pre>    <span class="token comment">/*</pre></td></tr><tr><td data-num="49"></td><td><pre>	可以看到上面做了什么处理，get、set、del 三个都进行了判断，如果各自的参数都为空，就从 property object 中取出对应的</pre></td></tr><tr><td data-num="50"></td><td><pre>	get、set、del 方法，然后通过调用 type 并传递 get、set、del 作为参数，实例化新的对象并返回</pre></td></tr><tr><td data-num="51"></td><td><pre>    */</span></pre></td></tr><tr><td data-num="52"></td><td><pre>    new <span class="token operator">=</span>  <span class="token function">PyObject_CallFunctionObjArgs</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> get<span class="token punctuation">,</span> set<span class="token punctuation">,</span> del<span class="token punctuation">,</span> doc<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="53"></td><td><pre>    <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>type<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="54"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>new <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="55"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="56"></td><td><pre>    <span class="token keyword">return</span> new<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="57"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>可以看到当我们执行 @name.setter 的时候做了什么，首先获取 name 的 type 类型，也就是 property，然后获取 get、set、del 方法，再通过对 property 调用，实例化一个新的对象并返回，你可以理解为原先我们只装饰了一个 function object，如下</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">GHost</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        self<span class="token punctuation">.</span>__name <span class="token operator">=</span> <span class="token string">"刹耶"</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token decorator annotation punctuation">@property</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">name</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">return</span> self<span class="token punctuation">.</span>__name</pre></td></tr></table></figure><p>上面的类中，在 property 初始化的时候，这个 name 方法作为 property 的 fget 参数传递进去，property 对象只有 get 方法不为空，set 和 del 都为空，那么当我们再新增一个设置方法的时候</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">GHost</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        self<span class="token punctuation">.</span>__name <span class="token operator">=</span> <span class="token string">"刹耶"</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token decorator annotation punctuation">@property</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">name</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">return</span> self<span class="token punctuation">.</span>__name</pre></td></tr><tr><td data-num="9"></td><td><pre>    </pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token decorator annotation punctuation">@name<span class="token punctuation">.</span>setter</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">name</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> val<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        self<span class="token punctuation">.</span>__name <span class="token operator">=</span> val</pre></td></tr></table></figure><p>首先判断 get 方法是否为空，由于我们已经定义了 get 方法，所以它会将 get 方法取出，然后通过 property 的 type 类型再 new 一个新的出来，但是这次分别传递了 get 方法和 set 方法，这时，你的 name 对象又被更新了一次</p>
+<p>Python property 的内容差不多就这些了，了解一个东西是怎么实现的其实非常有趣，最起码你知道它是怎么跑的🤭</p>
 <div align=center width=100%><iframe class="video-frame" height=500 width=80% frameborder=0 allowfullscreen src="//player.bilibili.com/player.html?aid=561170527&bvid=BV1Ce4y1B7gY&cid=851548804&page=1" ></iframe></div>
 
       <div class="tags">
@@ -552,7 +255,7 @@ property_copy(PyObject *old, PyObject *get, PyObject *set, PyObject *del)
     <div class="item left">
       
 
-  <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicm07ih54j20zk0m84qp.jpg" title="Python list实现原理">
+  <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipey0a334j20zk0m8qpt.jpg" title="Python list实现原理">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>Python list实现原理</h3>
@@ -562,7 +265,7 @@ property_copy(PyObject *old, PyObject *get, PyObject *set, PyObject *del)
     <div class="item right">
       
 
-  <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeu1usa7j20zk0m8b29.jpg" title="Python Django服务启动时做了什么?">
+  <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclfdu6exj20zk0m87hw.jpg" title="Python Django服务启动时做了什么?">
   <span class="type">Next Post</span>
   <span class="category"><i class="ic i-flag"></i> Django</span>
   <h3>Python Django服务启动时做了什么?</h3>
@@ -584,7 +287,7 @@ property_copy(PyObject *old, PyObject *get, PyObject *set, PyObject *del)
   <div class="panels">
     <div class="inner">
       <div class="contents panel pjax" data-title="Contents">
-          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-property%E7%9A%84%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">Python @property的源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-number">1.0.1.</span> <span class="toc-text">作用</span></a></li></ol></li></ol></li></ol>
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#python-property%E7%9A%84%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text"> Python @property 的源码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-number">1.0.1.</span> <span class="toc-text"> 作用</span></a></li></ol></li></ol></li></ol>
       </div>
       <div class="related panel pjax" data-title="Related">
         <ul>
@@ -700,35 +403,57 @@ property_copy(PyObject *old, PyObject *get, PyObject *set, PyObject *del)
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/Python/" title="In Python">Python</a>
 </div>
 
     <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Life/" title="In Life">Life</a>
+</div>
+
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Python/" title="In Python">Python</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Python/Django/" title="In Django">Django</a>
+</div>
+
+    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
   </li>
 
       
@@ -764,42 +489,6 @@ property_copy(PyObject *old, PyObject *get, PyObject *set, PyObject *del)
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
     <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
   </li>
 
@@ -812,7 +501,19 @@ property_copy(PyObject *old, PyObject *get, PyObject *set, PyObject *del)
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
+    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
   </li>
 
   </ul>

@@ -102,12 +102,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicis3attqj20zk0m8k7l.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclffsa1cj20zk0m811l.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicmnywqgpj20zk0m8dwx.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclxxcb6rj20zk0m8b29.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclimtf7dj20zk0m8qav.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclfdu6exj20zk0m87hw.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicm0fdw5cj20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclfw2t96j20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipeyonbf9j20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giph4lm9i7j20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giciszlczyj20zk0m816d.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicm0n457cj20zk0m8e81.jpg"></li>
         </ul>
       </div>
     </header>
@@ -156,266 +156,22 @@ Leayoos Chui = 士多啤梨苹果橙</title>
   <div class="body md" itemprop="articleBody">
     
 
-    <h3 id="Python-zip"><a href="#Python-zip" class="headerlink" title="Python zip()"></a>Python zip()</h3><h6 id="我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看runoob对zip的描述"><a href="#我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看runoob对zip的描述" class="headerlink" title="我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看runoob对zip的描述"></a>我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看runoob对zip的描述</h6><p><strong>zip()</strong> 用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组，然后返回由这些元素组成的列表。如果各个迭代器的元素个数不一致，则返回的列表长度与最短的对象相同，利用 * 号操作符，可以将元组解压为列表</p>
-<p>关于zip的简单用法可以参考：<span class="exturl" data-url="aHR0cHM6Ly93d3cucnVub29iLmNvbS9weXRob24vcHl0aG9uLWZ1bmMtemlwLmh0bWw=">https://www.runoob.com/python/python-func-zip.html</span></p>
+    <h3 id="python-zip"><a class="markdownIt-Anchor" href="#python-zip">#</a> Python zip()</h3>
+<h6 id="我一般也不清楚如何形容一些方法的特性都是在网上查查就过了先看看runoob对zip的描述"><a class="markdownIt-Anchor" href="#我一般也不清楚如何形容一些方法的特性都是在网上查查就过了先看看runoob对zip的描述">#</a> 我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看 runoob 对 zip 的描述</h6>
+<p><strong>zip()</strong> 用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组，然后返回由这些元素组成的列表。如果各个迭代器的元素个数不一致，则返回的列表长度与最短的对象相同，利用 * 号操作符，可以将元组解压为列表</p>
+<p>关于 zip 的简单用法可以参考：<span class="exturl" data-url="aHR0cHM6Ly93d3cucnVub29iLmNvbS9weXRob24vcHl0aG9uLWZ1bmMtemlwLmh0bWw=">https://www.runoob.com/python/python-func-zip.html</span></p>
 <span id="more"></span>
-
-<p>在Python源码中，zip是这样子的</p>
-<pre><code class="python">class zip(object):
-    &quot;&quot;&quot;
-    zip(*iterables) --&gt; zip object
-    
-    Return a zip object whose .__next__() method returns a tuple where
-    the i-th element comes from the i-th iterable argument.  The .__next__()
-    method continues until the shortest iterable in the argument sequence
-    is exhausted and then it raises StopIteration.
-    &quot;&quot;&quot;
-    def __getattribute__(self, *args, **kwargs): # real signature unknown
-        &quot;&quot;&quot; Return getattr(self, name). &quot;&quot;&quot;
-        pass
-
-    def __init__(self, *iterables): # real signature unknown; restored from __doc__
-        pass
-
-    def __iter__(self, *args, **kwargs): # real signature unknown
-        &quot;&quot;&quot; Implement iter(self). &quot;&quot;&quot;
-        pass
-
-    @staticmethod # known case of __new__
-    def __new__(*args, **kwargs): # real signature unknown
-        &quot;&quot;&quot; Create and return a new object.  See help(type) for accurate signature. &quot;&quot;&quot;
-        pass
-
-    def __next__(self, *args, **kwargs): # real signature unknown
-        &quot;&quot;&quot; Implement next(self). &quot;&quot;&quot;
-        pass
-
-    def __reduce__(self, *args, **kwargs): # real signature unknown
-        &quot;&quot;&quot; Return state information for pickling. &quot;&quot;&quot;
-        pass
-</code></pre>
-<p>zip类定义了__iter__、__next__，说明它是支持迭代操作的，注释提到，当调用zip时，它会返回一个zip对象，调用.__next__()方法返回一个元组，其中第i个元素来自第i个可迭代参数，__next__()会一直持续到参数序列中最短的可迭代对象用尽为止，然后引发StopIteration，终止循环</p>
-<p>在调用zip时，我们可以传递多个iterator</p>
-<pre><code class="python">a = [1, 2, 3]
-b = [4, 5, 6]
-c = [7, 8, 9]
-
-r = zip(a, b, c)
-
-for i in r:
-    print(i)
-
-======&gt;&gt;&gt; 打印结果
-(1, 4, 7)
-(2, 5, 8)
-(3, 6, 9)
-======&gt;&gt;&gt;
-</code></pre>
-<h3 id="在CPython中zip的结构"><a href="#在CPython中zip的结构" class="headerlink" title="在CPython中zip的结构"></a>在CPython中zip的结构</h3><pre><code class="c">PyTypeObject PyZip_Type = &#123;
-    PyVarObject_HEAD_INIT(&amp;PyType_Type, 0)
-    &quot;zip&quot;,                              /* tp_name */
-    sizeof(zipobject),                  /* tp_basicsize */
-    ...... /* 忽略，不重要 */
-    PyObject_GenericGetAttr,            /* tp_getattro */
-    0,                                  /* tp_setattro */
-    0,                                  /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC |
-        Py_TPFLAGS_BASETYPE,            /* tp_flags */
-    zip_doc,                            /* tp_doc */
-    (traverseproc)zip_traverse,    /* tp_traverse */
-    0,                                  /* tp_clear */
-    0,                                  /* tp_richcompare */
-    0,                                  /* tp_weaklistoffset */
-    PyObject_SelfIter,                  /* tp_iter */
-    (iternextfunc)zip_next,     /* tp_iternext */
-    zip_methods,                        /* tp_methods */
-    0,                                  /* tp_members */
-    0,                                  /* tp_getset */
-    0,                                  /* tp_base */
-    0,                                  /* tp_dict */
-    0,                                  /* tp_descr_get */
-    0,                                  /* tp_descr_set */
-    0,                                  /* tp_dictoffset */
-    0,                                  /* tp_init */
-    PyType_GenericAlloc,                /* tp_alloc */
-    zip_new,                            /* tp_new */
-    PyObject_GC_Del,                    /* tp_free */
-&#125;;
-</code></pre>
-<p>那在我们调用zip时，是先调用了zip_new方法</p>
-<pre><code class="c">typedef struct &#123;
-    PyObject_HEAD
-    Py_ssize_t          tuplesize;
-    PyObject *ittuple;                  /* tuple of iterators */
-    PyObject *result;
-&#125; zipobject; // zipobject结构体
-
-static PyObject *
-zip_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
-&#123;
-    zipobject *lz; // 成功创建则返回对象, 对应Python中的zip object
-    Py_ssize_t i;
-    PyObject *ittuple;  /* tuple of iterators */ // 存储每个迭代器的对象
-    PyObject *result;
-    Py_ssize_t tuplesize;
-
-    if (type == &amp;PyZip_Type &amp;&amp; !_PyArg_NoKeywords(&quot;zip&quot;, kwds))
-    // 类型检查和关键字判断
-        return NULL;
-
-    /* args must be a tuple */
-    assert(PyTuple_Check(args)); // args必须是一个元组
-    tuplesize = PyTuple_GET_SIZE(args); // 获取args的大小
-
-    /* obtain iterators */
-    // 开始获取迭代器
-    /*
-        如果args为空, 也就是zip()没有参数, 那么tuplesize就为0, 会从缓冲池里获取一个空元组
-    如果不为空, 就按照tuplesize申请一个元组，并对其元素都设置为NULL、GC管理
-    */
-    ittuple = PyTuple_New(tuplesize);
-
-    if (ittuple == NULL)
-    // 申请失败
-        return NULL;
-    for (i=0; i &lt; tuplesize; ++i) &#123; // tuplesize循环
-        PyObject *item = PyTuple_GET_ITEM(args, i); // 获取args对应下标的对象
-        PyObject *it = PyObject_GetIter(item); // 调用每个item对象的__iter__方法，获取iterator（item可能是不同类型）
-        if (it == NULL) &#123;
-        // 如果某一个item调用__iter__后返回空, 则运行结束
-            Py_DECREF(ittuple); // 引用计数-1
-            return NULL;
-        &#125;
-        PyTuple_SET_ITEM(ittuple, i, it); // 根据下标i在ittuple中设置it（迭代器对象）
-    &#125;
-
-    /* create a result holder */
-    // 再根据tuplesize创建一个元组, 专门用来存储结果, 而大小和ittuple一样
-    result = PyTuple_New(tuplesize);
-    if (result == NULL) &#123;
-    // 申请失败
-        Py_DECREF(ittuple);
-        return NULL;
-    &#125;
-    for (i=0 ; i &lt; tuplesize ; i++) &#123;
-        Py_INCREF(Py_None); // 空对象
-        PyTuple_SET_ITEM(result, i, Py_None); // 根据下标i在result中设置None
-    &#125;
-
-    /* create zipobject structure */
-    lz = (zipobject *)type-&gt;tp_alloc(type, 0);
-    if (lz == NULL) &#123;
-        Py_DECREF(ittuple);
-        Py_DECREF(result);
-        return NULL;
-    &#125;
-    lz-&gt;ittuple = ittuple; // 设置迭代器元素
-    lz-&gt;tuplesize = tuplesize; // 设置大小
-    lz-&gt;result = result; // 设置存储结果的元组
-
-    return (PyObject *)lz; // 返回zipobject
-&#125;
-</code></pre>
-<p>在调用zip()时，首先根据传递的位置参数args，获取args的大小，然后根据该大小申请两个元组，一个用来存储位置参数中，每个对象调用__iter__()后返回的迭代器对象，一个用来存储调用__next__时返回的结果，一共执行了两次循环，最终返回zipobject</p>
-<pre><code class="python">g = zip()
-print(g)
-
-&lt;zip object at 0x0000020D3976D200&gt;
-</code></pre>
-<p>在对zip object进行迭代时，是如何处理的，首先会先调用zip object的__iter__方法，而它返回了本身</p>
-<pre><code class="c">PyObject *
-PyObject_SelfIter(PyObject *obj)
-&#123;
-    Py_INCREF(obj);
-    return obj;
-&#125;
-</code></pre>
-<p>并对本身不断的调用__next__方法</p>
-<pre><code class="c">static PyObject *
-zip_next(zipobject *lz)
-&#123;
-    Py_ssize_t i;
-    Py_ssize_t tuplesize = lz-&gt;tuplesize; // 元素的大小
-    PyObject *result = lz-&gt;result; // 存储结果的元组
-    PyObject *it;
-    PyObject *item;
-    PyObject *olditem;
-
-    if (tuplesize == 0)
-        return NULL;
-    if (Py_REFCNT(result) == 1) &#123;
-    // 当引用计数为1时
-        Py_INCREF(result); // 引用计数+1
-    // 对tuplesize进行循环
-        for (i=0 ; i &lt; tuplesize ; i++) &#123;
-            it = PyTuple_GET_ITEM(lz-&gt;ittuple, i); // 根据i获取ittuple对应下标的迭代器
-            item = (*Py_TYPE(it)-&gt;tp_iternext)(it); // 调用每个迭代器的__next__方法, 获取第it位置的元素
-            if (item == NULL) &#123;
-        // 如果__next__返回空，表示可迭代对象已用尽，调用结束
-        // 当zip()传递的每个参数长度不一致，就会以最短的迭代完并结束
-        // 比如a = [1,2,3], b = [4,5,6,7,8,9], 当执行第4次时，a已经用尽了, 根据下标4在a中获取会发生异常, 也就会结束
-                Py_DECREF(result);
-                return NULL;
-            &#125;
-        // 根据下标i在result(结果元组)里获取None, 对None进行引用计数-1, 并在它的位置设置每个迭代器返回的元素
-            olditem = PyTuple_GET_ITEM(result, i);
-            PyTuple_SET_ITEM(result, i, item); // 在None的位置设置item
-            Py_DECREF(olditem);
-        &#125;
-        // bpo-42536: The GC may have untracked this result tuple. Since we&#39;re
-        // recycling it, make sure it&#39;s tracked again:
-    // 一些GC的判断处理
-        if (!_PyObject_GC_IS_TRACKED(result)) &#123;
-            _PyObject_GC_TRACK(result);
-        &#125;
-    &#125; else &#123;
-    // 当结果元组的引用计数不为1, 就重新申请一个
-        result = PyTuple_New(tuplesize);
-        if (result == NULL)
-        // 申请失败
-            return NULL;
-        for (i=0 ; i &lt; tuplesize ; i++) &#123; // 这里的循环处理跟上面的相差无几，只是不需要管理None了
-            it = PyTuple_GET_ITEM(lz-&gt;ittuple, i); // 根据i下标在ittuple中获取每个迭代器
-            item = (*Py_TYPE(it)-&gt;tp_iternext)(it); // 调用每个迭代器的__next__方法返回元素
-            if (item == NULL) &#123;
-        // 元素为NULL时表示迭代结束
-                Py_DECREF(result);
-                return NULL;
-            &#125;
-            PyTuple_SET_ITEM(result, i, item); // 根据i下标在结果元组里设置每个item
-        &#125;
-    &#125;
-    return result; // 返回了一个元组对象
-&#125;
-</code></pre>
-<p>这里需要注意，在对zip进行调用__next__时，最终返回了一个PyTupleObject，也就是元组，在元组里边已经将迭代器的元素都设置到了该元组，所以实际上，返回的每个结果是通过对PyTupleObject调用__next__获取的</p>
-<p>首先在调用PyTupleObject的__iter__时，会将it_index设置为0，也就是起始位置，然后返回一个tupleiterobject对象，调用的也正在它的__next__方法</p>
-<pre><code class="c">static PyObject *
-tupleiter_next(tupleiterobject *it)
-&#123;
-    PyTupleObject *seq;
-    PyObject *item;
-
-    assert(it != NULL);
-    seq = it-&gt;it_seq;
-    if (seq == NULL)
-        return NULL;
-    assert(PyTuple_Check(seq));
-
-    // 从0开始, 条件为元组的长度
-    if (it-&gt;it_index &lt; PyTuple_GET_SIZE(seq)) &#123;
-        item = PyTuple_GET_ITEM(seq, it-&gt;it_index); // 根据下标获取我们在zip_next方法中设置好的每个结果元组
-        ++it-&gt;it_index; // 下标+1
-        Py_INCREF(item); // 引用计数+1
-        return item; // 返回元素
-    &#125;
-
-    it-&gt;it_seq = NULL;
-    Py_DECREF(seq);
-    return NULL;
-&#125;
-</code></pre>
-<p>关于zip()的探究就到这了，基本重要的都讲了，有兴趣可以自己翻一翻源码😎</p>
+<p>在 Python 源码中，zip 是这样子的</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">zip</span><span class="token punctuation">(</span><span class="token builtin">object</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token triple-quoted-string string">"""</pre></td></tr><tr><td data-num="3"></td><td><pre>    zip(*iterables) --> zip object</pre></td></tr><tr><td data-num="4"></td><td><pre>    </pre></td></tr><tr><td data-num="5"></td><td><pre>    Return a zip object whose .__next__() method returns a tuple where</pre></td></tr><tr><td data-num="6"></td><td><pre>    the i-th element comes from the i-th iterable argument.  The .__next__()</pre></td></tr><tr><td data-num="7"></td><td><pre>    method continues until the shortest iterable in the argument sequence</pre></td></tr><tr><td data-num="8"></td><td><pre>    is exhausted and then it raises StopIteration.</pre></td></tr><tr><td data-num="9"></td><td><pre>    """</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__getattribute__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        <span class="token triple-quoted-string string">""" Return getattr(self, name). """</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>iterables<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown; restored from __doc__</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__iter__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        <span class="token triple-quoted-string string">""" Implement iter(self). """</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token decorator annotation punctuation">@staticmethod</span> <span class="token comment"># known case of __new__</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__new__</span><span class="token punctuation">(</span><span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown</span></pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token triple-quoted-string string">""" Create and return a new object.  See help(type) for accurate signature. """</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="25"></td><td><pre></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__next__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown</span></pre></td></tr><tr><td data-num="27"></td><td><pre>        <span class="token triple-quoted-string string">""" Implement next(self). """</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="29"></td><td><pre></pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__reduce__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> <span class="token operator">**</span>kwargs<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># real signature unknown</span></pre></td></tr><tr><td data-num="31"></td><td><pre>        <span class="token triple-quoted-string string">""" Return state information for pickling. """</span></pre></td></tr><tr><td data-num="32"></td><td><pre>        <span class="token keyword">pass</span></pre></td></tr></table></figure><p>zip 类定义了__iter__、__next__，说明它是支持迭代操作的，注释提到，当调用 zip 时，它会返回一个 zip 对象，调用.__next__() 方法返回一个元组，其中第 i 个元素来自第 i 个可迭代参数，__next__() 会一直持续到参数序列中最短的可迭代对象用尽为止，然后引发 StopIteration，终止循环</p>
+<p>在调用 zip 时，我们可以传递多个 iterator</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre>a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="2"></td><td><pre>b <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="3"></td><td><pre>c <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>r <span class="token operator">=</span> <span class="token builtin">zip</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token keyword">for</span> i <span class="token keyword">in</span> r<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">>></span><span class="token operator">></span> 打印结果</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">>></span><span class="token operator">></span></pre></td></tr></table></figure><h3 id="在cpython中zip的结构"><a class="markdownIt-Anchor" href="#在cpython中zip的结构">#</a> 在 CPython 中 zip 的结构</h3>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>PyTypeObject PyZip_Type <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token function">PyVarObject_HEAD_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>PyType_Type<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token string">"zip"</span><span class="token punctuation">,</span>                              <span class="token comment">/* tp_name */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">sizeof</span><span class="token punctuation">(</span>zipobject<span class="token punctuation">)</span><span class="token punctuation">,</span>                  <span class="token comment">/* tp_basicsize */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token comment">/* 忽略，不重要 */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    PyObject_GenericGetAttr<span class="token punctuation">,</span>            <span class="token comment">/* tp_getattro */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_setattro */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_as_buffer */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    Py_TPFLAGS_DEFAULT <span class="token operator">|</span> Py_TPFLAGS_HAVE_GC <span class="token operator">|</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        Py_TPFLAGS_BASETYPE<span class="token punctuation">,</span>            <span class="token comment">/* tp_flags */</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    zip_doc<span class="token punctuation">,</span>                            <span class="token comment">/* tp_doc */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token punctuation">(</span>traverseproc<span class="token punctuation">)</span>zip_traverse<span class="token punctuation">,</span>    <span class="token comment">/* tp_traverse */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_clear */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_richcompare */</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_weaklistoffset */</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    PyObject_SelfIter<span class="token punctuation">,</span>                  <span class="token comment">/* tp_iter */</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token punctuation">(</span>iternextfunc<span class="token punctuation">)</span>zip_next<span class="token punctuation">,</span>     <span class="token comment">/* tp_iternext */</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    zip_methods<span class="token punctuation">,</span>                        <span class="token comment">/* tp_methods */</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_members */</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_getset */</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_base */</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_dict */</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_descr_get */</span></pre></td></tr><tr><td data-num="24"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_descr_set */</span></pre></td></tr><tr><td data-num="25"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_dictoffset */</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                  <span class="token comment">/* tp_init */</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    PyType_GenericAlloc<span class="token punctuation">,</span>                <span class="token comment">/* tp_alloc */</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    zip_new<span class="token punctuation">,</span>                            <span class="token comment">/* tp_new */</span></pre></td></tr><tr><td data-num="29"></td><td><pre>    PyObject_GC_Del<span class="token punctuation">,</span>                    <span class="token comment">/* tp_free */</span></pre></td></tr><tr><td data-num="30"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>那在我们调用 zip 时，是先调用了 zip_new 方法</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject_HEAD</pre></td></tr><tr><td data-num="3"></td><td><pre>    Py_ssize_t          tuplesize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyObject <span class="token operator">*</span>ittuple<span class="token punctuation">;</span>                  <span class="token comment">/* tuple of iterators */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    PyObject <span class="token operator">*</span>result<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">&#125;</span> zipobject<span class="token punctuation">;</span> <span class="token comment">//zipobject 结构体</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token function">zip_new</span><span class="token punctuation">(</span>PyTypeObject <span class="token operator">*</span>type<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>args<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>kwds<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    zipobject <span class="token operator">*</span>lz<span class="token punctuation">;</span> <span class="token comment">// 成功创建则返回对象，对应 Python 中的 zip object</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    Py_ssize_t i<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    PyObject <span class="token operator">*</span>ittuple<span class="token punctuation">;</span>  <span class="token comment">/* tuple of iterators */</span> <span class="token comment">// 存储每个迭代器的对象</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    PyObject <span class="token operator">*</span>result<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    Py_ssize_t tuplesize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>type <span class="token operator">==</span> <span class="token operator">&amp;</span>PyZip_Type <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token function">_PyArg_NoKeywords</span><span class="token punctuation">(</span><span class="token string">"zip"</span><span class="token punctuation">,</span> kwds<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="18"></td><td><pre>	<span class="token comment">// 类型检查和关键字判断</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token comment">/* args must be a tuple */</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token function">assert</span><span class="token punctuation">(</span><span class="token function">PyTuple_Check</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//args 必须是一个元组</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    tuplesize <span class="token operator">=</span> <span class="token function">PyTuple_GET_SIZE</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 获取 args 的大小</span></pre></td></tr><tr><td data-num="24"></td><td><pre></pre></td></tr><tr><td data-num="25"></td><td><pre>    <span class="token comment">/* obtain iterators */</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token comment">// 开始获取迭代器</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token comment">/*</pre></td></tr><tr><td data-num="28"></td><td><pre>        如果 args 为空，也就是 zip () 没有参数，那么 tuplesize 就为 0, 会从缓冲池里获取一个空元组</pre></td></tr><tr><td data-num="29"></td><td><pre>	如果不为空，就按照 tuplesize 申请一个元组，并对其元素都设置为 NULL、GC 管理</pre></td></tr><tr><td data-num="30"></td><td><pre>    */</span></pre></td></tr><tr><td data-num="31"></td><td><pre>    ittuple <span class="token operator">=</span> <span class="token function">PyTuple_New</span><span class="token punctuation">(</span>tuplesize<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="32"></td><td><pre></pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>ittuple <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="34"></td><td><pre>	<span class="token comment">// 申请失败</span></pre></td></tr><tr><td data-num="35"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="36"></td><td><pre>    <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> tuplesize<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">//tuplesize 循环</span></pre></td></tr><tr><td data-num="37"></td><td><pre>        PyObject <span class="token operator">*</span>item <span class="token operator">=</span> <span class="token function">PyTuple_GET_ITEM</span><span class="token punctuation">(</span>args<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 获取 args 对应下标的对象</span></pre></td></tr><tr><td data-num="38"></td><td><pre>        PyObject <span class="token operator">*</span>it <span class="token operator">=</span> <span class="token function">PyObject_GetIter</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 调用每个 item 对象的__iter__方法，获取 iterator（item 可能是不同类型）</span></pre></td></tr><tr><td data-num="39"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>it <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="40"></td><td><pre>	    <span class="token comment">// 如果某一个 item 调用__iter__后返回空，则运行结束</span></pre></td></tr><tr><td data-num="41"></td><td><pre>            <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>ittuple<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 引用计数 - 1</span></pre></td></tr><tr><td data-num="42"></td><td><pre>            <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="43"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="44"></td><td><pre>        <span class="token function">PyTuple_SET_ITEM</span><span class="token punctuation">(</span>ittuple<span class="token punctuation">,</span> i<span class="token punctuation">,</span> it<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 根据下标 i 在 ittuple 中设置 it（迭代器对象）</span></pre></td></tr><tr><td data-num="45"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="46"></td><td><pre></pre></td></tr><tr><td data-num="47"></td><td><pre>    <span class="token comment">/* create a result holder */</span></pre></td></tr><tr><td data-num="48"></td><td><pre>    <span class="token comment">// 再根据 tuplesize 创建一个元组，专门用来存储结果，而大小和 ittuple 一样</span></pre></td></tr><tr><td data-num="49"></td><td><pre>    result <span class="token operator">=</span> <span class="token function">PyTuple_New</span><span class="token punctuation">(</span>tuplesize<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="50"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>result <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="51"></td><td><pre>	<span class="token comment">// 申请失败</span></pre></td></tr><tr><td data-num="52"></td><td><pre>        <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>ittuple<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="53"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="54"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="55"></td><td><pre>    <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span> <span class="token punctuation">;</span> i <span class="token operator">&lt;</span> tuplesize <span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="56"></td><td><pre>        <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>Py_None<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 空对象</span></pre></td></tr><tr><td data-num="57"></td><td><pre>        <span class="token function">PyTuple_SET_ITEM</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> i<span class="token punctuation">,</span> Py_None<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 根据下标 i 在 result 中设置 None</span></pre></td></tr><tr><td data-num="58"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="59"></td><td><pre></pre></td></tr><tr><td data-num="60"></td><td><pre>    <span class="token comment">/* create zipobject structure */</span></pre></td></tr><tr><td data-num="61"></td><td><pre>    lz <span class="token operator">=</span> <span class="token punctuation">(</span>zipobject <span class="token operator">*</span><span class="token punctuation">)</span>type<span class="token operator">-></span><span class="token function">tp_alloc</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="62"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>lz <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="63"></td><td><pre>        <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>ittuple<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="64"></td><td><pre>        <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="65"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="66"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="67"></td><td><pre>    lz<span class="token operator">-></span>ittuple <span class="token operator">=</span> ittuple<span class="token punctuation">;</span> <span class="token comment">// 设置迭代器元素</span></pre></td></tr><tr><td data-num="68"></td><td><pre>    lz<span class="token operator">-></span>tuplesize <span class="token operator">=</span> tuplesize<span class="token punctuation">;</span> <span class="token comment">// 设置大小</span></pre></td></tr><tr><td data-num="69"></td><td><pre>    lz<span class="token operator">-></span>result <span class="token operator">=</span> result<span class="token punctuation">;</span> <span class="token comment">// 设置存储结果的元组</span></pre></td></tr><tr><td data-num="70"></td><td><pre></pre></td></tr><tr><td data-num="71"></td><td><pre>    <span class="token keyword">return</span> <span class="token punctuation">(</span>PyObject <span class="token operator">*</span><span class="token punctuation">)</span>lz<span class="token punctuation">;</span> <span class="token comment">// 返回 zipobject</span></pre></td></tr><tr><td data-num="72"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>在调用 zip () 时，首先根据传递的位置参数 args，获取 args 的大小，然后根据该大小申请两个元组，一个用来存储位置参数中，每个对象调用__iter__() 后返回的迭代器对象，一个用来存储调用__next__时返回的结果，一共执行了两次循环，最终返回 zipobject</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre>g <span class="token operator">=</span> <span class="token builtin">zip</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">print</span><span class="token punctuation">(</span>g<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token operator">&lt;</span><span class="token builtin">zip</span> <span class="token builtin">object</span> at <span class="token number">0x0000020D3976D200</span><span class="token operator">></span></pre></td></tr></table></figure><p>在对 zip object 进行迭代时，是如何处理的，首先会先调用 zip object 的__iter__方法，而它返回了本身</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">PyObject_SelfIter</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>obj<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">return</span> obj<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>并对本身不断的调用__next__方法</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">zip_next</span><span class="token punctuation">(</span>zipobject <span class="token operator">*</span>lz<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    Py_ssize_t i<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    Py_ssize_t tuplesize <span class="token operator">=</span> lz<span class="token operator">-></span>tuplesize<span class="token punctuation">;</span> <span class="token comment">// 元素的大小</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    PyObject <span class="token operator">*</span>result <span class="token operator">=</span> lz<span class="token operator">-></span>result<span class="token punctuation">;</span> <span class="token comment">// 存储结果的元组</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    PyObject <span class="token operator">*</span>it<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    PyObject <span class="token operator">*</span>item<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    PyObject <span class="token operator">*</span>olditem<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>tuplesize <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">Py_REFCNT</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>	<span class="token comment">// 当引用计数为 1 时</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 引用计数 + 1</span></pre></td></tr><tr><td data-num="16"></td><td><pre>	<span class="token comment">// 对 tuplesize 进行循环</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span> <span class="token punctuation">;</span> i <span class="token operator">&lt;</span> tuplesize <span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>            it <span class="token operator">=</span> <span class="token function">PyTuple_GET_ITEM</span><span class="token punctuation">(</span>lz<span class="token operator">-></span>ittuple<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 根据 i 获取 ittuple 对应下标的迭代器</span></pre></td></tr><tr><td data-num="19"></td><td><pre>            item <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">*</span><span class="token function">Py_TYPE</span><span class="token punctuation">(</span>it<span class="token punctuation">)</span><span class="token operator">-></span>tp_iternext<span class="token punctuation">)</span><span class="token punctuation">(</span>it<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 调用每个迭代器的__next__方法，获取第 it 位置的元素</span></pre></td></tr><tr><td data-num="20"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>item <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>		<span class="token comment">// 如果__next__返回空，表示可迭代对象已用尽，调用结束</span></pre></td></tr><tr><td data-num="22"></td><td><pre>		<span class="token comment">// 当 zip () 传递的每个参数长度不一致，就会以最短的迭代完并结束</span></pre></td></tr><tr><td data-num="23"></td><td><pre>		<span class="token comment">// 比如 a = [1,2,3], b = [4,5,6,7,8,9], 当执行第 4 次时，a 已经用尽了，根据下标 4 在 a 中获取会发生异常，也就会结束</span></pre></td></tr><tr><td data-num="24"></td><td><pre>                <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="25"></td><td><pre>                <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>	    <span class="token comment">// 根据下标 i 在 result (结果元组) 里获取 None, 对 None 进行引用计数 - 1, 并在它的位置设置每个迭代器返回的元素</span></pre></td></tr><tr><td data-num="28"></td><td><pre>            olditem <span class="token operator">=</span> <span class="token function">PyTuple_GET_ITEM</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>            <span class="token function">PyTuple_SET_ITEM</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> i<span class="token punctuation">,</span> item<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 在 None 的位置设置 item</span></pre></td></tr><tr><td data-num="30"></td><td><pre>            <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>olditem<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="31"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="32"></td><td><pre>        <span class="token comment">// bpo-42536: The GC may have untracked this result tuple. Since we're</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        <span class="token comment">// recycling it, make sure it's tracked again:</span></pre></td></tr><tr><td data-num="34"></td><td><pre>	<span class="token comment">// 一些 GC 的判断处理</span></pre></td></tr><tr><td data-num="35"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">_PyObject_GC_IS_TRACKED</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="36"></td><td><pre>            <span class="token function">_PyObject_GC_TRACK</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="37"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="38"></td><td><pre>    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="39"></td><td><pre>	<span class="token comment">// 当结果元组的引用计数不为 1, 就重新申请一个</span></pre></td></tr><tr><td data-num="40"></td><td><pre>        result <span class="token operator">=</span> <span class="token function">PyTuple_New</span><span class="token punctuation">(</span>tuplesize<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="41"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>result <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="42"></td><td><pre>	    <span class="token comment">// 申请失败</span></pre></td></tr><tr><td data-num="43"></td><td><pre>            <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="44"></td><td><pre>        <span class="token keyword">for</span> <span class="token punctuation">(</span>i<span class="token operator">=</span><span class="token number">0</span> <span class="token punctuation">;</span> i <span class="token operator">&lt;</span> tuplesize <span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 这里的循环处理跟上面的相差无几，只是不需要管理 None 了</span></pre></td></tr><tr><td data-num="45"></td><td><pre>            it <span class="token operator">=</span> <span class="token function">PyTuple_GET_ITEM</span><span class="token punctuation">(</span>lz<span class="token operator">-></span>ittuple<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 根据 i 下标在 ittuple 中获取每个迭代器</span></pre></td></tr><tr><td data-num="46"></td><td><pre>            item <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">*</span><span class="token function">Py_TYPE</span><span class="token punctuation">(</span>it<span class="token punctuation">)</span><span class="token operator">-></span>tp_iternext<span class="token punctuation">)</span><span class="token punctuation">(</span>it<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 调用每个迭代器的__next__方法返回元素</span></pre></td></tr><tr><td data-num="47"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>item <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="48"></td><td><pre>		<span class="token comment">// 元素为 NULL 时表示迭代结束</span></pre></td></tr><tr><td data-num="49"></td><td><pre>                <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="50"></td><td><pre>                <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="51"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="52"></td><td><pre>            <span class="token function">PyTuple_SET_ITEM</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> i<span class="token punctuation">,</span> item<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 根据 i 下标在结果元组里设置每个 item</span></pre></td></tr><tr><td data-num="53"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="54"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="55"></td><td><pre>    <span class="token keyword">return</span> result<span class="token punctuation">;</span> <span class="token comment">// 返回了一个元组对象</span></pre></td></tr><tr><td data-num="56"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>这里需要注意，在对 zip 进行调用__next__时，最终返回了一个 PyTupleObject，也就是元组，在元组里边已经将迭代器的元素都设置到了该元组，所以实际上，返回的每个结果是通过对 PyTupleObject 调用__next__获取的</p>
+<p>首先在调用 PyTupleObject 的__iter__时，会将 it_index 设置为 0，也就是起始位置，然后返回一个 tupleiterobject 对象，调用的也正在它的__next__方法</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">tupleiter_next</span><span class="token punctuation">(</span>tupleiterobject <span class="token operator">*</span>it<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyTupleObject <span class="token operator">*</span>seq<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    PyObject <span class="token operator">*</span>item<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token function">assert</span><span class="token punctuation">(</span>it <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    seq <span class="token operator">=</span> it<span class="token operator">-></span>it_seq<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>seq <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token function">assert</span><span class="token punctuation">(</span><span class="token function">PyTuple_Check</span><span class="token punctuation">(</span>seq<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token comment">// 从 0 开始，条件为元组的长度</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>it<span class="token operator">-></span>it_index <span class="token operator">&lt;</span> <span class="token function">PyTuple_GET_SIZE</span><span class="token punctuation">(</span>seq<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        item <span class="token operator">=</span> <span class="token function">PyTuple_GET_ITEM</span><span class="token punctuation">(</span>seq<span class="token punctuation">,</span> it<span class="token operator">-></span>it_index<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 根据下标获取我们在 zip_next 方法中设置好的每个结果元组</span></pre></td></tr><tr><td data-num="16"></td><td><pre>        <span class="token operator">++</span>it<span class="token operator">-></span>it_index<span class="token punctuation">;</span> <span class="token comment">// 下标 + 1</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 引用计数 + 1</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        <span class="token keyword">return</span> item<span class="token punctuation">;</span> <span class="token comment">// 返回元素</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>    it<span class="token operator">-></span>it_seq <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>seq<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="24"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>关于 zip () 的探究就到这了，基本重要的都讲了，有兴趣可以自己翻一翻源码😎</p>
 <iframe src="//player.bilibili.com/player.html?aid=934559716&bvid=BV1WM4y1w7H7&cid=453686633&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
       <div class="tags">
@@ -495,7 +251,7 @@ tupleiter_next(tupleiterobject *it)
     <div class="item left">
       
 
-  <a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclhpw3lwj20zk0m8gvw.jpg" title="Python map对象探究">
+  <a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipesng5oej20zk0m87d4.jpg" title="Python map对象探究">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>Python map对象探究</h3>
@@ -505,7 +261,7 @@ tupleiter_next(tupleiterobject *it)
     <div class="item right">
       
 
-  <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeybxm1pj20zk0m8niv.jpg" title="Python list实现原理">
+  <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeyvx1d4j20zk0m8hdt.jpg" title="Python list实现原理">
   <span class="type">Next Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>Python list实现原理</h3>
@@ -527,7 +283,7 @@ tupleiter_next(tupleiterobject *it)
   <div class="panels">
     <div class="inner">
       <div class="contents panel pjax" data-title="Contents">
-          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python-zip"><span class="toc-number">1.</span> <span class="toc-text">Python zip()</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%88%91%E4%B8%80%E8%88%AC%E4%B9%9F%E4%B8%8D%E6%B8%85%E6%A5%9A%E5%A6%82%E4%BD%95%E5%BD%A2%E5%AE%B9%E4%B8%80%E4%BA%9B%E6%96%B9%E6%B3%95%E7%9A%84%E7%89%B9%E6%80%A7%EF%BC%8C%E9%83%BD%E6%98%AF%E5%9C%A8%E7%BD%91%E4%B8%8A%E6%9F%A5%E6%9F%A5%E5%B0%B1%E8%BF%87%E4%BA%86%EF%BC%8C%E5%85%88%E7%9C%8B%E7%9C%8Brunoob%E5%AF%B9zip%E7%9A%84%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看runoob对zip的描述</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8CPython%E4%B8%ADzip%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">在CPython中zip的结构</span></a></li></ol>
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#python-zip"><span class="toc-number">1.</span> <span class="toc-text"> Python zip()</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%88%91%E4%B8%80%E8%88%AC%E4%B9%9F%E4%B8%8D%E6%B8%85%E6%A5%9A%E5%A6%82%E4%BD%95%E5%BD%A2%E5%AE%B9%E4%B8%80%E4%BA%9B%E6%96%B9%E6%B3%95%E7%9A%84%E7%89%B9%E6%80%A7%E9%83%BD%E6%98%AF%E5%9C%A8%E7%BD%91%E4%B8%8A%E6%9F%A5%E6%9F%A5%E5%B0%B1%E8%BF%87%E4%BA%86%E5%85%88%E7%9C%8B%E7%9C%8Brunoob%E5%AF%B9zip%E7%9A%84%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.0.0.1.</span> <span class="toc-text"> 我一般也不清楚如何形容一些方法的特性，都是在网上查查就过了，先看看 runoob 对 zip 的描述</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8cpython%E4%B8%ADzip%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text"> 在 CPython 中 zip 的结构</span></a></li></ol>
       </div>
       <div class="related panel pjax" data-title="Related">
         <ul>
@@ -640,22 +396,14 @@ tupleiter_next(tupleiterobject *it)
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/Life/" title="In Life">Life</a>
-</div>
-
-    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
 </div>
 
-    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
+    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
   </li>
 
       
@@ -679,7 +427,31 @@ tupleiter_next(tupleiterobject *it)
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
     <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Office/" title="In Office">Office</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Office/PowerPoint/" title="In PowerPoint">PowerPoint</a>
+</div>
+
+    <span><a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" title="PPT结构组成（工作中的总结）">PPT结构组成（工作中的总结）</a></span>
   </li>
 
       
@@ -698,26 +470,10 @@ tupleiter_next(tupleiterobject *it)
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
+<a href="/categories/Life/" title="In Life">Life</a>
 </div>
 
-    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
-</div>
-
-    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
   </li>
 
       
@@ -741,7 +497,7 @@ tupleiter_next(tupleiterobject *it)
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
+    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
   </li>
 
       
@@ -753,7 +509,7 @@ tupleiter_next(tupleiterobject *it)
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
   </li>
 
   </ul>

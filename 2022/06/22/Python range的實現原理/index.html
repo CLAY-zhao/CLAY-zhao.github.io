@@ -102,12 +102,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclwuom7cj20zk0m8dvn.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclxfdlttj20zk0m8npd.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclx29mstj20zk0m8hdt.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicitf0kl1j20zk0m87fe.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipeyvx1d4j20zk0m8hdt.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giph4wqtg4j20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipevgoki5j20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicis3attqj20zk0m8k7l.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giph4fomxoj20zk0m8axp.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipew28b65j20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipesx5fdwj20zk0m81kx.jpg"></li>
+          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclxfdlttj20zk0m8npd.jpg"></li>
         </ul>
       </div>
     </header>
@@ -159,315 +159,29 @@ Leayoos Chui = 士多啤梨苹果橙</title>
   <div class="body md" itemprop="articleBody">
     
 
-    <h3 id="Range的實現原理"><a href="#Range的實現原理" class="headerlink" title="Range的實現原理"></a>Range的實現原理</h3><p>老規矩，先看看range的docstring</p>
-<pre><code class="python">range(stop) -&gt; range object
-range(start, stop[, step]) -&gt; range object
-
-Return an object that produces a sequence of integers from start (inclusive)
-to stop (exclusive) by step.  range(i, j) produces i, i+1, i+2, ..., j-1.
-start defaults to 0, and stop is omitted!  range(4) produces 0, 1, 2, 3.
-These are exactly the valid indices for a list of 4 elements.
-When step is given, it specifies the increment (or decrement).
-</code></pre>
-<span id="more"></span>
-
-<p>首先，調用range()時，它會返回一個range object，那在CPython裏，對應的就是rangeobject結構體，但最終返回的還是PyObject *，range對應CPython中PyRange_Type，位於Objects/rangeobject.c</p>
-<pre><code class="c">PyTypeObject PyRange_Type = &#123;
-        PyVarObject_HEAD_INIT(&amp;PyType_Type, 0)
-        &quot;range&quot;,                /* Name of this type */
-        sizeof(rangeobject),    /* Basic object size */
-        0,                      /* Item size for varobject */
-        (destructor)range_dealloc, /* tp_dealloc */
-        0,                      /* tp_vectorcall_offset */
-        0,                      /* tp_getattr */
-        0,                      /* tp_setattr */
-        0,                      /* tp_as_async */
-        (reprfunc)range_repr,   /* tp_repr */
-        &amp;range_as_number,       /* tp_as_number */
-        &amp;range_as_sequence,     /* tp_as_sequence */
-        &amp;range_as_mapping,      /* tp_as_mapping */
-        (hashfunc)range_hash,   /* tp_hash */
-        0,                      /* tp_call */
-        0,                      /* tp_str */
-        PyObject_GenericGetAttr,  /* tp_getattro */
-        0,                      /* tp_setattro */
-        0,                      /* tp_as_buffer */
-        Py_TPFLAGS_DEFAULT,     /* tp_flags */
-        range_doc,              /* tp_doc */ 
-        0,                      /* tp_traverse */
-        0,                      /* tp_clear */
-        range_richcompare,      /* tp_richcompare */
-        0,                      /* tp_weaklistoffset */
-        range_iter,             /* tp_iter */
-        0,                      /* tp_iternext */
-        range_methods,          /* tp_methods */
-        range_members,          /* tp_members */
-        0,                      /* tp_getset */
-        0,                      /* tp_base */
-        0,                      /* tp_dict */
-        0,                      /* tp_descr_get */
-        0,                      /* tp_descr_set */
-        0,                      /* tp_dictoffset */
-        0,                      /* tp_init */
-        0,                      /* tp_alloc */
-        range_new,              /* tp_new */
-        .tp_vectorcall = (vectorcallfunc)range_vectorcall
-&#125;;
-</code></pre>
-<p>在調用range(10)、range(0, 10)、range(0, 10, 2)的時候，首先會執行range_new方法</p>
-<pre><code class="c">static PyObject *
-range_new(PyTypeObject *type, PyObject *args, PyObject *kw)
-&#123;
-    if (!_PyArg_NoKeywords(&quot;range&quot;, kw))
-    // 校驗是否沒有傳遞關鍵字, 如果沒有傳遞, 表示真, 傳遞了, 為假
-        return NULL;
-
-    /*
-    創建rangeobject並返回, _PyTuple_ITEMS將args轉爲PyTupleObject, 並取出ob_item
-    PyTyple_GET_SIZE獲取參數的數量
-    */
-    return range_from_array(type, _PyTuple_ITEMS(args), PyTuple_GET_SIZE(args));
-&#125;
-</code></pre>
-<p>那在創建range對象時，主要是執行了range_from_array方法, 一切事情都發生在裏面</p>
-<pre><code class="c">static PyObject *
-range_from_array(PyTypeObject *type, PyObject *const *args, Py_ssize_t num_args)
-&#123;
-    rangeobject *obj; // 首先聲明一個rangeobject對象, 如果創建成功就會返回此對象
-    PyObject *start = NULL, *stop = NULL, *step = NULL; // 定義range的起始、結尾、間隔
-
-    // 參數個數
-    switch (num_args) &#123;
-        case 3:
-        // 傳遞了3個參數: start、stop、step
-            step = args[2]; // 取出第3个参数: 间隔
-            /* fallthrough */
-        case 2:
-        // 傳遞了2個參數: start、stop
-            /* Convert borrowed refs to owned refs */
-            start = PyNumber_Index(args[0]); // 校验类型并返回索引，方法实现在下方
-            if (!start) &#123;
-        // 为空, 不是有效的int
-                return NULL;
-            &#125;
-            stop = PyNumber_Index(args[1]); // 校验类型并返回索引
-            if (!stop) &#123;
-        // 为空, 不是有效的int
-                Py_DECREF(start); // 引用计数-1
-                return NULL;
-            &#125;
-        // 验证间隔, 实现方法在下面
-            step = validate_step(step);  /* Caution, this can clear exceptions */
-            if (!step) &#123;
-        // 如果为空
-                Py_DECREF(start); // start引用计数-1
-                Py_DECREF(stop); // stop引用计数-1
-                return NULL; // 结束
-            &#125;
-            break;
-        case 1:
-        // 傳遞了1個參數: stop
-            stop = PyNumber_Index(args[0]); // 校验类型並返回索引
-            if (!stop) &#123;
-                return NULL;
-            &#125;
-            Py_INCREF(_PyLong_Zero);
-            start = _PyLong_Zero;
-            Py_INCREF(_PyLong_One);
-            step = _PyLong_One;
-            break;
-        case 0:
-        // 儅range傳遞參數為0個時，抛異常
-            PyErr_SetString(PyExc_TypeError,
-                            &quot;range expected at least 1 argument, got 0&quot;);
-            return NULL;
-        default:
-        // 儅range傳遞參數超過3個時，抛異常
-            PyErr_Format(PyExc_TypeError,
-                         &quot;range expected at most 3 arguments, got %zd&quot;,
-                         num_args);
-            return NULL;
-    &#125;
-    obj = make_range_object(type, start, stop, step); // 真正開始創建rangeobject, 裏面做了計算range的範圍長度
-    if (obj != NULL) &#123;
-    // 創建rangeobject成功, 返回PyObject *
-        return (PyObject *) obj;
-    &#125;
-
-    /* Failed to create object, release attributes */
-    // 創建失敗, 釋放屬性
-    Py_DECREF(start);
-    Py_DECREF(stop);
-    Py_DECREF(step);
-    return NULL;
-&#125;
-
-static PyObject *
-validate_step(PyObject *step)
-&#123;
-    // 校验间隔
-    /* No step specified, use a step of 1. */
-    if (!step)
-    // 如果没有指定间隔, 就默认使用1
-        return PyLong_FromLong(1); // 从 C long int中创建一个Python int对象
-
-    step = PyNumber_Index(step); // 校验类型并返回索引
-    if (step &amp;&amp; _PyLong_Sign(step) == 0) &#123;
-    // 如果间隔给了0, 抛异常
-        PyErr_SetString(PyExc_ValueError,
-                        &quot;range() arg 3 must not be zero&quot;);
-        Py_CLEAR(step);
-    &#125;
-
-    return step; // 返回步长
-&#125;
-</code></pre>
-<p><img data-src="http://res.cloudinary.com/dotachkke/image/upload/v1655865175/upload/tegn9o0cgkwvarr9nina.png" alt="image.png"></p>
-<p>PyNumber_Index方法的定义，返回Python int对象，如果结果不是int，就会引发TypeError，或者对象不能作为索引</p>
-<pre><code class="c">PyObject *
-PyNumber_Index(PyObject *item)
-&#123;
-    PyObject *result = NULL;
-    if (item == NULL) &#123;
-        return null_error();
-    &#125;
-
-    if (PyLong_Check(item)) &#123;
-    // 如果item是一個PyLongObject或者子類，則返回True
-        Py_INCREF(item); // 引用計數+1
-        return item;
-    &#125;
-    if (!_PyIndex_Check(item)) &#123;
-    // 如果對象不是一個PyLongObject，檢查對象是否定義了__index__方法
-        PyErr_Format(PyExc_TypeError,
-                     &quot;&#39;%.200s&#39; object cannot be interpreted &quot;
-                     &quot;as an integer&quot;, Py_TYPE(item)-&gt;tp_name);
-        return NULL;
-    &#125;
-    // 在item的父類中，獲取tp_as_number(實現了數字協議對象相關的結構), 並取出np_index調用，對應Python對象的__index__方法,
-    result = Py_TYPE(item)-&gt;tp_as_number-&gt;nb_index(item);
-    if (!result || PyLong_CheckExact(result))
-    // 如果返回非0或者為PyLongObject
-        return result; // 成功返回
-    if (!PyLong_Check(result)) &#123;
-    // 如果返回的不是一個PyLongObject, 抛異常, 比如在Python中返回None或者非int對象
-        PyErr_Format(PyExc_TypeError,
-                     &quot;__index__ returned non-int (type %.200s)&quot;,
-                     Py_TYPE(result)-&gt;tp_name);
-        Py_DECREF(result); // 引用計數-1
-        return NULL;
-    &#125;
-    /* Issue #17576: warn if &#39;result&#39; not of exact type int. */
-    if (PyErr_WarnFormat(PyExc_DeprecationWarning, 1,
-            &quot;__index__ returned non-int (type %.200s).  &quot;
-            &quot;The ability to return an instance of a strict subclass of int &quot;
-            &quot;is deprecated, and may be removed in a future version of Python.&quot;,
-            Py_TYPE(result)-&gt;tp_name)) &#123;
-        Py_DECREF(result);
-        return NULL;
-    &#125;
-    return result;
-&#125;
-</code></pre>
-<p>在PyNumber_Index中，如果對象不是PyLongObject，還會檢查對象是否定義了__index__，在沒有重載的情況下作爲參數傳遞給range<br><img data-src="http://res.cloudinary.com/dotachkke/image/upload/v1655867228/upload/ftln3qyctb3m71qv88or.png" alt="image.png"></p>
-<p>如果重載了__index__方法的情況下，range成功創建了rangeobject<br><img data-src="http://res.cloudinary.com/dotachkke/image/upload/v1655867322/upload/w1u8jk5z2mfvwu0g8mlk.png" alt="image.png"></p>
-<p>如果重載了__index__方法，但是返回的不是PyLongObject，就會抛異常: “<strong>index</strong> returned non-int (type %.200s)”<br><img data-src="http://res.cloudinary.com/dotachkke/image/upload/v1655867796/upload/tww5cev6tmtaml7uyxgz.png" alt="image.png"></p>
-<h3 id="for-…-in-range時，發生了什麽？"><a href="#for-…-in-range時，發生了什麽？" class="headerlink" title="for … in range時，發生了什麽？"></a>for … in range時，發生了什麽？</h3><p>在Python中，對一個對象進行循環迭代時，首先會調用對象的__iter__方法，獲取iterator，再對iterator一直調用__next__方法，獲取iterable，直到遇到StopIteration，就會停止，那麽在對rangeobject進行迭代時，就是執行了rangeobject定義好的__iter__方法，對應range_iter方法</p>
-<pre><code class="c">static PyObject *
-range_iter(PyObject *seq)
-&#123;
-    rangeobject *r = (rangeobject *)seq;
-    longrangeiterobject *it; // 在調用__iter__時，如果大小範圍超出, 返回的是longrangeiterobject, 儅調用__next__時，實際就是調用它的__next__方法，而不是rangeobject
-    long lstart, lstop, lstep; // 起始、結束、間隔
-    unsigned long ulen;
-
-    assert(PyRange_Check(seq));
-    
-    // If all three fields and the length convert to long, use the int
-    ......
-    
-    /*
-    get_len_of_range主要計算range範圍/長度
-    如果step &gt; 0并且start &gt;= stop，或者step &lt; 0并且start &lt;= stop, 那麽返回的範圍為空 -&gt; []
-    對於step &gt; 0, 如果n個值在範圍内，則最後一個值為 start + (n - 1) * step &amp;&amp; &lt;= stop - 1
-    1. 儅step(間隔) &gt; 0 &amp;&amp; start(起始) &lt; stop(結束)時, 1 + (stop - 1 - start) / step, 如1 + (10 - 1 - 0) / 1 = 10
-    2. 儅step &lt; 0 &amp;&amp; start &gt; stop時, 1 + (start - 1 - stop) / (0 - (-step)), 如1 + (0 - 1 - 10) / (0 - (-1)) = -10
-    3. 否則返回0, 也就是空範圍
-    */
-    ulen = get_len_of_range(lstart, lstop, lstep);
-    if (ulen &gt; (unsigned long)LONG_MAX) &#123;
-    // 如果計算的範圍長度大於最大範圍,
-        goto long_range;
-    &#125;
-    /* check for potential overflow of lstart + ulen * lstep */
-    if (ulen) &#123;
-        if (lstep &gt; 0) &#123;
-            if (lstop &gt; LONG_MAX - (lstep - 1))
-                goto long_range;
-        &#125;
-        else &#123;
-            if (lstop &lt; LONG_MIN + (-1 - lstep))
-                goto long_range;
-        &#125;
-    &#125;
-    // 範圍一般都不會太大, 一般都會進入該方法, 這裏返回的是rangeiterobject, 而不是longrangeiterobject
-    return fast_range_iter(lstart, lstop, lstep, (long)ulen);
-
-  long_range:
-    // 超出最大值, 返回longrangeiterobject
-    it = PyObject_New(longrangeiterobject, &amp;PyLongRangeIter_Type);
-    if (it == NULL)
-        return NULL;
-
-    it-&gt;start = r-&gt;start; // 起始
-    it-&gt;step = r-&gt;step; // 結尾
-    it-&gt;len = r-&gt;length; // 長度/範圍
-    it-&gt;index = _PyLong_Zero; // 索引
-    Py_INCREF(it-&gt;start); // 引用計數+1
-    Py_INCREF(it-&gt;step);
-    Py_INCREF(it-&gt;len);
-    Py_INCREF(it-&gt;index);
-    return (PyObject *)it;
-&#125;
-
-static PyObject *
-fast_range_iter(long start, long stop, long step, long len)
-&#123;
-    rangeiterobject *it = PyObject_New(rangeiterobject, &amp;PyRangeIter_Type);
-    if (it == NULL)
-        return NULL;
-    it-&gt;start = start;
-    it-&gt;step = step;
-    it-&gt;len = len;
-    it-&gt;index = 0; // 索引默認為0
-    return (PyObject *)it;
-&#125;
-</code></pre>
-<p>關於get_len_of_range的注釋説明，是我找女同事翻譯的，也不一定都對，但是特別感謝她😜</p>
+    <h3 id="range的實現原理"><a class="markdownIt-Anchor" href="#range的實現原理">#</a> Range 的實現原理</h3>
+<p>老規矩，先看看 range 的 docstring</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token builtin">range</span><span class="token punctuation">(</span>stop<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">range</span> <span class="token builtin">object</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token builtin">range</span><span class="token punctuation">(</span>start<span class="token punctuation">,</span> stop<span class="token punctuation">[</span><span class="token punctuation">,</span> step<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">range</span> <span class="token builtin">object</span></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre>Return an <span class="token builtin">object</span> that produces a sequence of integers <span class="token keyword">from</span> start <span class="token punctuation">(</span>inclusive<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>to stop <span class="token punctuation">(</span>exclusive<span class="token punctuation">)</span> by step<span class="token punctuation">.</span>  <span class="token builtin">range</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> j<span class="token punctuation">)</span> produces i<span class="token punctuation">,</span> i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">,</span> i<span class="token operator">+</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> j<span class="token operator">-</span><span class="token number">1.</span></pre></td></tr><tr><td data-num="6"></td><td><pre>start defaults to <span class="token number">0</span><span class="token punctuation">,</span> <span class="token keyword">and</span> stop <span class="token keyword">is</span> omitted!  <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span> produces <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3.</span></pre></td></tr><tr><td data-num="7"></td><td><pre>These are exactly the valid indices <span class="token keyword">for</span> a <span class="token builtin">list</span> of <span class="token number">4</span> elements<span class="token punctuation">.</span></pre></td></tr><tr><td data-num="8"></td><td><pre>When step <span class="token keyword">is</span> given<span class="token punctuation">,</span> it specifies the increment <span class="token punctuation">(</span><span class="token keyword">or</span> decrement<span class="token punctuation">)</span><span class="token punctuation">.</span></pre></td></tr></table></figure><span id="more"></span>
+<p>首先，調用 range () 時，它會返回一個 range object，那在 CPython 裏，對應的就是 rangeobject 結構體，但最終返回的還是 PyObject *，range 對應 CPython 中 PyRange_Type，位於 Objects/rangeobject.c</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>PyTypeObject PyRange_Type <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>        <span class="token function">PyVarObject_HEAD_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>PyType_Type<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        <span class="token string">"range"</span><span class="token punctuation">,</span>                <span class="token comment">/* Name of this type */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token keyword">sizeof</span><span class="token punctuation">(</span>rangeobject<span class="token punctuation">)</span><span class="token punctuation">,</span>    <span class="token comment">/* Basic object size */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* Item size for varobject */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token punctuation">(</span>destructor<span class="token punctuation">)</span>range_dealloc<span class="token punctuation">,</span> <span class="token comment">/* tp_dealloc */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_vectorcall_offset */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_getattr */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_setattr */</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_as_async */</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        <span class="token punctuation">(</span>reprfunc<span class="token punctuation">)</span>range_repr<span class="token punctuation">,</span>   <span class="token comment">/* tp_repr */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        <span class="token operator">&amp;</span>range_as_number<span class="token punctuation">,</span>       <span class="token comment">/* tp_as_number */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token operator">&amp;</span>range_as_sequence<span class="token punctuation">,</span>     <span class="token comment">/* tp_as_sequence */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>        <span class="token operator">&amp;</span>range_as_mapping<span class="token punctuation">,</span>      <span class="token comment">/* tp_as_mapping */</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token punctuation">(</span>hashfunc<span class="token punctuation">)</span>range_hash<span class="token punctuation">,</span>   <span class="token comment">/* tp_hash */</span></pre></td></tr><tr><td data-num="16"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_call */</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_str */</span></pre></td></tr><tr><td data-num="18"></td><td><pre>        PyObject_GenericGetAttr<span class="token punctuation">,</span>  <span class="token comment">/* tp_getattro */</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_setattro */</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_as_buffer */</span></pre></td></tr><tr><td data-num="21"></td><td><pre>        Py_TPFLAGS_DEFAULT<span class="token punctuation">,</span>     <span class="token comment">/* tp_flags */</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        range_doc<span class="token punctuation">,</span>              <span class="token comment">/* tp_doc */</span> </pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_traverse */</span></pre></td></tr><tr><td data-num="24"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_clear */</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        range_richcompare<span class="token punctuation">,</span>      <span class="token comment">/* tp_richcompare */</span></pre></td></tr><tr><td data-num="26"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_weaklistoffset */</span></pre></td></tr><tr><td data-num="27"></td><td><pre>        range_iter<span class="token punctuation">,</span>             <span class="token comment">/* tp_iter */</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_iternext */</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        range_methods<span class="token punctuation">,</span>          <span class="token comment">/* tp_methods */</span></pre></td></tr><tr><td data-num="30"></td><td><pre>        range_members<span class="token punctuation">,</span>          <span class="token comment">/* tp_members */</span></pre></td></tr><tr><td data-num="31"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_getset */</span></pre></td></tr><tr><td data-num="32"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_base */</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_dict */</span></pre></td></tr><tr><td data-num="34"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_descr_get */</span></pre></td></tr><tr><td data-num="35"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_descr_set */</span></pre></td></tr><tr><td data-num="36"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_dictoffset */</span></pre></td></tr><tr><td data-num="37"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_init */</span></pre></td></tr><tr><td data-num="38"></td><td><pre>        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">/* tp_alloc */</span></pre></td></tr><tr><td data-num="39"></td><td><pre>        range_new<span class="token punctuation">,</span>              <span class="token comment">/* tp_new */</span></pre></td></tr><tr><td data-num="40"></td><td><pre>        <span class="token punctuation">.</span>tp_vectorcall <span class="token operator">=</span> <span class="token punctuation">(</span>vectorcallfunc<span class="token punctuation">)</span>range_vectorcall</pre></td></tr><tr><td data-num="41"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>在調用 range (10)、range (0, 10)、range (0, 10, 2) 的時候，首先會執行 range_new 方法</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">range_new</span><span class="token punctuation">(</span>PyTypeObject <span class="token operator">*</span>type<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>args<span class="token punctuation">,</span> PyObject <span class="token operator">*</span>kw<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">_PyArg_NoKeywords</span><span class="token punctuation">(</span><span class="token string">"range"</span><span class="token punctuation">,</span> kw<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>	<span class="token comment">// 校驗是否沒有傳遞關鍵字，如果沒有傳遞，表示真，傳遞了，為假</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token comment">/*</pre></td></tr><tr><td data-num="9"></td><td><pre>	創建 rangeobject 並返回，_PyTuple_ITEMS 將 args 轉爲 PyTupleObject, 並取出 ob_item</pre></td></tr><tr><td data-num="10"></td><td><pre>	PyTyple_GET_SIZE 獲取參數的數量</pre></td></tr><tr><td data-num="11"></td><td><pre>    */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token keyword">return</span> <span class="token function">range_from_array</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> <span class="token function">_PyTuple_ITEMS</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">PyTuple_GET_SIZE</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>那在創建 range 對象時，主要是執行了 range_from_array 方法，一切事情都發生在裏面</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">range_from_array</span><span class="token punctuation">(</span>PyTypeObject <span class="token operator">*</span>type<span class="token punctuation">,</span> PyObject <span class="token operator">*</span><span class="token keyword">const</span> <span class="token operator">*</span>args<span class="token punctuation">,</span> Py_ssize_t num_args<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    rangeobject <span class="token operator">*</span>obj<span class="token punctuation">;</span> <span class="token comment">// 首先聲明一個 rangeobject 對象，如果創建成功就會返回此對象</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    PyObject <span class="token operator">*</span>start <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token operator">*</span>stop <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token operator">*</span>step <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span> <span class="token comment">// 定義 range 的起始、結尾、間隔</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token comment">// 參數個數</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">switch</span> <span class="token punctuation">(</span>num_args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token keyword">case</span> <span class="token number">3</span><span class="token operator">:</span></pre></td></tr><tr><td data-num="10"></td><td><pre>	    <span class="token comment">// 傳遞了 3 個參數: start、stop、step</span></pre></td></tr><tr><td data-num="11"></td><td><pre>            step <span class="token operator">=</span> args<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// 取出第 3 个参数：间隔</span></pre></td></tr><tr><td data-num="12"></td><td><pre>            <span class="token comment">/* fallthrough */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">case</span> <span class="token number">2</span><span class="token operator">:</span></pre></td></tr><tr><td data-num="14"></td><td><pre>	    <span class="token comment">// 傳遞了 2 個參數: start、stop</span></pre></td></tr><tr><td data-num="15"></td><td><pre>            <span class="token comment">/* Convert borrowed refs to owned refs */</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            start <span class="token operator">=</span> <span class="token function">PyNumber_Index</span><span class="token punctuation">(</span>args<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 校验类型并返回索引，方法实现在下方</span></pre></td></tr><tr><td data-num="17"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>start<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>		<span class="token comment">// 为空，不是有效的 int</span></pre></td></tr><tr><td data-num="19"></td><td><pre>                <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>            stop <span class="token operator">=</span> <span class="token function">PyNumber_Index</span><span class="token punctuation">(</span>args<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 校验类型并返回索引</span></pre></td></tr><tr><td data-num="22"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>stop<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>		<span class="token comment">// 为空，不是有效的 int</span></pre></td></tr><tr><td data-num="24"></td><td><pre>                <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 引用计数 - 1</span></pre></td></tr><tr><td data-num="25"></td><td><pre>                <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>	    <span class="token comment">// 验证间隔，实现方法在下面</span></pre></td></tr><tr><td data-num="28"></td><td><pre>            step <span class="token operator">=</span> <span class="token function">validate_step</span><span class="token punctuation">(</span>step<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">/* Caution, this can clear exceptions */</span></pre></td></tr><tr><td data-num="29"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>step<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="30"></td><td><pre>		<span class="token comment">// 如果为空</span></pre></td></tr><tr><td data-num="31"></td><td><pre>                <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//start 引用计数 - 1</span></pre></td></tr><tr><td data-num="32"></td><td><pre>                <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>stop<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//stop 引用计数 - 1</span></pre></td></tr><tr><td data-num="33"></td><td><pre>                <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span> <span class="token comment">// 结束</span></pre></td></tr><tr><td data-num="34"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="35"></td><td><pre>            <span class="token keyword">break</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="36"></td><td><pre>        <span class="token keyword">case</span> <span class="token number">1</span><span class="token operator">:</span></pre></td></tr><tr><td data-num="37"></td><td><pre>	    <span class="token comment">// 傳遞了 1 個參數: stop</span></pre></td></tr><tr><td data-num="38"></td><td><pre>            stop <span class="token operator">=</span> <span class="token function">PyNumber_Index</span><span class="token punctuation">(</span>args<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 校验类型並返回索引</span></pre></td></tr><tr><td data-num="39"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>stop<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="40"></td><td><pre>                <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="41"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="42"></td><td><pre>            <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>_PyLong_Zero<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="43"></td><td><pre>            start <span class="token operator">=</span> _PyLong_Zero<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="44"></td><td><pre>            <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>_PyLong_One<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="45"></td><td><pre>            step <span class="token operator">=</span> _PyLong_One<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="46"></td><td><pre>            <span class="token keyword">break</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="47"></td><td><pre>        <span class="token keyword">case</span> <span class="token number">0</span><span class="token operator">:</span></pre></td></tr><tr><td data-num="48"></td><td><pre>	    <span class="token comment">// 儅 range 傳遞參數為 0 個時，抛異常</span></pre></td></tr><tr><td data-num="49"></td><td><pre>            <span class="token function">PyErr_SetString</span><span class="token punctuation">(</span>PyExc_TypeError<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="50"></td><td><pre>                            <span class="token string">"range expected at least 1 argument, got 0"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="51"></td><td><pre>            <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="52"></td><td><pre>        <span class="token keyword">default</span><span class="token operator">:</span></pre></td></tr><tr><td data-num="53"></td><td><pre>	    <span class="token comment">// 儅 range 傳遞參數超過 3 個時，抛異常</span></pre></td></tr><tr><td data-num="54"></td><td><pre>            <span class="token function">PyErr_Format</span><span class="token punctuation">(</span>PyExc_TypeError<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="55"></td><td><pre>                         <span class="token string">"range expected at most 3 arguments, got %zd"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="56"></td><td><pre>                         num_args<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="57"></td><td><pre>            <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="58"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="59"></td><td><pre>    obj <span class="token operator">=</span> <span class="token function">make_range_object</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> start<span class="token punctuation">,</span> stop<span class="token punctuation">,</span> step<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 真正開始創建 rangeobject, 裏面做了計算 range 的範圍長度</span></pre></td></tr><tr><td data-num="60"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>obj <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="61"></td><td><pre>	<span class="token comment">// 創建 rangeobject 成功，返回 PyObject *</span></pre></td></tr><tr><td data-num="62"></td><td><pre>        <span class="token keyword">return</span> <span class="token punctuation">(</span>PyObject <span class="token operator">*</span><span class="token punctuation">)</span> obj<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="63"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="64"></td><td><pre></pre></td></tr><tr><td data-num="65"></td><td><pre>    <span class="token comment">/* Failed to create object, release attributes */</span></pre></td></tr><tr><td data-num="66"></td><td><pre>    <span class="token comment">// 創建失敗，釋放屬性</span></pre></td></tr><tr><td data-num="67"></td><td><pre>    <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="68"></td><td><pre>    <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>stop<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="69"></td><td><pre>    <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>step<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="70"></td><td><pre>    <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="71"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="72"></td><td><pre></pre></td></tr><tr><td data-num="73"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="74"></td><td><pre><span class="token function">validate_step</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>step<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="75"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="76"></td><td><pre>    <span class="token comment">// 校验间隔</span></pre></td></tr><tr><td data-num="77"></td><td><pre>    <span class="token comment">/* No step specified, use a step of 1. */</span></pre></td></tr><tr><td data-num="78"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>step<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="79"></td><td><pre>	<span class="token comment">// 如果没有指定间隔，就默认使用 1</span></pre></td></tr><tr><td data-num="80"></td><td><pre>        <span class="token keyword">return</span> <span class="token function">PyLong_FromLong</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 从 C long int 中创建一个 Python int 对象</span></pre></td></tr><tr><td data-num="81"></td><td><pre></pre></td></tr><tr><td data-num="82"></td><td><pre>    step <span class="token operator">=</span> <span class="token function">PyNumber_Index</span><span class="token punctuation">(</span>step<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 校验类型并返回索引</span></pre></td></tr><tr><td data-num="83"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>step <span class="token operator">&amp;&amp;</span> <span class="token function">_PyLong_Sign</span><span class="token punctuation">(</span>step<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="84"></td><td><pre>	<span class="token comment">// 如果间隔给了 0, 抛异常</span></pre></td></tr><tr><td data-num="85"></td><td><pre>        <span class="token function">PyErr_SetString</span><span class="token punctuation">(</span>PyExc_ValueError<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="86"></td><td><pre>                        <span class="token string">"range() arg 3 must not be zero"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="87"></td><td><pre>        <span class="token function">Py_CLEAR</span><span class="token punctuation">(</span>step<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="88"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="89"></td><td><pre></pre></td></tr><tr><td data-num="90"></td><td><pre>    <span class="token keyword">return</span> step<span class="token punctuation">;</span> <span class="token comment">// 返回步长</span></pre></td></tr><tr><td data-num="91"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p><img data-src="http://res.cloudinary.com/dotachkke/image/upload/v1655865175/upload/tegn9o0cgkwvarr9nina.png" alt="image.png"></p>
+<p>PyNumber_Index 方法的定义，返回 Python int 对象，如果结果不是 int，就会引发 TypeError，或者对象不能作为索引</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">PyNumber_Index</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>item<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyObject <span class="token operator">*</span>result <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>item <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token keyword">return</span> <span class="token function">null_error</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">PyLong_Check</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>	<span class="token comment">// 如果 item 是一個 PyLongObject 或者子類，則返回 True</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 引用計數 + 1</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        <span class="token keyword">return</span> item<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">_PyIndex_Check</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>	<span class="token comment">// 如果對象不是一個 PyLongObject，檢查對象是否定義了__index__方法</span></pre></td></tr><tr><td data-num="16"></td><td><pre>        <span class="token function">PyErr_Format</span><span class="token punctuation">(</span>PyExc_TypeError<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="17"></td><td><pre>                     <span class="token string">"'%.200s' object cannot be interpreted "</span></pre></td></tr><tr><td data-num="18"></td><td><pre>                     <span class="token string">"as an integer"</span><span class="token punctuation">,</span> <span class="token function">Py_TYPE</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token operator">-></span>tp_name<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token comment">// 在 item 的父類中，獲取 tp_as_number (實現了數字協議對象相關的結構), 並取出 np_index 調用，對應 Python 對象的__index__方法，</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    result <span class="token operator">=</span> <span class="token function">Py_TYPE</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token operator">-></span>tp_as_number<span class="token operator">-></span><span class="token function">nb_index</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>result <span class="token operator">||</span> <span class="token function">PyLong_CheckExact</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="24"></td><td><pre>	<span class="token comment">// 如果返回非 0 或者為 PyLongObject</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        <span class="token keyword">return</span> result<span class="token punctuation">;</span> <span class="token comment">// 成功返回</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">PyLong_Check</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>	<span class="token comment">// 如果返回的不是一個 PyLongObject, 抛異常，比如在 Python 中返回 None 或者非 int 對象</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        <span class="token function">PyErr_Format</span><span class="token punctuation">(</span>PyExc_TypeError<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="29"></td><td><pre>                     <span class="token string">"__index__ returned non-int (type %.200s)"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="30"></td><td><pre>                     <span class="token function">Py_TYPE</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token operator">-></span>tp_name<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="31"></td><td><pre>        <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 引用計數 - 1</span></pre></td></tr><tr><td data-num="32"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="34"></td><td><pre>    <span class="token comment">/* Issue #17576: warn if 'result' not of exact type int. */</span></pre></td></tr><tr><td data-num="35"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">PyErr_WarnFormat</span><span class="token punctuation">(</span>PyExc_DeprecationWarning<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="36"></td><td><pre>            <span class="token string">"__index__ returned non-int (type %.200s).  "</span></pre></td></tr><tr><td data-num="37"></td><td><pre>            <span class="token string">"The ability to return an instance of a strict subclass of int "</span></pre></td></tr><tr><td data-num="38"></td><td><pre>            <span class="token string">"is deprecated, and may be removed in a future version of Python."</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="39"></td><td><pre>            <span class="token function">Py_TYPE</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token operator">-></span>tp_name<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="40"></td><td><pre>        <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="41"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="42"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="43"></td><td><pre>    <span class="token keyword">return</span> result<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="44"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>在 PyNumber_Index 中，如果對象不是 PyLongObject，還會檢查對象是否定義了__index__，在沒有重載的情況下作爲參數傳遞給 range<br>
+<img data-src="http://res.cloudinary.com/dotachkke/image/upload/v1655867228/upload/ftln3qyctb3m71qv88or.png" alt="image.png"></p>
+<p>如果重載了__index__方法的情況下，range 成功創建了 rangeobject<br>
+<img data-src="http://res.cloudinary.com/dotachkke/image/upload/v1655867322/upload/w1u8jk5z2mfvwu0g8mlk.png" alt="image.png"></p>
+<p>如果重載了__index__方法，但是返回的不是 PyLongObject，就會抛異常: “<strong>index</strong> returned non-int (type %.200s)”<br>
+<img data-src="http://res.cloudinary.com/dotachkke/image/upload/v1655867796/upload/tww5cev6tmtaml7uyxgz.png" alt="image.png"></p>
+<h3 id="for-in-range時發生了什麽"><a class="markdownIt-Anchor" href="#for-in-range時發生了什麽">#</a> for … in range 時，發生了什麽？</h3>
+<p>在 Python 中，對一個對象進行循環迭代時，首先會調用對象的__iter__方法，獲取 iterator，再對 iterator 一直調用__next__方法，獲取 iterable，直到遇到 StopIteration，就會停止，那麽在對 rangeobject 進行迭代時，就是執行了 rangeobject 定義好的__iter__方法，對應 range_iter 方法</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">range_iter</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>seq<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    rangeobject <span class="token operator">*</span>r <span class="token operator">=</span> <span class="token punctuation">(</span>rangeobject <span class="token operator">*</span><span class="token punctuation">)</span>seq<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    longrangeiterobject <span class="token operator">*</span>it<span class="token punctuation">;</span> <span class="token comment">// 在調用__iter__時，如果大小範圍超出，返回的是 longrangeiterobject, 儅調用__next__時，實際就是調用它的__next__方法，而不是 rangeobject</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">long</span> lstart<span class="token punctuation">,</span> lstop<span class="token punctuation">,</span> lstep<span class="token punctuation">;</span> <span class="token comment">// 起始、結束、間隔</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">unsigned</span> <span class="token keyword">long</span> ulen<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token function">assert</span><span class="token punctuation">(</span><span class="token function">PyRange_Check</span><span class="token punctuation">(</span>seq<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    </pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token comment">// If all three fields and the length convert to long, use the int</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    </pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token comment">/*</pre></td></tr><tr><td data-num="15"></td><td><pre>	get_len_of_range 主要計算 range 範圍 / 長度</pre></td></tr><tr><td data-num="16"></td><td><pre>	如果 step > 0 并且 start >= stop，或者 step &lt; 0 并且 start &lt;= stop, 那麽返回的範圍為空 -> []</pre></td></tr><tr><td data-num="17"></td><td><pre>	對於 step > 0, 如果 n 個值在範圍内，則最後一個值為 start + (n - 1) * step &amp;&amp; &lt;= stop - 1</pre></td></tr><tr><td data-num="18"></td><td><pre>	1. 儅 step (間隔) > 0 &amp;&amp; start (起始) &lt; stop (結束) 時，1 + (stop - 1 - start) /step, 如 1 + (10 - 1 - 0) / 1 = 10</pre></td></tr><tr><td data-num="19"></td><td><pre>	2. 儅 step &lt; 0 &amp;&amp; start > stop 時，1 + (start - 1 - stop) / (0 - (-step)), 如 1 + (0 - 1 - 10) / (0 - (-1)) = -10</pre></td></tr><tr><td data-num="20"></td><td><pre>	3. 否則返回 0, 也就是空範圍</pre></td></tr><tr><td data-num="21"></td><td><pre>    */</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    ulen <span class="token operator">=</span> <span class="token function">get_len_of_range</span><span class="token punctuation">(</span>lstart<span class="token punctuation">,</span> lstop<span class="token punctuation">,</span> lstep<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>ulen <span class="token operator">></span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">long</span><span class="token punctuation">)</span>LONG_MAX<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>	<span class="token comment">// 如果計算的範圍長度大於最大範圍，</span></pre></td></tr><tr><td data-num="25"></td><td><pre>        <span class="token keyword">goto</span> long_range<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token comment">/* check for potential overflow of lstart + ulen * lstep */</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>ulen<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>lstep <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="30"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>lstop <span class="token operator">></span> LONG_MAX <span class="token operator">-</span> <span class="token punctuation">(</span>lstep <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="31"></td><td><pre>                <span class="token keyword">goto</span> long_range<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="32"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        <span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="34"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>lstop <span class="token operator">&lt;</span> LONG_MIN <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span> <span class="token operator">-</span> lstep<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="35"></td><td><pre>                <span class="token keyword">goto</span> long_range<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="36"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="37"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="38"></td><td><pre>    <span class="token comment">// 範圍一般都不會太大，一般都會進入該方法，這裏返回的是 rangeiterobject, 而不是 longrangeiterobject</span></pre></td></tr><tr><td data-num="39"></td><td><pre>    <span class="token keyword">return</span> <span class="token function">fast_range_iter</span><span class="token punctuation">(</span>lstart<span class="token punctuation">,</span> lstop<span class="token punctuation">,</span> lstep<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span>ulen<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="40"></td><td><pre></pre></td></tr><tr><td data-num="41"></td><td><pre>  long_range<span class="token operator">:</span></pre></td></tr><tr><td data-num="42"></td><td><pre>    <span class="token comment">// 超出最大值，返回 longrangeiterobject</span></pre></td></tr><tr><td data-num="43"></td><td><pre>    it <span class="token operator">=</span> <span class="token function">PyObject_New</span><span class="token punctuation">(</span>longrangeiterobject<span class="token punctuation">,</span> <span class="token operator">&amp;</span>PyLongRangeIter_Type<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="44"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>it <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="45"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="46"></td><td><pre></pre></td></tr><tr><td data-num="47"></td><td><pre>    it<span class="token operator">-></span>start <span class="token operator">=</span> r<span class="token operator">-></span>start<span class="token punctuation">;</span> <span class="token comment">// 起始</span></pre></td></tr><tr><td data-num="48"></td><td><pre>    it<span class="token operator">-></span>step <span class="token operator">=</span> r<span class="token operator">-></span>step<span class="token punctuation">;</span> <span class="token comment">// 結尾</span></pre></td></tr><tr><td data-num="49"></td><td><pre>    it<span class="token operator">-></span>len <span class="token operator">=</span> r<span class="token operator">-></span>length<span class="token punctuation">;</span> <span class="token comment">// 長度 / 範圍</span></pre></td></tr><tr><td data-num="50"></td><td><pre>    it<span class="token operator">-></span>index <span class="token operator">=</span> _PyLong_Zero<span class="token punctuation">;</span> <span class="token comment">// 索引</span></pre></td></tr><tr><td data-num="51"></td><td><pre>    <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>it<span class="token operator">-></span>start<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 引用計數 + 1</span></pre></td></tr><tr><td data-num="52"></td><td><pre>    <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>it<span class="token operator">-></span>step<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="53"></td><td><pre>    <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>it<span class="token operator">-></span>len<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="54"></td><td><pre>    <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>it<span class="token operator">-></span>index<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="55"></td><td><pre>    <span class="token keyword">return</span> <span class="token punctuation">(</span>PyObject <span class="token operator">*</span><span class="token punctuation">)</span>it<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="56"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="57"></td><td><pre></pre></td></tr><tr><td data-num="58"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="59"></td><td><pre><span class="token function">fast_range_iter</span><span class="token punctuation">(</span><span class="token keyword">long</span> start<span class="token punctuation">,</span> <span class="token keyword">long</span> stop<span class="token punctuation">,</span> <span class="token keyword">long</span> step<span class="token punctuation">,</span> <span class="token keyword">long</span> len<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="60"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="61"></td><td><pre>    rangeiterobject <span class="token operator">*</span>it <span class="token operator">=</span> <span class="token function">PyObject_New</span><span class="token punctuation">(</span>rangeiterobject<span class="token punctuation">,</span> <span class="token operator">&amp;</span>PyRangeIter_Type<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="62"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>it <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="63"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="64"></td><td><pre>    it<span class="token operator">-></span>start <span class="token operator">=</span> start<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="65"></td><td><pre>    it<span class="token operator">-></span>step <span class="token operator">=</span> step<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="66"></td><td><pre>    it<span class="token operator">-></span>len <span class="token operator">=</span> len<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="67"></td><td><pre>    it<span class="token operator">-></span>index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token comment">// 索引默認為 0</span></pre></td></tr><tr><td data-num="68"></td><td><pre>    <span class="token keyword">return</span> <span class="token punctuation">(</span>PyObject <span class="token operator">*</span><span class="token punctuation">)</span>it<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="69"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>關於 get_len_of_range 的注釋説明，是我找女同事翻譯的，也不一定都對，但是特別感謝她😜</p>
 <blockquote>
-<p>如果 step &gt; 0 且 lo &gt;= hi，或 step &lt; 0 且 lo &lt;= hi，则范围为空。否则对于 step &gt; 0，如果 n 个值在范围内，则最后一个是<br>lo + (n-1)<em>step，它必须 &lt;= hi-1。 重新排列，n &lt;= (hi - lo - 1)/step + 1，所以拿 RHS 的底层给出适当的值。 因为 lo &lt; hi 在这种情况下， hi-lo-1 &gt;= 0，所以RHS 是非负数，因此截断与底层一样。 令 M 为最大的正长整型，RHS 分子最坏的情况是 hi=M, lo=-M-1, 然后hi-lo-1 = M-(-M-1)-1 = 2</em>M。 因此 无符号长整型 就足够精确计算 RHS 的精准度。 step &lt; 0 的分析很相似。</p>
+<p>如果 step &gt; 0 且 lo &gt;= hi，或 step &lt;0 且 lo &lt;= hi，则范围为空。否则对于 step&gt; 0，如果 n 个值在范围内，则最后一个是<br>
+ lo + (n-1)<em> step，它必须 &lt;= hi-1。 重新排列，n &lt;= (hi - lo - 1)/step + 1，所以拿 RHS 的底层给出适当的值。 因为 lo &lt; hi 在这种情况下， hi-lo-1 &gt;= 0，所以 RHS 是非负数，因此截断与底层一样。 令 M 为最大的正长整型，RHS 分子最坏的情况是 hi=M, lo=-M-1, 然后 hi-lo-1 = M-(-M-1)-1 = 2</em>M。 因此 无符号长整型 就足够精确计算 RHS 的精准度。 step &lt; 0 的分析很相似。</p>
 </blockquote>
-<p>儅執行for … in range(10)時，它才開始計算範圍，如果範圍沒有超出最大值，那麽返回的對象為rangeiterobject，那麽此時，在調用__next__時，就是調用rangeiterobject的__next__方法，rangeiterobject對應PyRangeIter_Type, __next__會調用rangeiter_next</p>
-<pre><code class="c">static PyObject *
-rangeiter_next(rangeiterobject *r)
-&#123;
-    // 每調用一次__next__, 就會執行這裏
-    if (r-&gt;index &lt; r-&gt;len)
-    // 如果index小於計算的範圍, index默認為0
-        /* cast to unsigned to avoid possible signed overflow
-           in intermediate calculations. */
-    // 返回一個PyLongObject，每次計算為
-    // 假設range(10), 那麽第1次, start為0, index為0, step默認為1
-    // 第1次: 0 + 0 * 1 = 0
-    // 第2次: 0 + 1 * 1 = 1
-    // 第10次: 0 + 9 * 1 = 9
-    // 結果為: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-        return PyLong_FromLong((long)(r-&gt;start +
-                                      (unsigned long)(r-&gt;index++) * r-&gt;step));
-    return NULL;
-&#125;
-</code></pre>
-<p>range的基本流程基本就這些了，還有一些count、index方法，我基本沒用過，有興趣可以自己去探討一下</p>
+<p>儅執行 for … in range (10) 時，它才開始計算範圍，如果範圍沒有超出最大值，那麽返回的對象為 rangeiterobject，那麽此時，在調用__next__時，就是調用 rangeiterobject 的__next__方法，rangeiterobject 對應 PyRangeIter_Type, __next__會調用 rangeiter_next</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">static</span> PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">rangeiter_next</span><span class="token punctuation">(</span>rangeiterobject <span class="token operator">*</span>r<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token comment">// 每調用一次__next__, 就會執行這裏</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>r<span class="token operator">-></span>index <span class="token operator">&lt;</span> r<span class="token operator">-></span>len<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>	<span class="token comment">// 如果 index 小於計算的範圍，index 默認為 0</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token comment">/* cast to unsigned to avoid possible signed overflow</pre></td></tr><tr><td data-num="8"></td><td><pre>           in intermediate calculations. */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>	<span class="token comment">// 返回一個 PyLongObject，每次計算為</span></pre></td></tr><tr><td data-num="10"></td><td><pre>	<span class="token comment">// 假設 range (10), 那麽第 1 次，start 為 0, index 為 0, step 默認為 1</span></pre></td></tr><tr><td data-num="11"></td><td><pre>	<span class="token comment">// 第 1 次: 0 + 0 * 1 = 0</span></pre></td></tr><tr><td data-num="12"></td><td><pre>	<span class="token comment">// 第 2 次: 0 + 1 * 1 = 1</span></pre></td></tr><tr><td data-num="13"></td><td><pre>	<span class="token comment">// 第 10 次: 0 + 9 * 1 = 9</span></pre></td></tr><tr><td data-num="14"></td><td><pre>	<span class="token comment">// 結果為: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9</span></pre></td></tr><tr><td data-num="15"></td><td><pre>        <span class="token keyword">return</span> <span class="token function">PyLong_FromLong</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span><span class="token punctuation">(</span>r<span class="token operator">-></span>start <span class="token operator">+</span></pre></td></tr><tr><td data-num="16"></td><td><pre>                                      <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">long</span><span class="token punctuation">)</span><span class="token punctuation">(</span>r<span class="token operator">-></span>index<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token operator">*</span> r<span class="token operator">-></span>step<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>range 的基本流程基本就這些了，還有一些 count、index 方法，我基本沒用過，有興趣可以自己去探討一下</p>
 
       <div class="tags">
           <a href="/tags/CPython/" rel="tag"><i class="ic i-tag"></i> CPython</a>
@@ -546,7 +260,7 @@ rangeiter_next(rangeiterobject *r)
     <div class="item left">
       
 
-  <a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicljgocqbj20zk0m8e81.jpg" title="Python Tuple實現原理">
+  <a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipevgoki5j20zk0m84qp.jpg" title="Python Tuple實現原理">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>Python Tuple實現原理</h3>
@@ -556,7 +270,7 @@ rangeiter_next(rangeiterobject *r)
     <div class="item right">
       
 
-  <a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicliierfjj20zk0m8npd.jpg" title="CPython VM的工作原理">
+  <a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeubcbajj20zk0m8h1h.jpg" title="CPython VM的工作原理">
   <span class="type">Next Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>CPython VM的工作原理</h3>
@@ -578,7 +292,7 @@ rangeiter_next(rangeiterobject *r)
   <div class="panels">
     <div class="inner">
       <div class="contents panel pjax" data-title="Contents">
-          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">Range的實現原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#for-%E2%80%A6-in-range%E6%99%82%EF%BC%8C%E7%99%BC%E7%94%9F%E4%BA%86%E4%BB%80%E9%BA%BD%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">for … in range時，發生了什麽？</span></a></li></ol>
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text"> Range 的實現原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#for-in-range%E6%99%82%E7%99%BC%E7%94%9F%E4%BA%86%E4%BB%80%E9%BA%BD"><span class="toc-number">2.</span> <span class="toc-text"> for … in range 時，發生了什麽？</span></a></li></ol>
       </div>
       <div class="related panel pjax" data-title="Related">
         <ul>
@@ -696,7 +410,7 @@ rangeiter_next(rangeiterobject *r)
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
   </li>
 
       
@@ -708,7 +422,7 @@ rangeiter_next(rangeiterobject *r)
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
+    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
   </li>
 
       
@@ -730,45 +444,9 @@ rangeiter_next(rangeiterobject *r)
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
 </div>
 
-    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Life/" title="In Life">Life</a>
-</div>
-
-    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
+    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
   </li>
 
       
@@ -799,12 +477,46 @@ rangeiter_next(rangeiterobject *r)
   <li class="item">
     
 <div class="breadcrumb">
+<a href="/categories/Life/" title="In Life">Life</a>
+</div>
+
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
+    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
   </li>
 
   </ul>
