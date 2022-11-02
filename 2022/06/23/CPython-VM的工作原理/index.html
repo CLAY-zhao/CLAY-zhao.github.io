@@ -102,12 +102,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicitspjpbj20zk0m81ky.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipeu7txpzj20zk0m81kx.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclj9410cj20zk0m8h12.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giph47e9vtj20zk0m8x6l.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipesrnqv3j20zk0m8ava.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclhpw3lwj20zk0m8gvw.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipesrnqv3j20zk0m8ava.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclfb3vzhj20zk0m8wny.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclgi503lj20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giciszlczyj20zk0m816d.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicm0n457cj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeubcbajj20zk0m8h1h.jpg"></li>
         </ul>
       </div>
     </header>
@@ -156,16 +156,16 @@ Leayoos Chui = 士多啤梨苹果橙</title>
   <div class="body md" itemprop="articleBody">
     
 
-    <h3 id="what-cpython-is-and-why-anyone-would-want-to-study-it"><a class="markdownIt-Anchor" href="#what-cpython-is-and-why-anyone-would-want-to-study-it">#</a> What CPython is and why anyone would want to study it</h3>
+    <h3 id="what-cpython-is-and-why-anyone-would-want-to-study-it"><a class="anchor" href="#what-cpython-is-and-why-anyone-would-want-to-study-it">#</a> What CPython is and why anyone would want to study it</h3>
 <p>CPython 是用 C 编写的 Python 解释器，它是 Python 的实现之一，CPython 的独特之处在于它是最原始、维护最多和最流行的一个。</p>
 <p>CPython 实现了 Python，But what is Python？One may simply answer —— Python is a programming language。什么定义了 Python？Python 不像 C 这样的语言，它没有形式规范</p>
-<span id="more"></span>
+<p><span id="more"></span></p>
 <blockquote>
 <p>CPython 提供了 Python/C API，它允许用 C 扩展 Python 并将 Python 嵌入到 C 中。要有效地使用这个 API，但需要对 CPython 的工作原理有很好的理解</p>
 </blockquote>
-<h3 id="理解cpython是如何工作的"><a class="markdownIt-Anchor" href="#理解cpython是如何工作的">#</a> 理解 CPython 是如何工作的</h3>
+<h3 id="理解cpython是如何工作的"><a class="anchor" href="#理解cpython是如何工作的">#</a> 理解 CPython 是如何工作的</h3>
 <p>CPython 被设计为易于维护，能够通过阅读源代码并理解它是做什么的</p>
-<h5 id="python程序的执行大致由三个阶段组成"><a class="markdownIt-Anchor" href="#python程序的执行大致由三个阶段组成">#</a> Python 程序的执行大致由三个阶段组成：</h5>
+<h5 id="python程序的执行大致由三个阶段组成"><a class="anchor" href="#python程序的执行大致由三个阶段组成">#</a> Python 程序的执行大致由三个阶段组成：</h5>
 <ol>
 <li>初始化</li>
 <li>汇编</li>
@@ -173,7 +173,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 </ol>
 <p>在初始化阶段，CPython 初始化运行 Python 所需的数据结构。它还准备内置类型、配置和加载内置模块、建立导入系统和许多其它事情</p>
 <p>接下来是编译阶段，从某种意义上，CPython 是解释器，而不是编译器，因为它不产生机器码。然而，解释器通常在执行源代码之前，将其源代码转换为某种中间表示形式，CPython 也是。这个翻译阶段的工作和典型编译器的工作是一样的：解析源代码并构建 AST（抽象语法树），从 AST 生成字节码，甚至执行一些字节码优化</p>
-<h5 id="首先字节码是什么"><a class="markdownIt-Anchor" href="#首先字节码是什么">#</a> 首先字节码是什么？</h5>
+<h5 id="首先字节码是什么"><a class="anchor" href="#首先字节码是什么">#</a> 首先字节码是什么？</h5>
 <p>字节码是一系列指令，每条指令由两个字节组成：一个用于操作码，一个用于参数</p>
 <figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">g</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">return</span> x <span class="token operator">+</span> <span class="token number">3</span></pre></td></tr></table></figure><p>CPython 将 function g 的主体转换为以下字节序列：[124, 0, 100, 1, 23, 0, 83, 0]，可以用内置 dis module 来分解它</p>
 <figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre>$ python <span class="token parameter variable">-m</span> dis example1.py</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token number">2</span>           <span class="token number">0</span> LOAD_FAST            <span class="token number">0</span> <span class="token punctuation">(</span>x<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>            <span class="token number">2</span> LOAD_CONST           <span class="token number">1</span> <span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>            <span class="token number">4</span> BINARY_ADD</pre></td></tr><tr><td data-num="6"></td><td><pre>            <span class="token number">6</span> RETURN_VALUE</pre></td></tr></table></figure><p>LOAD_FAST 操作码对应于字节 124，参数为 0。LOAD_CONST 操作码对应字节 100，参数为 1。BINARY_ADD 和 RETURN_VALUE 指令总是分别编码为（23、0）和（83、0），因为它们不需要参数。</p>
@@ -188,25 +188,25 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <li>相加两个数字的的指令是否于连接两个字符串的指令相同？如果是，那么虚拟机如何区分这些操作？</li>
 </ol>
 <p>我们需要先了解 CPython VM 的核心概念</p>
-<h3 id="code-objectsfunction-objectsframes"><a class="markdownIt-Anchor" href="#code-objectsfunction-objectsframes">#</a> Code objects，Function objects，Frames</h3>
-<h5 id="code-object"><a class="markdownIt-Anchor" href="#code-object">#</a> code object</h5>
+<h3 id="code-objectsfunction-objectsframes"><a class="anchor" href="#code-objectsfunction-objectsframes">#</a> Code objects，Function objects，Frames</h3>
+<h5 id="code-object"><a class="anchor" href="#code-object">#</a> code object</h5>
 <p>我们看到了一个简单函数的字节码是什么样子，但是实际情况下的 Python 程序是要复杂的多的，VM 如何执行包含函数定义并进行函数调用的模块？</p>
 <figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">return</span> x <span class="token operator">+</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token keyword">print</span><span class="token punctuation">(</span>f<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>它的字节码是什么样子的？首先这个程序定义了函数 f，以 1 作为参数调用 f，并输出调用结果</p>
 <figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre>$ python <span class="token parameter variable">-m</span> dis example2.py</pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>  <span class="token number">1</span>           <span class="token number">0</span> LOAD_CONST               <span class="token number">0</span> <span class="token punctuation">(</span><span class="token operator">&lt;</span>code object f at 0x000001AEEC279150, <span class="token function">file</span> <span class="token string">"work.py"</span>, line <span class="token operator"><span class="token file-descriptor important">1</span>></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>              <span class="token number">2</span> LOAD_CONST               <span class="token number">1</span> <span class="token punctuation">(</span><span class="token string">'f'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>              <span class="token number">4</span> MAKE_FUNCTION            <span class="token number">0</span></pre></td></tr><tr><td data-num="6"></td><td><pre>              <span class="token number">6</span> STORE_NAME               <span class="token number">0</span> <span class="token punctuation">(</span>f<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>  <span class="token number">5</span>           <span class="token number">8</span> LOAD_NAME                <span class="token number">1</span> <span class="token punctuation">(</span>print<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>             <span class="token number">10</span> LOAD_NAME                <span class="token number">0</span> <span class="token punctuation">(</span>f<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>             <span class="token number">12</span> LOAD_CONST               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>             <span class="token number">14</span> CALL_FUNCTION            <span class="token number">1</span></pre></td></tr><tr><td data-num="12"></td><td><pre>             <span class="token number">16</span> CALL_FUNCTION            <span class="token number">1</span></pre></td></tr><tr><td data-num="13"></td><td><pre>             <span class="token number">18</span> POP_TOP</pre></td></tr><tr><td data-num="14"></td><td><pre>             <span class="token number">20</span> LOAD_CONST               <span class="token number">3</span> <span class="token punctuation">(</span>None<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>             <span class="token number">22</span> RETURN_VALUE</pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>Disassembly of <span class="token operator">&lt;</span>code object f at 0x000001AEEC279150, <span class="token function">file</span> <span class="token string">"work.py"</span>, line <span class="token operator"><span class="token file-descriptor important">1</span>></span>:</pre></td></tr><tr><td data-num="18"></td><td><pre>  <span class="token number">2</span>           <span class="token number">0</span> LOAD_FAST                <span class="token number">0</span> <span class="token punctuation">(</span>x<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>              <span class="token number">2</span> LOAD_CONST               <span class="token number">1</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="20"></td><td><pre>              <span class="token number">4</span> BINARY_ADD</pre></td></tr><tr><td data-num="21"></td><td><pre>              <span class="token number">6</span> RETURN_VALUE</pre></td></tr></table></figure><p>在第 1 行，我们定义了函数 f，方法是将函数从代码对象（code object）中创建出来，并将名称 f 绑定到该对象上。</p>
 <p>作为单个单元（如模块或函数体），执行的代码片段成为代码块。CPython 存储有关代码块在称为代码对象的结构中，它包含字节和类似于块中使用的变量名列表之类的东西。运行模块或调用函数意味着开始计算相应的代码对象。</p>
-<h5 id="function-object"><a class="markdownIt-Anchor" href="#function-object">#</a> function object</h5>
+<h5 id="function-object"><a class="anchor" href="#function-object">#</a> function object</h5>
 <p>然而，函数不仅仅是一个代码对象，它必须包含其它信息，如函数名、docstring、默认参数和在封闭范围中定义的变量值。此信息与代码对象一起存储在函数对象中。MAKE_FUNCTION 指令用于创建它，在 CPython 源代码中函数对象结构的定义之前有一下注释：</p>
 <blockquote>
-<p>函数对象和代码对象不应该混淆：<br>
-函数对象是通过 def 语句创建的，它们在其__code__属性中引用一个代码对象，该对象是一个纯语法对象，即仅仅是一些源代码行的编译版本。每个源代码 “fragment” 有一个代码对象，但是每个代码对象可以被零个或多个函数对象引用，这取决于目前为止在源代码中执行 def 语句的次数</p>
+<p>函数对象和代码对象不应该混淆：<br />
+函数对象是通过 def 语句创建的，它们在其__code__属性中引用一个代码对象，该对象是一个纯语法对象，即仅仅是一些源代码行的编译版本。每个源代码 &quot;fragment&quot; 有一个代码对象，但是每个代码对象可以被零个或多个函数对象引用，这取决于目前为止在源代码中执行 def 语句的次数</p>
 </blockquote>
 <p>几个函数对象怎么会引用一个代码对象呢？</p>
 <figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">make_add_x</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">add_x</span><span class="token punctuation">(</span>y<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        <span class="token keyword">return</span> x <span class="token operator">+</span> y</pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">return</span> add_x</pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>add_4 <span class="token operator">=</span> make_add_x<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>add_5 <span class="token operator">=</span> make_add_x<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>make_add_x 函数的字节码包含 MAKE_FUNCTION 指令，函数 add_4 () 和 add_5 () 是使用与参数相同的代码对象调用此指令的结果，但有一个不同的参数 x 的值。每个函数都有自己的单元格变量机制，允许我们创建像 add_4 和 add_5 这样的闭包。</p>
 <p>先看看代码和函数对象的定义，方便理解它是什么</p>
-<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">struct</span> <span class="token class-name">PyCodeObject</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject_HEAD</pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">int</span> co_argcount<span class="token punctuation">;</span>            <span class="token comment">/* #arguments, except *args */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">int</span> co_posonlyargcount<span class="token punctuation">;</span>     <span class="token comment">/* #positional only arguments */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">int</span> co_kwonlyargcount<span class="token punctuation">;</span>      <span class="token comment">/* #keyword only arguments */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">int</span> co_nlocals<span class="token punctuation">;</span>             <span class="token comment">/* #local variables */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">int</span> co_stacksize<span class="token punctuation">;</span>           <span class="token comment">/* #entries needed for evaluation stack */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">int</span> co_flags<span class="token punctuation">;</span>               <span class="token comment">/* CO_..., see below */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">int</span> co_firstlineno<span class="token punctuation">;</span>         <span class="token comment">/* first source line number */</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    PyObject <span class="token operator">*</span>co_code<span class="token punctuation">;</span>          <span class="token comment">/* instruction opcodes */</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    PyObject <span class="token operator">*</span>co_consts<span class="token punctuation">;</span>        <span class="token comment">/* list (constants used) */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    PyObject <span class="token operator">*</span>co_names<span class="token punctuation">;</span>         <span class="token comment">/* list of strings (names used) */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    PyObject <span class="token operator">*</span>co_varnames<span class="token punctuation">;</span>      <span class="token comment">/* tuple of strings (local variable names) */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    PyObject <span class="token operator">*</span>co_freevars<span class="token punctuation">;</span>      <span class="token comment">/* tuple of strings (free variable names) */</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    PyObject <span class="token operator">*</span>co_cellvars<span class="token punctuation">;</span>      <span class="token comment">/* tuple of strings (cell variable names) */</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>    Py_ssize_t <span class="token operator">*</span>co_cell2arg<span class="token punctuation">;</span>    <span class="token comment">/* Maps cell vars which are arguments. */</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    PyObject <span class="token operator">*</span>co_filename<span class="token punctuation">;</span>      <span class="token comment">/* unicode (where it was loaded from) */</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    PyObject <span class="token operator">*</span>co_name<span class="token punctuation">;</span>          <span class="token comment">/* unicode (name, for reference) */</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        <span class="token comment">/* ... more members ... */</span></pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject_HEAD</pre></td></tr><tr><td data-num="3"></td><td><pre>    PyObject <span class="token operator">*</span>func_code<span class="token punctuation">;</span>        <span class="token comment">/* A code object, the __code__ attribute */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyObject <span class="token operator">*</span>func_globals<span class="token punctuation">;</span>     <span class="token comment">/* A dictionary (other mappings won't do) */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    PyObject <span class="token operator">*</span>func_defaults<span class="token punctuation">;</span>    <span class="token comment">/* NULL or a tuple */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    PyObject <span class="token operator">*</span>func_kwdefaults<span class="token punctuation">;</span>  <span class="token comment">/* NULL or a dict */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    PyObject <span class="token operator">*</span>func_closure<span class="token punctuation">;</span>     <span class="token comment">/* NULL or a tuple of cell objects */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    PyObject <span class="token operator">*</span>func_doc<span class="token punctuation">;</span>         <span class="token comment">/* The __doc__ attribute, can be anything */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    PyObject <span class="token operator">*</span>func_name<span class="token punctuation">;</span>        <span class="token comment">/* The __name__ attribute, a string object */</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    PyObject <span class="token operator">*</span>func_dict<span class="token punctuation">;</span>        <span class="token comment">/* The __dict__ attribute, a dict or NULL */</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    PyObject <span class="token operator">*</span>func_weakreflist<span class="token punctuation">;</span> <span class="token comment">/* List of weak references */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    PyObject <span class="token operator">*</span>func_module<span class="token punctuation">;</span>      <span class="token comment">/* The __module__ attribute, can be anything */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    PyObject <span class="token operator">*</span>func_annotations<span class="token punctuation">;</span> <span class="token comment">/* Annotations, a dict or NULL */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    PyObject <span class="token operator">*</span>func_qualname<span class="token punctuation">;</span>    <span class="token comment">/* The qualified name */</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    vectorcallfunc vectorcall<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token punctuation">&#125;</span> PyFunctionObject<span class="token punctuation">;</span></pre></td></tr></table></figure><h5 id="frame-object"><a class="markdownIt-Anchor" href="#frame-object">#</a> frame object</h5>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">struct</span> <span class="token class-name">PyCodeObject</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject_HEAD</pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">int</span> co_argcount<span class="token punctuation">;</span>            <span class="token comment">/* #arguments, except *args */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">int</span> co_posonlyargcount<span class="token punctuation">;</span>     <span class="token comment">/* #positional only arguments */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">int</span> co_kwonlyargcount<span class="token punctuation">;</span>      <span class="token comment">/* #keyword only arguments */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">int</span> co_nlocals<span class="token punctuation">;</span>             <span class="token comment">/* #local variables */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">int</span> co_stacksize<span class="token punctuation">;</span>           <span class="token comment">/* #entries needed for evaluation stack */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">int</span> co_flags<span class="token punctuation">;</span>               <span class="token comment">/* CO_..., see below */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">int</span> co_firstlineno<span class="token punctuation">;</span>         <span class="token comment">/* first source line number */</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    PyObject <span class="token operator">*</span>co_code<span class="token punctuation">;</span>          <span class="token comment">/* instruction opcodes */</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    PyObject <span class="token operator">*</span>co_consts<span class="token punctuation">;</span>        <span class="token comment">/* list (constants used) */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    PyObject <span class="token operator">*</span>co_names<span class="token punctuation">;</span>         <span class="token comment">/* list of strings (names used) */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    PyObject <span class="token operator">*</span>co_varnames<span class="token punctuation">;</span>      <span class="token comment">/* tuple of strings (local variable names) */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    PyObject <span class="token operator">*</span>co_freevars<span class="token punctuation">;</span>      <span class="token comment">/* tuple of strings (free variable names) */</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    PyObject <span class="token operator">*</span>co_cellvars<span class="token punctuation">;</span>      <span class="token comment">/* tuple of strings (cell variable names) */</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>    Py_ssize_t <span class="token operator">*</span>co_cell2arg<span class="token punctuation">;</span>    <span class="token comment">/* Maps cell vars which are arguments. */</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    PyObject <span class="token operator">*</span>co_filename<span class="token punctuation">;</span>      <span class="token comment">/* unicode (where it was loaded from) */</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    PyObject <span class="token operator">*</span>co_name<span class="token punctuation">;</span>          <span class="token comment">/* unicode (name, for reference) */</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        <span class="token comment">/* ... more members ... */</span></pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject_HEAD</pre></td></tr><tr><td data-num="3"></td><td><pre>    PyObject <span class="token operator">*</span>func_code<span class="token punctuation">;</span>        <span class="token comment">/* A code object, the __code__ attribute */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyObject <span class="token operator">*</span>func_globals<span class="token punctuation">;</span>     <span class="token comment">/* A dictionary (other mappings won't do) */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    PyObject <span class="token operator">*</span>func_defaults<span class="token punctuation">;</span>    <span class="token comment">/* NULL or a tuple */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    PyObject <span class="token operator">*</span>func_kwdefaults<span class="token punctuation">;</span>  <span class="token comment">/* NULL or a dict */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    PyObject <span class="token operator">*</span>func_closure<span class="token punctuation">;</span>     <span class="token comment">/* NULL or a tuple of cell objects */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    PyObject <span class="token operator">*</span>func_doc<span class="token punctuation">;</span>         <span class="token comment">/* The __doc__ attribute, can be anything */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    PyObject <span class="token operator">*</span>func_name<span class="token punctuation">;</span>        <span class="token comment">/* The __name__ attribute, a string object */</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    PyObject <span class="token operator">*</span>func_dict<span class="token punctuation">;</span>        <span class="token comment">/* The __dict__ attribute, a dict or NULL */</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    PyObject <span class="token operator">*</span>func_weakreflist<span class="token punctuation">;</span> <span class="token comment">/* List of weak references */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    PyObject <span class="token operator">*</span>func_module<span class="token punctuation">;</span>      <span class="token comment">/* The __module__ attribute, can be anything */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    PyObject <span class="token operator">*</span>func_annotations<span class="token punctuation">;</span> <span class="token comment">/* Annotations, a dict or NULL */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    PyObject <span class="token operator">*</span>func_qualname<span class="token punctuation">;</span>    <span class="token comment">/* The qualified name */</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    vectorcallfunc vectorcall<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token punctuation">&#125;</span> PyFunctionObject<span class="token punctuation">;</span></pre></td></tr></table></figure><h5 id="frame-object"><a class="anchor" href="#frame-object">#</a> frame object</h5>
 <p>当 VM 执行代码对象时，它必须跟踪变量的值和不断变化的值堆栈。它还需要记住在哪里停止执行当前代码对象以执行另一个对象，以及返回时在哪里继续执行。CPython 将这些信息存储在一个 frameobject 中。frame 提供了代码对象可以执行的状态</p>
 <figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">struct</span> <span class="token class-name">_frame</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject_VAR_HEAD</pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">_frame</span> <span class="token operator">*</span>f_back<span class="token punctuation">;</span>      <span class="token comment">/* previous frame, or NULL */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyCodeObject <span class="token operator">*</span>f_code<span class="token punctuation">;</span>       <span class="token comment">/* code segment */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    PyObject <span class="token operator">*</span>f_builtins<span class="token punctuation">;</span>       <span class="token comment">/* builtin symbol table (PyDictObject) */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    PyObject <span class="token operator">*</span>f_globals<span class="token punctuation">;</span>        <span class="token comment">/* global symbol table (PyDictObject) */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    PyObject <span class="token operator">*</span>f_locals<span class="token punctuation">;</span>         <span class="token comment">/* local symbol table (any mapping) */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    PyObject <span class="token operator">*</span><span class="token operator">*</span>f_valuestack<span class="token punctuation">;</span>    <span class="token comment">/* points after the last local */</span></pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre>    PyObject <span class="token operator">*</span><span class="token operator">*</span>f_stacktop<span class="token punctuation">;</span>          <span class="token comment">/* Next free slot in f_valuestack.  ... */</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    PyObject <span class="token operator">*</span>f_trace<span class="token punctuation">;</span>          <span class="token comment">/* Trace function */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token keyword">char</span> f_trace_lines<span class="token punctuation">;</span>         <span class="token comment">/* Emit per-line trace events? */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token keyword">char</span> f_trace_opcodes<span class="token punctuation">;</span>       <span class="token comment">/* Emit per-opcode trace events? */</span></pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token comment">/* Borrowed reference to a generator, or NULL */</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    PyObject <span class="token operator">*</span>f_gen<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token keyword">int</span> f_lasti<span class="token punctuation">;</span>                <span class="token comment">/* Last instruction if called */</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token comment">/* ... */</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token keyword">int</span> f_lineno<span class="token punctuation">;</span>               <span class="token comment">/* Current line number */</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token keyword">int</span> f_iblock<span class="token punctuation">;</span>               <span class="token comment">/* index in f_blockstack */</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">char</span> f_executing<span class="token punctuation">;</span>           <span class="token comment">/* whether the frame is still executing */</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    PyTryBlock f_blockstack<span class="token punctuation">[</span>CO_MAXBLOCKS<span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">/* for try and loop blocks */</span></pre></td></tr><tr><td data-num="24"></td><td><pre>    PyObject <span class="token operator">*</span>f_localsplus<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  <span class="token comment">/* locals+stack, dynamically sized */</span></pre></td></tr><tr><td data-num="25"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>创建一个 frame 来执行模块的代码对象，每当需要执行另一个代码对象时，CPython 都会创建一个新的 frameobject，每一帧都有对前一帧的引用，因此，帧形成一个帧堆栈，也称为调用堆栈，当前帧位于对于堆栈顶部，当调用一个函数时，一个新的帧被推送到堆栈上。在从当前正在执行的帧返回时，CPython 通过记住其最后处理的指令继续执行前一个帧。在某种意义上，CPython VM 除了构造和执行帧之外，什么也不做</p>
-<h5 id="threads-interpreters-runtime"><a class="markdownIt-Anchor" href="#threads-interpreters-runtime">#</a> Threads、Interpreters、Runtime</h5>
+<h5 id="threads-interpreters-runtime"><a class="anchor" href="#threads-interpreters-runtime">#</a> Threads、Interpreters、Runtime</h5>
 <p>我们已经看到 3 个重要的概念：</p>
 <ol>
 <li>code object</li>
@@ -219,7 +219,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <li>an interpreter state</li>
 <li>a runtime state</li>
 </ol>
-<h5 id="thread-state"><a class="markdownIt-Anchor" href="#thread-state">#</a> thread state</h5>
+<h5 id="thread-state"><a class="anchor" href="#thread-state">#</a> thread state</h5>
 <p>线程状态是一种数据结构，它包含特定于线程的数据，包括调用堆栈、异常状态和调试设置。它不应该于操作系统混淆。使用标准线程模块在单独的线程中运行函数时会发生什么</p>
 <figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">from</span> threading <span class="token keyword">import</span> Thread</pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token triple-quoted-string string">"""Perform an I/O-bound task"""</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">pass</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>t <span class="token operator">=</span> Thread<span class="token punctuation">(</span>target<span class="token operator">=</span>f<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>t<span class="token punctuation">.</span>start<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>t<span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>t.start () 实际上是通过调用 OS 函数（类 UNIX 系统上的 pthread_create () 和 Windows 上的 _startthreadex ( )）来创建一个新的 OS 线程。新创建的线程从负责调用目标的 _thread 模块调用函数。此函数不仅接收目标和目标的参数，而且还接收新操作系统线程中使用的新线程状态。操作系统线程使用自己的线程状态进入求值循环</p>
 <p>这里还涉及到一个<span class="exturl" data-url="aHR0cHM6Ly93aWtpLnB5dGhvbi5vcmcvbW9pbi9HbG9iYWxJbnRlcnByZXRlckxvY2s="> GIL（Global Interpreter Lock）</span>，它可以防止多个线程同时处于求值循环中。这样做的主要目的是，在不引入更细粒度锁的情况下，保护 CPython 状态不受损坏。Python/C API Reference 清楚的解释了 GIL</p>
@@ -227,12 +227,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <p>Python 解释器不是完全线程安全的，为了支持多线程的 Python 程序，有一个全局锁，称为 GIL，必须由当前线程持有 GIL 才能安全访问 Python 对象。如果没有锁，即使简单的操作也可能在多线程中引起问题：例如当两个线程同时增加同一对象的引用计数时，引用计数最终可能只增加一次，而不是两次</p>
 </blockquote>
 <p>要管理多个线程，需要比线程状态更高级的数据结构</p>
-<h5 id="interpreter-and-runtime-states"><a class="markdownIt-Anchor" href="#interpreter-and-runtime-states">#</a> interpreter and runtime states</h5>
+<h5 id="interpreter-and-runtime-states"><a class="anchor" href="#interpreter-and-runtime-states">#</a> interpreter and runtime states</h5>
 <p>实际上，有两种状态：解释器状态和运行时状态</p>
 <p>解释器状态是一组线程以及特定于该组的数据。线程共享一些东西，比如加载的模块（sys.module）、内建（builtins）和导入系统（imoprt lib）。</p>
 <p>运行时状态是一个全局变量，它存储特定于进程的数据，包括 CPython 的状态（例如，它是否已经初始化？）和 GIL 机制</p>
 <p>通常，一个进程的所有线程都属于同一个解释器，但是，有些情况下，可能需要创建一个子解释器来隔离一组线程，<span class="exturl" data-url="aHR0cHM6Ly9tb2R3c2dpLnJlYWR0aGVkb2NzLmlvL2VuL2RldmVsb3AvdXNlci1ndWlkZXMvcHJvY2Vzc2VzLWFuZC10aHJlYWRpbmcuaHRtbCNweXRob24tc3ViLWludGVycHJldGVycw==">mod_wsgi</span> 就是一个例子，它使用不同的解释器来运行 WSGI 应用程序。隔离最明显的效果是，每组线程都有自己版本的所有模块，包括__main__，这是一个全局名称空间</p>
-<h5 id="architecture-summary"><a class="markdownIt-Anchor" href="#architecture-summary">#</a> Architecture summary</h5>
+<h5 id="architecture-summary"><a class="anchor" href="#architecture-summary">#</a> Architecture summary</h5>
 <p>CPython 的体系结构，解释器可以看作是一个分层结构</p>
 <ol>
 <li>Runtime：进程的全局状态，包括 GIL 和内存分配机制</li>
@@ -290,11 +290,6 @@ Leayoos Chui = 士多啤梨苹果橙</title>
         <img data-src="/images/alipay.png" alt="小芳芳 Alipay">
         <p>Alipay</p>
       </div>
-      
-      <div>
-        <img data-src="/images/paypal.png" alt="小芳芳 PayPal">
-        <p>PayPal</p>
-      </div>
   </div>
 </div>
 
@@ -326,7 +321,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
     <div class="item left">
       
 
-  <a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicli3sbvtj20zk0m8x6p.jpg" title="Python range的實現原理">
+  <a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclfdu6exj20zk0m87hw.jpg" title="Python range的實現原理">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> Python</span>
   <h3>Python range的實現原理</h3>
@@ -336,7 +331,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
     <div class="item right">
       
 
-  <a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipevarprfj20zk0m8npd.jpg" title="Python map对象探究">
+  <a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipexw3o58j20zk0m8e81.jpg" title="Python map对象探究">
   <span class="type">Next Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>Python map对象探究</h3>
@@ -395,6 +390,8 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 </nav>
 
 <div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0NMQVktemhhbw==" title="https:&#x2F;&#x2F;github.com&#x2F;CLAY-zhao"><i class="ic i-github"></i></span>
+      <span class="exturl item bilibili" data-url="aHR0cHM6Ly9zcGFjZS5iaWxpYmlsaS5jb20vMjkxMzUwNTA=" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;29135050"><i class="ic i-bilibili"></i></span>
 </div>
 
 <ul class="menu">
@@ -483,70 +480,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/Life/" title="In Life">Life</a>
-</div>
-
-    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Office/" title="In Office">Office</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/Office/PowerPoint/" title="In PowerPoint">PowerPoint</a>
-</div>
-
-    <span><a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" title="PPT结构组成（工作中的总结）">PPT结构组成（工作中的总结）</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Python/" title="In Python">Python</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/Python/Django/" title="In Django">Django</a>
-</div>
-
-    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
   </li>
 
       
@@ -570,7 +509,43 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Life/" title="In Life">Life</a>
+</div>
+
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
+</div>
+
+    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Python/" title="In Python">Python</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Python/Django/" title="In Django">Django</a>
+</div>
+
+    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
   </li>
 
       
@@ -582,7 +557,31 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
+    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Office/" title="In Office">Office</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Office/PowerPoint/" title="In PowerPoint">PowerPoint</a>
+</div>
+
+    <span><a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" title="PPT结构组成（工作中的总结）">PPT结构组成（工作中的总结）</a></span>
   </li>
 
   </ul>

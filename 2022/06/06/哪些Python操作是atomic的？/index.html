@@ -102,12 +102,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclhnx9glj20zk0m8npd.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclip4jbpj20zk0m87cv.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicli9lfebj20zk0m84qp.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicljgocqbj20zk0m8e81.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gicis081o9j20zk0m8dmr.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipesrnqv3j20zk0m8ava.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclx29mstj20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclh0m9pdj20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicmnywqgpj20zk0m8dwx.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicitzannuj20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipexe4oykj20zk0m87ji.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclflwv2aj20zk0m84qp.jpg"></li>
         </ul>
       </div>
     </header>
@@ -161,10 +161,10 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <li>全局解釋器鎖（GIL）一次只允許單個綫程執行</li>
 <li>許多操作轉換為單個 bytecode 來執行</li>
 </ol>
-<span id="more"></span>
-<h1 id=""><a class="markdownIt-Anchor" href="#">#</a> </h1>
+<p><span id="more"></span></p>
+<h1 id=""><a class="anchor" href="#">#</a> </h1>
 <p>可以使用 dis 模塊來檢查操作是否編譯為單個字節碼指令</p>
-<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">def</span> <span class="token function">update_dict</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>     d<span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">import</span> dis</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> dis<span class="token punctuation">.</span>dis<span class="token punctuation">(</span>update_dict<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>  <span class="token number">3</span>           <span class="token number">0</span> LOAD_CONST               <span class="token number">1</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>      <span class="token comment"># 將 co_consts [1] 壓入堆，也就是 1</span></pre></td></tr><tr><td data-num="7"></td><td><pre>              <span class="token number">3</span> LOAD_GLOBAL              <span class="token number">0</span> <span class="token punctuation">(</span>d<span class="token punctuation">)</span>      <span class="token comment"># 在全局中加載 d 符號，即 co_names [0], 壓入堆棧上</span></pre></td></tr><tr><td data-num="8"></td><td><pre>              <span class="token number">6</span> LOAD_CONST               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span>    <span class="token comment"># 將 co_consts [2] 壓入堆，也就是 a 符號</span></pre></td></tr><tr><td data-num="9"></td><td><pre>              <span class="token number">9</span> STORE_SUBSCR                        <span class="token comment"># single bytecode instruction</span></pre></td></tr><tr><td data-num="10"></td><td><pre>             <span class="token number">10</span> LOAD_CONST               <span class="token number">0</span> <span class="token punctuation">(</span><span class="token boolean">None</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>             <span class="token number">13</span> RETURN_VALUE</pre></td></tr></table></figure><h1 id="pythons-swap-is-not-atomic"><a class="markdownIt-Anchor" href="#pythons-swap-is-not-atomic">#</a> Python’s swap is not atomic</h1>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">def</span> <span class="token function">update_dict</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>     d<span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">import</span> dis</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> dis<span class="token punctuation">.</span>dis<span class="token punctuation">(</span>update_dict<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>  <span class="token number">3</span>           <span class="token number">0</span> LOAD_CONST               <span class="token number">1</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>      <span class="token comment"># 將 co_consts [1] 壓入堆，也就是 1</span></pre></td></tr><tr><td data-num="7"></td><td><pre>              <span class="token number">3</span> LOAD_GLOBAL              <span class="token number">0</span> <span class="token punctuation">(</span>d<span class="token punctuation">)</span>      <span class="token comment"># 在全局中加載 d 符號，即 co_names [0], 壓入堆棧上</span></pre></td></tr><tr><td data-num="8"></td><td><pre>              <span class="token number">6</span> LOAD_CONST               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span>    <span class="token comment"># 將 co_consts [2] 壓入堆，也就是 a 符號</span></pre></td></tr><tr><td data-num="9"></td><td><pre>              <span class="token number">9</span> STORE_SUBSCR                        <span class="token comment"># single bytecode instruction</span></pre></td></tr><tr><td data-num="10"></td><td><pre>             <span class="token number">10</span> LOAD_CONST               <span class="token number">0</span> <span class="token punctuation">(</span><span class="token boolean">None</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>             <span class="token number">13</span> RETURN_VALUE</pre></td></tr></table></figure><h1 id="pythons-swap-is-not-atomic"><a class="anchor" href="#pythons-swap-is-not-atomic">#</a> Python's swap is not atomic</h1>
 <p>在 PyMongo 的連接池中，確保并發的問題之一，如果一個綫程正在重置連接池，而另一個綫程正在使用該池，如何防止它們相互踩踏</p>
 <figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">Pool</span><span class="token punctuation">(</span><span class="token builtin">object</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        self<span class="token punctuation">.</span>sockets <span class="token operator">=</span> <span class="token builtin">set</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">reset</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token comment"># Close sockets before deleting them</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        sockets<span class="token punctuation">,</span> self<span class="token punctuation">.</span>sockets <span class="token operator">=</span> self<span class="token punctuation">.</span>sockets<span class="token punctuation">,</span> <span class="token builtin">set</span><span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">for</span> sock_info <span class="token keyword">in</span> sockets<span class="token punctuation">:</span> sock_info<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>這裏有可能會有競爭條件，作者認爲 sockets, self.sockets = self.sockets, set () 是 atomic 的，即第一個進入的綫程 reset () 將 self.sockets 替換為一個空集，但其實并非如此，在測試時，偶爾會發生 racing，測試啓動了 40 個并發綫程，每個綫程查詢 MongoDB，調用 reset ()，然後再次查詢 MongoDB</p>
 <figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 測試失敗原因</span></pre></td></tr><tr><td data-num="2"></td><td><pre>test_disconnect <span class="token punctuation">(</span>test<span class="token punctuation">.</span>test_pooling<span class="token punctuation">.</span>TestPooling<span class="token punctuation">)</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> Exception <span class="token keyword">in</span> thread Thread<span class="token operator">-</span><span class="token number">45</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>Traceback <span class="token punctuation">(</span>most recent call last<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre> <span class="token operator">&lt;</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> snip <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token operator">></span></pre></td></tr><tr><td data-num="5"></td><td><pre> File <span class="token string">"pymongo/pool.py"</span><span class="token punctuation">,</span> line <span class="token number">159</span><span class="token punctuation">,</span> <span class="token keyword">in</span> reset</pre></td></tr><tr><td data-num="6"></td><td><pre>   <span class="token keyword">for</span> sock_info <span class="token keyword">in</span> sockets<span class="token punctuation">:</span> sock_info<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>RuntimeError<span class="token punctuation">:</span> Set changed size during iteration</pre></td></tr></table></figure><p>作者認爲交換兩個對象的賦值操作時 atomic 的，但實際上它需要 6 個字節碼指令</p>
@@ -226,11 +226,6 @@ Leayoos Chui = 士多啤梨苹果橙</title>
         <img data-src="/images/alipay.png" alt="小芳芳 Alipay">
         <p>Alipay</p>
       </div>
-      
-      <div>
-        <img data-src="/images/paypal.png" alt="小芳芳 PayPal">
-        <p>PayPal</p>
-      </div>
   </div>
 </div>
 
@@ -262,7 +257,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
     <div class="item left">
       
 
-  <a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipet4bz0yj20zk0m8e81.jpg" title="端午节快乐">
+  <a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclh5u05ej20zk0m87df.jpg" title="端午节快乐">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> Life</span>
   <h3>端午节快乐</h3>
@@ -272,7 +267,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
     <div class="item right">
       
 
-  <a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicitcxhpij20zk0m8hdt.jpg" title="getattr實現原理">
+  <a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipewkhf1zj20zk0m81kx.jpg" title="getattr實現原理">
   <span class="type">Next Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>getattr實現原理</h3>
@@ -294,7 +289,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
   <div class="panels">
     <div class="inner">
       <div class="contents panel pjax" data-title="Contents">
-          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"> </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pythons-swap-is-not-atomic"><span class="toc-number">2.</span> <span class="toc-text"> Python’s swap is not atomic</span></a></li></ol>
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"> </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pythons-swap-is-not-atomic"><span class="toc-number">2.</span> <span class="toc-text"> Python&#39;s swap is not atomic</span></a></li></ol>
       </div>
       <div class="related panel pjax" data-title="Related">
         <ul>
@@ -331,6 +326,8 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 </nav>
 
 <div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0NMQVktemhhbw==" title="https:&#x2F;&#x2F;github.com&#x2F;CLAY-zhao"><i class="ic i-github"></i></span>
+      <span class="exturl item bilibili" data-url="aHR0cHM6Ly9zcGFjZS5iaWxpYmlsaS5jb20vMjkxMzUwNTA=" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;29135050"><i class="ic i-bilibili"></i></span>
 </div>
 
 <ul class="menu">
@@ -412,6 +409,18 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
     <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
   </li>
 
@@ -422,11 +431,45 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
 </div>
 
-    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
+    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Python/" title="In Python">Python</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Python/Django/" title="In Django">Django</a>
+</div>
+
+    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
   </li>
 
       
@@ -455,42 +498,6 @@ Leayoos Chui = 士多啤梨苹果橙</title>
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Python/" title="In Python">Python</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/Python/Django/" title="In Django">Django</a>
-</div>
-
-    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
 <a href="/categories/Office/" title="In Office">Office</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/Office/PowerPoint/" title="In PowerPoint">PowerPoint</a>
@@ -506,21 +513,11 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
+<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
 </div>
 
-    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
+    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
   </li>
 
   </ul>

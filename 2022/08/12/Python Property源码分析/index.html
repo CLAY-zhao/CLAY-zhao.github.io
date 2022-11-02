@@ -102,12 +102,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giciuv0socj20zk0m8qes.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclj9410cj20zk0m8h12.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipetfk5zwj20zk0m8e81.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclxp31goj20zk0m8qv5.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1gipevgoki5j20zk0m84qp.jpg"></li>
-          <li class="item" data-background-image="https://tva1.sinaimg.cn/large/6833939bly1giclh3brzpj20zk0m8ann.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giciuja1j1j20zk0m8kjl.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicitcxhpij20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeybxm1pj20zk0m8niv.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeu7txpzj20zk0m81kx.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclh3brzpj20zk0m8ann.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclg5ms2rj20zk0m8u0x.jpg"></li>
         </ul>
       </div>
     </header>
@@ -156,11 +156,11 @@ Leayoos Chui = 士多啤梨苹果橙</title>
   <div class="body md" itemprop="articleBody">
     
 
-    <h1 id="python-property的源码分析"><a class="markdownIt-Anchor" href="#python-property的源码分析">#</a> Python @property 的源码分析</h1>
+    <h1 id="python-property的源码分析"><a class="anchor" href="#python-property的源码分析">#</a> Python @property 的源码分析</h1>
 <p>property 在 Python 中是一种装饰器，可以用来修饰方法</p>
-<h3 id="作用"><a class="markdownIt-Anchor" href="#作用">#</a> 作用</h3>
+<h3 id="作用"><a class="anchor" href="#作用">#</a> 作用</h3>
 <p>我们可以使用 @property 装饰器来创建只读属性，@property 装饰器会将方法转换为相同名称的只读属性，可以与所定义的属性配合使用，以防止属性被修改</p>
-<span id="more"></span>
+<p><span id="more"></span></p>
 <p>property 具体的使用案例可以参考：<span class="exturl" data-url="aHR0cHM6Ly93d3cucnVub29iLmNvbS9weXRob24vcHl0aG9uLWZ1bmMtcHJvcGVydHkuaHRtbA==">https://www.runoob.com/python/python-func-property.html</span>，里面有详细介绍</p>
 <p>以下的用法是最常用的</p>
 <figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">GHost</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        self<span class="token punctuation">.</span>__name <span class="token operator">=</span> <span class="token string">"刹耶"</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token decorator annotation punctuation">@property</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">name</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">return</span> self<span class="token punctuation">.</span>__name</pre></td></tr><tr><td data-num="9"></td><td><pre>    </pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token decorator annotation punctuation">@name<span class="token punctuation">.</span>setter</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">name</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> val<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        self<span class="token punctuation">.</span>__name <span class="token operator">=</span> val</pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre>ghost <span class="token operator">=</span> GHost<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr></table></figure><p>我们可以直接通过调用 ghost.name 获取到名称，而不需要（）进行调用，当执行 <span class="exturl" data-url="aHR0cDovL2dob3N0Lm5hbWU=">ghost.name</span> = xxx 时又会触发赋值操作，我们来看看 CPython 是如何做到的</p>
@@ -176,7 +176,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">GHost</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        self<span class="token punctuation">.</span>__name <span class="token operator">=</span> <span class="token string">"刹耶"</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token decorator annotation punctuation">@property</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">name</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">return</span> self<span class="token punctuation">.</span>__name</pre></td></tr></table></figure><p>上面的类中，在 property 初始化的时候，这个 name 方法作为 property 的 fget 参数传递进去，property 对象只有 get 方法不为空，set 和 del 都为空，那么当我们再新增一个设置方法的时候</p>
 <figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">GHost</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        self<span class="token punctuation">.</span>__name <span class="token operator">=</span> <span class="token string">"刹耶"</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token decorator annotation punctuation">@property</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">name</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">return</span> self<span class="token punctuation">.</span>__name</pre></td></tr><tr><td data-num="9"></td><td><pre>    </pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token decorator annotation punctuation">@name<span class="token punctuation">.</span>setter</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">name</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> val<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        self<span class="token punctuation">.</span>__name <span class="token operator">=</span> val</pre></td></tr></table></figure><p>首先判断 get 方法是否为空，由于我们已经定义了 get 方法，所以它会将 get 方法取出，然后通过 property 的 type 类型再 new 一个新的出来，但是这次分别传递了 get 方法和 set 方法，这时，你的 name 对象又被更新了一次</p>
 <p>Python property 的内容差不多就这些了，了解一个东西是怎么实现的其实非常有趣，最起码你知道它是怎么跑的🤭</p>
-<div align=center width=100%><iframe class="video-frame" height=500 width=80% frameborder=0 allowfullscreen src="//player.bilibili.com/player.html?aid=561170527&bvid=BV1Ce4y1B7gY&cid=851548804&page=1" ></iframe></div>
+<p>&lt;div align=center width=100%&gt;&lt;iframe class=&quot;video-frame&quot; height=500 width=80% frameborder=0 allowfullscreen src=&quot;<a target="_blank" rel="noopener" href="//player.bilibili.com/player.html?aid=561170527&amp;bvid=BV1Ce4y1B7gY&amp;cid=851548804&amp;page=1">//player.bilibili.com/player.html?aid=561170527&amp;bvid=BV1Ce4y1B7gY&amp;cid=851548804&amp;page=1</a>&quot; &gt;&lt;/iframe&gt;&lt;/div&gt;</p>
 
       <div class="tags">
           <a href="/tags/CPython/" rel="tag"><i class="ic i-tag"></i> CPython</a>
@@ -219,11 +219,6 @@ Leayoos Chui = 士多啤梨苹果橙</title>
         <img data-src="/images/alipay.png" alt="小芳芳 Alipay">
         <p>Alipay</p>
       </div>
-      
-      <div>
-        <img data-src="/images/paypal.png" alt="小芳芳 PayPal">
-        <p>PayPal</p>
-      </div>
   </div>
 </div>
 
@@ -255,7 +250,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
     <div class="item left">
       
 
-  <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipey0a334j20zk0m8qpt.jpg" title="Python list实现原理">
+  <a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicis081o9j20zk0m8dmr.jpg" title="Python list实现原理">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>Python list实现原理</h3>
@@ -265,7 +260,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
     <div class="item right">
       
 
-  <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva1.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclfdu6exj20zk0m87hw.jpg" title="Python Django服务启动时做了什么?">
+  <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclip4jbpj20zk0m87cv.jpg" title="Python Django服务启动时做了什么?">
   <span class="type">Next Post</span>
   <span class="category"><i class="ic i-flag"></i> Django</span>
   <h3>Python Django服务启动时做了什么?</h3>
@@ -324,6 +319,8 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 </nav>
 
 <div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0NMQVktemhhbw==" title="https:&#x2F;&#x2F;github.com&#x2F;CLAY-zhao"><i class="ic i-github"></i></span>
+      <span class="exturl item bilibili" data-url="aHR0cHM6Ly9zcGFjZS5iaWxpYmlsaS5jb20vMjkxMzUwNTA=" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;29135050"><i class="ic i-bilibili"></i></span>
 </div>
 
 <ul class="menu">
@@ -403,11 +400,9 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
 </div>
 
-    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
+    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
   </li>
 
       
@@ -419,17 +414,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Life/" title="In Life">Life</a>
-</div>
-
-    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
   </li>
 
       
@@ -442,30 +427,6 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 </div>
 
     <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
   </li>
 
       
@@ -489,6 +450,52 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
+    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Life/" title="In Life">Life</a>
+</div>
+
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
     <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
   </li>
 
@@ -501,19 +508,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
   </li>
 
   </ul>
