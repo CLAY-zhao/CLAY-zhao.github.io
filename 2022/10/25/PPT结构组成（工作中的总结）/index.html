@@ -102,12 +102,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipet8c1a2j20zk0m8kct.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeyvx1d4j20zk0m8hdt.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giph4wqtg4j20zk0m8x6p.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeu1usa7j20zk0m8b29.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicliierfjj20zk0m8npd.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclhtuo6nj20zk0m8ttm.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipeu1usa7j20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicis3attqj20zk0m8k7l.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipesx5fdwj20zk0m81kx.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicli3sbvtj20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipeuv80yoj20zk0m8kjl.jpg"></li>
+          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicitzannuj20zk0m8b29.jpg"></li>
         </ul>
       </div>
     </header>
@@ -156,11 +156,11 @@ Leayoos Chui = 士多啤梨苹果橙</title>
   <div class="body md" itemprop="articleBody">
     
 
-    <h3 id="ppt结构组成"><a class="anchor" href="#ppt结构组成">#</a> PPT 结构组成</h3>
+    <h3 id="ppt结构组成"><a class="markdownIt-Anchor" href="#ppt结构组成">#</a> PPT 结构组成</h3>
 <p>PPT 本质上是一个 ZIP 压缩包，将 PPT 改为 ZIP 之后解压可以看到这些文件：</p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/8c97ea36d8908052.png" alt="" /><br />
-<span id="more"></span></p>
-<p>里面的文件数量会根据幻灯片的内容所有不同，但肯定会有<br />
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/8c97ea36d8908052.png" alt=""></p>
+<span id="more"></span>
+<p>里面的文件数量会根据幻灯片的内容所有不同，但肯定会有<br>
  [Content_Types].xml、.rels、presentation 这些文件，如果 PPT 一页都没有是无法解压缩的</p>
 <p>[Content_Types] 文件定义了所有幻灯片里用到的格式和内容，就是提前声明这些内容</p>
 <figure class="highlight xml"><figcaption data-lang="XML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Override</span> <span class="token attr-name">PartName</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/ppt/slideLayouts/slideLayout1.xml<span class="token punctuation">"</span></span></pre></td></tr><tr><td data-num="2"></td><td><pre>              <span class="token attr-name">ContentType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span> # 声明不同母版的布局</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Override</span> <span class="token attr-name">PartName</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/ppt/slideMasters/slideMaster1.xml<span class="token punctuation">"</span></span></pre></td></tr><tr><td data-num="4"></td><td><pre>              <span class="token attr-name">ContentType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span> # 声明母版</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Override</span> <span class="token attr-name">PartName</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/ppt/slides/slide1.xml<span class="token punctuation">"</span></span></pre></td></tr><tr><td data-num="6"></td><td><pre>              <span class="token attr-name">ContentType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>application/vnd.openxmlformats-officedocument.presentationml.slide+xml<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>  # 声明每一页幻灯片</pre></td></tr></table></figure><p>Relationships 标签它是为了方便各种资源的的引用，格式为：</p>
@@ -169,14 +169,14 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <p><strong>Slides</strong> 这位更是重量级它存储的就是每页幻灯片的具体内容，包括动画设置，你有几页幻灯片，那就会有 slide1~n 个 xml 文件</p>
 <p><strong>Slide Master</strong> 它包含母版的所有文本、格式等的定义</p>
 <p><strong>Slide Layouts</strong> 它包含了幻灯片使用的版式的默认格式，就是母版下的不同布局样式</p>
-<h3 id="替换背景图"><a class="anchor" href="#替换背景图">#</a> 替换背景图</h3>
+<h3 id="替换背景图"><a class="markdownIt-Anchor" href="#替换背景图">#</a> 替换背景图</h3>
 <blockquote>
 <p>如果要将自己的背景图替换到 PPTX 里作为背景，应该怎么做</p>
 </blockquote>
 <ol>
 <li>首先，如果 PPT 里套用了图片、媒体文件等，那么 PPT 目录里就会有一个 media 目录，里面会存放 PPT 套用的图片、媒体文件</li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/61f7470602c70c6c.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/61f7470602c70c6c.png" alt=""></p>
 <ol start="2">
 <li>
 <p>将我们自己的背景图复制到里面，然后改成不会冲突的名字</p>
@@ -185,30 +185,30 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <p>改背景图不需要修改 slideLayouts 里面的东西，只需要修改 slides 目录，也就是每页幻灯片对应的文件</p>
 </li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5fc2a5db26d88a35.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5fc2a5db26d88a35.png" alt=""></p>
 <ol start="4">
 <li>里面一共有 slide1~18 个 xml，也就是有 18 页</li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/41b74f8d443d1b00.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/41b74f8d443d1b00.png" alt=""></p>
 <ol start="5">
 <li>我们将第一页改成自己的背景图，首先在 slides 目录下有一个_rels 的目录</li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/d39a43b83a8be5aa.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/d39a43b83a8be5aa.png" alt=""></p>
 <ol start="6">
 <li>它们都定义了每页幻灯片的资源引用关系，打开 slide1.xml.rels</li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/be5f3e1987c66dd2.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/be5f3e1987c66dd2.png" alt=""></p>
 <ol start="7">
 <li>然后我们自己新增一个标签，定义一个背景图的引用，Id 一定不要重复</li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/16798418509c3dd9.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/16798418509c3dd9.png" alt=""></p>
 <p>8 . 我们再修改一下 slide1.xml，给它新增一个背景图设置的标签</p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5a4961c202207e5b.png" alt="" /></p>
-<p>13. 基本上就可以了，我们将所有文件打包成 ZIP 再改成 PPTX 后缀名就能打开文件了，背景图已经设置好了，很简单<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/438a09286fd494c9.png" alt="" /></p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/72fd181077e3f655.png" alt="" /></p>
-<h3 id="将自己的母版替换为其他ppt的母版"><a class="anchor" href="#将自己的母版替换为其他ppt的母版">#</a> 将自己的母版替换为其他 PPT 的母版</h3>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5a4961c202207e5b.png" alt=""></p>
+<p>13. 基本上就可以了，我们将所有文件打包成 ZIP 再改成 PPTX 后缀名就能打开文件了，背景图已经设置好了，很简单<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/438a09286fd494c9.png" alt=""></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/72fd181077e3f655.png" alt=""></p>
+<h3 id="将自己的母版替换为其他ppt的母版"><a class="markdownIt-Anchor" href="#将自己的母版替换为其他ppt的母版">#</a> 将自己的母版替换为其他 PPT 的母版</h3>
 <p>替换母版就非常的麻烦了，要改的东西特别多，来看看如何替换</p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/623518d30c876351.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/623518d30c876351.png" alt=""></p>
 <ol>
 <li>
 <p>先准备一份自己设置好的 PPT 母版，还是以这个 PPT 为例，替换它所有母版为我们</p>
@@ -220,61 +220,61 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <p>首先分别将 A、B 两个转为 ZIP 解压，然后删除 B 的 slideLayouts、slideMasters 目录下的所有文件，将 A 的 slideLayouts、slideMasters 下的所有文件复制到 B 文件里</p>
 </li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/d2846ac20037c788.png" alt="" /></p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/c5d651f4cb2c999d.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/d2846ac20037c788.png" alt=""></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/c5d651f4cb2c999d.png" alt=""></p>
 <ol start="4">
 <li>复制完之后，修改 B 文件的 [Content_Types].xml 文件，它是用来声明的，我们 A 文件里只有 1 个 slideMaster1.xml 文件和 11 个 slideLayout1~11.xml 文件，所有我们要删掉 [Content_Types].xml 里的一些声明</li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/fa95124f81f2e3a1.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/fa95124f81f2e3a1.png" alt=""></p>
 <blockquote>
 <p>以上这些超过 slideLayouts11 的声明都要删掉，不然你声明了一个不存在的东西，PPT 打开会报异常</p>
 </blockquote>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/a523663e72d3767a.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/a523663e72d3767a.png" alt=""></p>
 <blockquote>
 <p>还有 4 个 slideMaster 要删掉，因为 A 文件只有一个 slideMaster，其他东西就不需要修改了</p>
 </blockquote>
 <ol start="5">
 <li>然后进入 PPT 目录，修改 presentation.xml 文件</li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/73fd80cb6ee0f126.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/73fd80cb6ee0f126.png" alt=""></p>
 <blockquote>
 <p>将多余的 4 个 sldMasterId 标签删掉，它是告诉 PPT 你有多少个主题，看下图，以双横线分开每个主题</p>
 </blockquote>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/2a0790f9e6518c48.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/2a0790f9e6518c48.png" alt=""></p>
 <blockquote>
 <p>一共有 5 个，但我们复制过来的 slideMaster 主题只有 1 个</p>
 </blockquote>
 <ol start="6">
 <li>然后在 PPT 目录下，有一个_rels 目录，里面有一个 presentation.xml.rels 文件，是用来定义 presentation.xml 里面的引用声明的，将多余的 4 个 slideMaster 声明删掉</li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/37e4e52e6ba6c94c.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/37e4e52e6ba6c94c.png" alt=""></p>
 <ol start="7">
 <li>处理完以上步骤之后，将你 A 文件里的 media 目录下的所有媒体文件都复制到 B 文件的 media，我在 B 文件的 media 里创建了一个 other 目录用来存放 A 媒体文件，因为 PPT 的素材命名都是名字加数字，1~n，如果我们 A 文件也有很多媒体文件，直接复制到 B 文件里，你还得改名保证不重复名字，特别麻烦</li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/f0ccf660620cd262.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/f0ccf660620cd262.png" alt=""></p>
 <ol start="8">
 <li>复制完之后，我们进入 slides/_rels 目录，修改 slide.xml.rel 文件</li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/8b91f8d438be21b1.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/8b91f8d438be21b1.png" alt=""></p>
 <blockquote>
 <p>统一改成了 slideLayout1，因为我们 A 的母版布局只有 11 种，而原本 B 的母版是有 18 种的，它可能某一页幻灯片使用了 11 之后的母版布局，不修改的话，打开 PPT 会报异常，如下图</p>
 </blockquote>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/be176664e084e30c.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/be176664e084e30c.png" alt=""></p>
 <ol start="9">
 <li>然后再修改 slideMaster1.xml 文件</li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/ee32945181a45822.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/ee32945181a45822.png" alt=""></p>
 <p>这时候将所有文件打包成 PPT 再打开看看效果如何！</p>
-<h6 id="原始文件"><a class="anchor" href="#原始文件">#</a> 原始文件</h6>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5457fb8ef5c343d8.png" alt="" /></p>
-<h6 id="替换母版后的文件"><a class="anchor" href="#替换母版后的文件">#</a> 替换母版后的文件</h6>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/269ff69aa21297bb.png" alt="" /></p>
+<h6 id="原始文件"><a class="markdownIt-Anchor" href="#原始文件">#</a> 原始文件</h6>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5457fb8ef5c343d8.png" alt=""></p>
+<h6 id="替换母版后的文件"><a class="markdownIt-Anchor" href="#替换母版后的文件">#</a> 替换母版后的文件</h6>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/269ff69aa21297bb.png" alt=""></p>
 <p>可以看到母版已经改变为了 A 文件的母版样式，包括版式都是 A 文件的，B 文件的母版都被删除了</p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/1b6324ef68e3e991.png" alt="" /></p>
-<h6 id="a文件的母版"><a class="anchor" href="#a文件的母版">#</a> A 文件的母版</h6>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/bad584236486d47b.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/1b6324ef68e3e991.png" alt=""></p>
+<h6 id="a文件的母版"><a class="markdownIt-Anchor" href="#a文件的母版">#</a> A 文件的母版</h6>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/bad584236486d47b.png" alt=""></p>
 <p>为了弄清楚如何更换背景图和更换母版，整个过程真的非常的枯燥，我必须每次复制、解压缩文件，然后不断的观察、比较两个 PPT 之间，母版与母版、背景图、资源的声明、调用方式，然后自己尝试着改，每一步修改，再打包成 PPT 去观察一下，不断的测试，最后直到修改为我要的展现形式，最后再以代码形式实现这些步骤，终于在最后看见了成功的模样，也是带有几分小激动！！！</p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/a6dde6ed17c6808a.png" alt="" /></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/a6dde6ed17c6808a.png" alt=""></p>
 
       <div class="tags">
           <a href="/tags/Office/" rel="tag"><i class="ic i-tag"></i> Office</a>
@@ -348,7 +348,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
     <div class="item left">
       
 
-  <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicit4jrvuj20zk0m8785.jpg" title="Python Django服务启动时做了什么?">
+  <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicmnywqgpj20zk0m8dwx.jpg" title="Python Django服务启动时做了什么?">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> Django</span>
   <h3>Python Django服务启动时做了什么?</h3>
@@ -356,6 +356,14 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 
     </div>
     <div class="item right">
+      
+
+  <a href="/2022/11/02/Python%E7%9A%84%E5%B1%9E%E6%80%A7%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeu1usa7j20zk0m8b29.jpg" title="Python的属性是如何工作的">
+  <span class="type">Next Post</span>
+  <span class="category"><i class="ic i-flag"></i> C</span>
+  <h3>Python的属性是如何工作的</h3>
+  </a>
+
     </div>
 </div>
 
@@ -390,7 +398,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <nav class="state">
     <div class="item posts">
       <a href="/archives/">
-        <span class="count">12</span>
+        <span class="count">13</span>
         <span class="name">posts</span>
       </a>
     </div>
@@ -460,10 +468,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 
   <ul id="quick">
     <li class="prev pjax">
+        <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" rel="prev" title="Previous Post"><i class="ic i-chevron-left"></i></a>
     </li>
     <li class="up"><i class="ic i-arrow-up"></i></li>
     <li class="down"><i class="ic i-arrow-down"></i></li>
     <li class="next pjax">
+        <a href="/2022/11/02/Python%E7%9A%84%E5%B1%9E%E6%80%A7%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/" rel="next" title="Next Post"><i class="ic i-chevron-right"></i></a>
     </li>
     <li class="percent"></li>
   </ul>
@@ -490,19 +500,7 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
   </li>
 
       
@@ -540,30 +538,6 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Python/" title="In Python">Python</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/Python/Django/" title="In Django">Django</a>
-</div>
-
-    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
     <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
   </li>
 
@@ -588,7 +562,43 @@ Leayoos Chui = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
+    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
   </li>
 
       
@@ -618,9 +628,6 @@ Leayoos Chui = 士多啤梨苹果橙</title>
       <i class="ic i-sakura rotate"></i>
     </span>
     <span class="author" itemprop="copyrightHolder">小芳芳 @ Leayoos Chui</span>
-  </div>
-  <div class="powered-by">
-    Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
   </div>
 </div>
 
