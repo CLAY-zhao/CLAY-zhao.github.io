@@ -1,0 +1,716 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="士多啤梨苹果橙" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="士多啤梨苹果橙" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="士多啤梨苹果橙" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Inside The Python Virtual Machine" />
+
+
+<link rel="canonical" href="http://example.com/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/">
+
+
+
+  <title>
+Inside The Python Virtual Machine - Compliling Python Source Code - CPython C |
+Leayoos Chui = 士多啤梨苹果橙</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Inside The Python Virtual Machine - Compliling Python Source Code
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2022-11-07 14:44:16">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-11-07T14:44:16+08:00">2022-11-07</time>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Leayoos Chui</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicm07ih54j20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeyvx1d4j20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipewkhf1zj20zk0m81kx.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclwrdwyaj20zk0m8are.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giciundwu5j20zk0m8n9e.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicitcxhpij20zk0m8hdt.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span><i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/CPython-C/" itemprop="item" rel="index" title="In CPython C"><span itemprop="name">CPython C</span></a>
+<meta itemprop="position" content="1" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="en">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="小芳芳">
+    <meta itemprop="description" content=", ">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="士多啤梨苹果橙">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h1 id="compiling-python-source-code"><a class="markdownIt-Anchor" href="#compiling-python-source-code">#</a> Compiling Python Source Code</h1>
+<p>尽管一般并不认为 Python 是一门编译性的语言，但实际上在代码执行前 Python 源码仍会被编译成可以被 Python 虚拟机执行的字节码（ByteCode），Python 的编译过程非常直接，不涉及到很复杂的步骤</p>
+<ol>
+<li>将源代码 parsing 成一个 parse tree</li>
+<li>将 parse tree 转化为 AST（抽象语法树，abstract syntax tree）</li>
+<li>生成符号表（symbol table）</li>
+<li>将 AST 生成 code object，这一步包含
+<ol>
+<li>将 AST 转化为一个 flow control graph</li>
+<li>从 control flow graph 产生 code object</li>
+</ol>
+</li>
+</ol>
+<h3 id="从源码到parse-tree"><a class="markdownIt-Anchor" href="#从源码到parse-tree">#</a> 从源码到 parse tree</h3>
+<p>按照<span class="exturl" data-url="aHR0cHM6Ly93d3cuYW1hem9uLmNvLnVrL0NvbXBpbGVycy1QcmluY2lwbGVzLVRlY2huaXF1ZXMtQWxmcmVkLUFoby9kcC8wMjAxMTAwODg2"> Dragon Book</span> 中描述的 Python 的 parser 属于一种 <span class="exturl" data-url="aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvTExfcGFyc2Vy">LL(1)</span> parser。CPython 目录下的<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy41L0dyYW1tYXIvR3JhbW1hcg=="> Grammar/Grammar</span> 文件中包含了 Python 语言文法的<span class="exturl" data-url="aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvRXh0ZW5kZWRfQmFja3VzJUUyJTgwJTkzTmF1cl9mb3Jt"> EBNF</span>（Extended Backus-Naur Form， 扩展巴科斯范式）</p>
+<figure class="highlight txt"><figcaption data-lang="txt"></figcaption><table><tr><td data-num="1"></td><td><pre>Python BNF文法（部分）</pre></td></tr><tr><td data-num="2"></td><td><pre>......</pre></td></tr><tr><td data-num="3"></td><td><pre>stmt: simple_stmt | compound_stmt</pre></td></tr><tr><td data-num="4"></td><td><pre>simple_stmt: small_stmt (';' small_stmt)* [';'] NEWLINE</pre></td></tr><tr><td data-num="5"></td><td><pre>small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt |</pre></td></tr><tr><td data-num="6"></td><td><pre>             import_stmt | global_stmt | nonlocal_stmt | assert_stmt)</pre></td></tr><tr><td data-num="7"></td><td><pre>expr_stmt: testlist_star_expr (annassign | augassign (yield_expr|testlist) |</pre></td></tr><tr><td data-num="8"></td><td><pre>                     [('=' (yield_expr|testlist_star_expr))+ [TYPE_COMMENT]] )</pre></td></tr><tr><td data-num="9"></td><td><pre>annassign: ':' test ['=' (yield_expr|testlist_star_expr)]</pre></td></tr><tr><td data-num="10"></td><td><pre>testlist_star_expr: (test|star_expr) (',' (test|star_expr))* [',']</pre></td></tr><tr><td data-num="11"></td><td><pre>augassign: ('+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&amp;=' | '|=' | '^=' |</pre></td></tr><tr><td data-num="12"></td><td><pre>            '&lt;&lt;=' | '>>=' | '**=' | '//=')</pre></td></tr><tr><td data-num="13"></td><td><pre># For normal and annotated assignments, additional restrictions enforced by the interpreter</pre></td></tr><tr><td data-num="14"></td><td><pre>del_stmt: 'del' exprlist</pre></td></tr><tr><td data-num="15"></td><td><pre>pass_stmt: 'pass'</pre></td></tr><tr><td data-num="16"></td><td><pre>flow_stmt: break_stmt | continue_stmt | return_stmt | raise_stmt | yield_stmt</pre></td></tr><tr><td data-num="17"></td><td><pre>break_stmt: 'break'</pre></td></tr><tr><td data-num="18"></td><td><pre>continue_stmt: 'continue'</pre></td></tr><tr><td data-num="19"></td><td><pre>return_stmt: 'return' [testlist_star_expr]</pre></td></tr><tr><td data-num="20"></td><td><pre>yield_stmt: yield_expr</pre></td></tr><tr><td data-num="21"></td><td><pre>raise_stmt: 'raise' [test ['from' test]]</pre></td></tr><tr><td data-num="22"></td><td><pre>import_stmt: import_name | import_from</pre></td></tr><tr><td data-num="23"></td><td><pre>import_name: 'import' dotted_as_names</pre></td></tr><tr><td data-num="24"></td><td><pre># note below: the ('.' | '...') is necessary because '...' is tokenized as ELLIPSIS</pre></td></tr><tr><td data-num="25"></td><td><pre>import_from: ('from' (('.' | '...')* dotted_name | ('.' | '...')+)</pre></td></tr><tr><td data-num="26"></td><td><pre>              'import' ('*' | '(' import_as_names ')' | import_as_names))</pre></td></tr><tr><td data-num="27"></td><td><pre>import_as_name: NAME ['as' NAME]</pre></td></tr><tr><td data-num="28"></td><td><pre>......</pre></td></tr></table></figure><p>每次从命令行中运行一个 Python 模块时，<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1BhcnNlci9wYXJzZXRvay5jI0wxMTY=">PyParser_ParseFileObject</span> 函数会启动对这个模块 parsing 过程，它会调用 tokenization 函数<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1BhcnNlci90b2tlbml6ZXIuYyNMODYw"> PyTokenizer_FromFile</span>，它接受模块的文件名作为参数，将模块文件的内容分解为一个个合法的 python tokens 或者发现语法错误时进行报错。</p>
+<h3 id="python-tokens"><a class="markdownIt-Anchor" href="#python-tokens">#</a> Python tokens</h3>
+<p>Python 源码可以看作是一段由 token 组成的序列，比如说 return 就是一个 keyword token，字面量 - 2 是一个数值字面量 token 等等。Parsing Python 源码的第一步就是将源码分割为一个个的 token。</p>
+<p>Python 中存在以下几种 token：</p>
+<ol>
+<li>identifiers：由程序员定义的名字，包括函数名、变量名、类名等等。它必须符合 Python 文档中指定的<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLnB5dGhvbi5vcmcvMy41L3JlZmVyZW5jZS9sZXhpY2FsX2FuYWx5c2lzLmh0bWwjaWRlbnRpZmllcnM=">规范</span></li>
+<li>operators：一些特殊符号，比如 +，* 能够对值进行运算产生结果</li>
+<li>delimiters：这类符号用来给表达式分组、提供标点、赋值操作，包括（，），{，}，=，*= 等。</li>
+<li>literals：字面量，这类符号用于提供一些类型的常量。比如字符串、bytes 类型的字面量：“Hello”，b&quot;Hello&quot;，数值类型的字面量 2，浮点类型字面量 1e100，虚数字面量 10j</li>
+<li>comments：以 #开头字符串字面量，用户注释。commects 总是位于一个 physical line 的结尾（<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMzE1NzI1ODkvZGlmZmVyZW5jZS1iZXR3ZWVuLWxvZ2ljYWwtbGluZS1hbmQtcGh5c2ljYWwtbGluZS1pbi1weXRob24=">规范</span>）</li>
+<li>NEWLINE：用于指示一行（logical line）的结束</li>
+<li>INDENT 与 DEDENT：表示一组符合语句（compound statements）的缩进层级（identation levels）</li>
+</ol>
+<p>一组 tokens 通过一个 NEWLINE token 被分割，组成一个 logical line，因此我们可以说 Python 程序由一系列被 NEWLINE token 分割的 logical line 组成。这个 logical line 可以映射到 Python 语句。每一个 logical line 又由一系列的 physical lines 所组成，physical line 的结尾是一个换行符（end of line）。多个 physical line 可以被连接在一起，连接可能是隐式的，比如在括号中的时候（包括 ()，[]，{} 三种），也可能是显示的，就是在末尾使用一个反斜杠 \，</p>
+<p>缩进对于 Python 语句的分组非常重要，Python grammar 中有一条规则用于对它进行描述：suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT，因此 Python tokenizer 的一项主要任务就是生成 INDENT 和 DEDENT 到 parse tree。</p>
+<p>Tokenizer 使用一个栈来保持对缩进的跟踪，INDENT 和 DEDENT token 生成算法如下</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment"># 伪代码</span></pre></td></tr><tr><td data-num="2"></td><td><pre>使用 <span class="token number">0</span> 初始化 indent栈</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">for</span> 每一个 logical line<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>当前行的缩进级别 <span class="token operator">></span> 栈顶的级别<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        push<span class="token punctuation">(</span>当前缩进级别<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        生成一个 INDENT token</pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>当前行的缩进级别 <span class="token operator">&lt;</span> 栈顶的级别<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>栈中不存在一个缩进级别 <span class="token operator">==</span> 当前缩进级别<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="9"></td><td><pre>            报告一个错误</pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token keyword">for</span> 栈顶的每一个 <span class="token operator">!=</span> 当前行缩进级的值<span class="token punctuation">:</span></pre></td></tr><tr><td data-num="11"></td><td><pre>            移除这个值</pre></td></tr><tr><td data-num="12"></td><td><pre>            生成一个 DEDENT token</pre></td></tr><tr><td data-num="13"></td><td><pre>    tokenize<span class="token punctuation">(</span>当前行<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="14"></td><td><pre>对每一个栈上的值（处了<span class="token number">0</span>）生成DEDENT token</pre></td></tr></table></figure><p>CPython 的实现中<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1BhcnNlci90b2tlbml6ZXIuYyNMODYw"> PyTokenizer_FromFile</span> 函数会按照从左到右，从上到下的对 Python 源码文件进行扫描并进行 tokenize。空格字符除了终止符被用来分隔开 token，但这不是必须的。如果其中存在歧义，则按照从右到左合法的可能的最长字符串来理解。比如说 2+2，是一个字面量 2，一个 operator +，另一个字面量 2。</p>
+<blockquote>
+<p>在 python 中提供了 tokenize 的接口（标准模块函数 <span class="exturl" data-url="aHR0cHM6Ly9kb2NzLnB5dGhvbi5vcmcvMy9saWJyYXJ5L3Rva2VuaXplLmh0bWwjdG9rZW5pemUudG9rZW5pemU=">tokenize.tokenize</span>）可以使用它对 python 源代码进行 tokenize，它接受一个 ByteIO.readline 的 callable 对象返回一个 tokens 的 generator，对这个 generator 进行迭代就能得到被解析模块的 tokens 序列</p>
+</blockquote>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> from tokenize <span class="token function">import</span> tokenize</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> f <span class="token operator">=</span> open<span class="token punctuation">(</span><span class="token string">"./demo1.py"</span>, <span class="token string">"rb"</span><span class="token punctuation">)</span> <span class="token comment"># 只有一行 print ("hello")</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">for</span> <span class="token for-or-select variable">t</span> <span class="token keyword">in</span> tokenize<span class="token punctuation">(</span>f.readline<span class="token punctuation">)</span>:</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">..</span>.     print<span class="token punctuation">(</span>t<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="6"></td><td><pre>TokenInfo<span class="token punctuation">(</span>type<span class="token operator">=</span><span class="token number">62</span> <span class="token punctuation">(</span>ENCODING<span class="token punctuation">)</span>, <span class="token assign-left variable">string</span><span class="token operator">=</span><span class="token string">'utf-8'</span>, <span class="token assign-left variable">start</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">0</span>, <span class="token number">0</span><span class="token punctuation">)</span>, <span class="token assign-left variable">end</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">0</span>, <span class="token number">0</span><span class="token punctuation">)</span>, <span class="token assign-left variable">line</span><span class="token operator">=</span><span class="token string">''</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>TokenInfo<span class="token punctuation">(</span>type<span class="token operator">=</span><span class="token number">1</span> <span class="token punctuation">(</span>NAME<span class="token punctuation">)</span>, <span class="token assign-left variable">string</span><span class="token operator">=</span><span class="token string">'print'</span>, <span class="token assign-left variable">start</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span>, <span class="token number">0</span><span class="token punctuation">)</span>, <span class="token assign-left variable">end</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span>, <span class="token number">5</span><span class="token punctuation">)</span>, <span class="token assign-left variable">line</span><span class="token operator">=</span><span class="token string">'print("hello")'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>TokenInfo<span class="token punctuation">(</span>type<span class="token operator">=</span><span class="token number">54</span> <span class="token punctuation">(</span>OP<span class="token punctuation">)</span>, <span class="token assign-left variable">string</span><span class="token operator">=</span><span class="token string">'('</span>, <span class="token assign-left variable">start</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span>, <span class="token number">5</span><span class="token punctuation">)</span>, <span class="token assign-left variable">end</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span>, <span class="token number">6</span><span class="token punctuation">)</span>, <span class="token assign-left variable">line</span><span class="token operator">=</span><span class="token string">'print("hello")'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>TokenInfo<span class="token punctuation">(</span>type<span class="token operator">=</span><span class="token number">3</span> <span class="token punctuation">(</span>STRING<span class="token punctuation">)</span>, <span class="token assign-left variable">string</span><span class="token operator">=</span><span class="token string">'"hello"'</span>, <span class="token assign-left variable">start</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span>, <span class="token number">6</span><span class="token punctuation">)</span>, <span class="token assign-left variable">end</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span>, <span class="token number">13</span><span class="token punctuation">)</span>, <span class="token assign-left variable">line</span><span class="token operator">=</span><span class="token string">'print("hello")'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>TokenInfo<span class="token punctuation">(</span>type<span class="token operator">=</span><span class="token number">54</span> <span class="token punctuation">(</span>OP<span class="token punctuation">)</span>, <span class="token assign-left variable">string</span><span class="token operator">=</span><span class="token string">')'</span>, <span class="token assign-left variable">start</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span>, <span class="token number">13</span><span class="token punctuation">)</span>, <span class="token assign-left variable">end</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span>, <span class="token number">14</span><span class="token punctuation">)</span>, <span class="token assign-left variable">line</span><span class="token operator">=</span><span class="token string">'print("hello")'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>TokenInfo<span class="token punctuation">(</span>type<span class="token operator">=</span><span class="token number">4</span> <span class="token punctuation">(</span>NEWLINE<span class="token punctuation">)</span>, <span class="token assign-left variable">string</span><span class="token operator">=</span><span class="token string">''</span>, <span class="token assign-left variable">start</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span>, <span class="token number">14</span><span class="token punctuation">)</span>, <span class="token assign-left variable">end</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">1</span>, <span class="token number">15</span><span class="token punctuation">)</span>, <span class="token assign-left variable">line</span><span class="token operator">=</span><span class="token string">''</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>TokenInfo<span class="token punctuation">(</span>type<span class="token operator">=</span><span class="token number">0</span> <span class="token punctuation">(</span>ENDMARKER<span class="token punctuation">)</span>, <span class="token assign-left variable">string</span><span class="token operator">=</span><span class="token string">''</span>, <span class="token assign-left variable">start</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">2</span>, <span class="token number">0</span><span class="token punctuation">)</span>, <span class="token assign-left variable">end</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">2</span>, <span class="token number">0</span><span class="token punctuation">)</span>, <span class="token assign-left variable">line</span><span class="token operator">=</span><span class="token string">''</span><span class="token punctuation">)</span></pre></td></tr></table></figure><blockquote>
+<p>还可以在命令行直接调用 tokenize</p>
+</blockquote>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre>$ python <span class="token parameter variable">-m</span> tokenize demo1.py</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token number">0,0</span>-0,0:            ENCODING       <span class="token string">'utf-8'</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token number">1,0</span>-1,5:            NAME           <span class="token string">'print'</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token number">1,5</span>-1,6:            OP             <span class="token string">'('</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token number">1,6</span>-1,13:           STRING         <span class="token string">'"hello"'</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token number">1,13</span>-1,14:          OP             <span class="token string">')'</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token number">1,14</span>-1,15:          NEWLINE        <span class="token string">''</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token number">2,0</span>-2,0:            ENDMARKER      <span class="token string">''</span></pre></td></tr></table></figure><p>tokenizer 生成的 tokens 随后会被传递给 parser 根据 Python 的语法来生成 parse tree。当 parser 发现一个 token 违反了语法规则时，就会抛出 SyntaxError。</p>
+<blockquote>
+<p>Python 中有一个 parser 模块提供了有限的对 parse tree 的访问能力</p>
+</blockquote>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token function">import</span> parser</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> from pprint <span class="token function">import</span> pprint</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> code_str <span class="token operator">=</span> <span class="token string">""</span>"</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">..</span>. def hello_world<span class="token punctuation">(</span><span class="token punctuation">)</span>:</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">..</span>.     <span class="token builtin class-name">return</span> <span class="token string">"hello world"</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">..</span>. <span class="token string">""</span>"</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> st <span class="token operator">=</span> parser.suite<span class="token punctuation">(</span>code_str<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> pprint<span class="token punctuation">(</span>parser.st2list<span class="token punctuation">(</span>st<span class="token punctuation">))</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token punctuation">[</span><span class="token number">257</span>,</pre></td></tr><tr><td data-num="10"></td><td><pre> <span class="token punctuation">[</span><span class="token number">269</span>,</pre></td></tr><tr><td data-num="11"></td><td><pre>  <span class="token punctuation">[</span><span class="token number">295</span>,</pre></td></tr><tr><td data-num="12"></td><td><pre>   <span class="token punctuation">[</span><span class="token number">263</span>,</pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token punctuation">[</span><span class="token number">1</span>, <span class="token string">'def'</span><span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token punctuation">[</span><span class="token number">1</span>, <span class="token string">'hello_world'</span><span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token punctuation">[</span><span class="token number">264</span>, <span class="token punctuation">[</span><span class="token number">7</span>, <span class="token string">'('</span><span class="token punctuation">]</span>, <span class="token punctuation">[</span><span class="token number">8</span>, <span class="token string">')'</span><span class="token punctuation">]</span><span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token punctuation">[</span><span class="token number">11</span>, <span class="token string">':'</span><span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token punctuation">[</span><span class="token number">304</span>,</pre></td></tr><tr><td data-num="18"></td><td><pre>     <span class="token punctuation">[</span><span class="token number">4</span>, <span class="token string">''</span><span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="19"></td><td><pre>     <span class="token punctuation">[</span><span class="token number">5</span>, <span class="token string">''</span><span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="20"></td><td><pre>     <span class="token punctuation">[</span><span class="token number">269</span>,</pre></td></tr><tr><td data-num="21"></td><td><pre>      <span class="token punctuation">[</span><span class="token number">270</span>,</pre></td></tr><tr><td data-num="22"></td><td><pre>       <span class="token punctuation">[</span><span class="token number">271</span>,</pre></td></tr><tr><td data-num="23"></td><td><pre>        <span class="token punctuation">[</span><span class="token number">278</span>,</pre></td></tr><tr><td data-num="24"></td><td><pre>         <span class="token punctuation">[</span><span class="token number">281</span>,</pre></td></tr><tr><td data-num="25"></td><td><pre>          <span class="token punctuation">[</span><span class="token number">1</span>, <span class="token string">'return'</span><span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="26"></td><td><pre>          <span class="token punctuation">[</span><span class="token number">274</span>,</pre></td></tr><tr><td data-num="27"></td><td><pre>           <span class="token punctuation">[</span><span class="token number">306</span>,</pre></td></tr><tr><td data-num="28"></td><td><pre>            <span class="token punctuation">[</span><span class="token number">310</span>,</pre></td></tr><tr><td data-num="29"></td><td><pre>             <span class="token punctuation">[</span><span class="token number">311</span>,</pre></td></tr><tr><td data-num="30"></td><td><pre>              <span class="token punctuation">[</span><span class="token number">312</span>,</pre></td></tr><tr><td data-num="31"></td><td><pre>               <span class="token punctuation">[</span><span class="token number">313</span>,</pre></td></tr><tr><td data-num="32"></td><td><pre>                <span class="token punctuation">[</span><span class="token number">316</span>,</pre></td></tr><tr><td data-num="33"></td><td><pre>                 <span class="token punctuation">[</span><span class="token number">317</span>,</pre></td></tr><tr><td data-num="34"></td><td><pre>                  <span class="token punctuation">[</span><span class="token number">318</span>,</pre></td></tr><tr><td data-num="35"></td><td><pre>                   <span class="token punctuation">[</span><span class="token number">319</span>,</pre></td></tr><tr><td data-num="36"></td><td><pre>                    <span class="token punctuation">[</span><span class="token number">320</span>,</pre></td></tr><tr><td data-num="37"></td><td><pre>                     <span class="token punctuation">[</span><span class="token number">321</span>,</pre></td></tr><tr><td data-num="38"></td><td><pre>                      <span class="token punctuation">[</span><span class="token number">322</span>,</pre></td></tr><tr><td data-num="39"></td><td><pre>                       <span class="token punctuation">[</span><span class="token number">323</span>,</pre></td></tr><tr><td data-num="40"></td><td><pre>                        <span class="token punctuation">[</span><span class="token number">324</span>, <span class="token punctuation">[</span><span class="token number">325</span>, <span class="token punctuation">[</span><span class="token number">3</span>, <span class="token string">'"hello world"'</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="41"></td><td><pre>       <span class="token punctuation">[</span><span class="token number">4</span>, <span class="token string">''</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="42"></td><td><pre>     <span class="token punctuation">[</span><span class="token number">6</span>, <span class="token string">''</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="43"></td><td><pre> <span class="token punctuation">[</span><span class="token number">4</span>, <span class="token string">''</span><span class="token punctuation">]</span>,</pre></td></tr><tr><td data-num="44"></td><td><pre> <span class="token punctuation">[</span><span class="token number">0</span>, <span class="token string">''</span><span class="token punctuation">]</span><span class="token punctuation">]</span></pre></td></tr></table></figure><p>函数调用 parser.suite (source) 会返回一个 Python 中对 parser tree 的中间值表示即 parser tree（ST）对象。list 中的第一个元素为一个 int 类型的数字，表示 Python grammar 中对应的<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L0luY2x1ZGUvdG9rZW4uaA=="> identifier 编号</span></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/11/07/eb7bcf1be9db5ddf.png" alt=""></p>
+<p>途中展示了代码中产生的 parse tree 结构，可以看到其中每个节点的类型可以用一个整数来表示，这些整数的定义位于头文件 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L0luY2x1ZGUvdG9rZW4uaA==">Include/token.h</span> 和 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L0luY2x1ZGUvZ3JhbWluaXQuaA==">Include/grammar.h</span> 中</p>
+<p>在 CPython 虚拟机中，使用树结构来对 parser tree 进行表示。每一个产生式规则（production rule）是树中的一个节点（node）。对 node 的定义位于头文件 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L0luY2x1ZGUvbm9kZS5oI0wxMA==">Include/node.h</span> 中。</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_node</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">short</span>               n_type<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">char</span>                <span class="token operator">*</span>n_str<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">int</span>                 n_lineno<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">int</span>                 n_col_offset<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">int</span>                 n_nchildren<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">_node</span>        <span class="token operator">*</span>n_child<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span> node<span class="token punctuation">;</span></pre></td></tr></table></figure><p>可以对 parser tree 进行遍历，访问节点的类型、子节点、行号等，这些操作以宏（macro）的形式定义在头文件 Include/node.h 中，用于与 parse tree 的节点进行交互。</p>
+<h3 id="从parse-tree到ast"><a class="markdownIt-Anchor" href="#从parse-tree到ast">#</a> 从 parse tree 到 AST</h3>
+<p>生成 parse tree 之后，下一步就是将其转换为 AST（抽象语法树，Abstract Syntax Tree）。AST 是一种与语法细节无关的代码表示，如上图 parse tree 中有一个逗号节点（colon node），因为它属于其中的语法构造（syntax construct），但是 AST 中将不会包含这样的语法构造</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token function">import</span> ast</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token function">node</span> <span class="token operator">=</span> ast.parse<span class="token punctuation">(</span>code_str, <span class="token assign-left variable">mode</span><span class="token operator">=</span><span class="token string">"exec"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> ast.dump<span class="token punctuation">(</span>node<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token string">"Module(body=[FunctionDef(name='hello_world', args=arguments(posonlyargs=[], args=[], kwonlyargs=[], kw_defaults=[], defaults=[]), body=[Return(value=Constant(value='hello world'))], decorator_list=[])], type_ignores=[])"</span></pre></td></tr></table></figure><p>AST 节点的定义可以在 Parser/Python.asdl 文件中找到（ASDL 是一种用来描述 AST 的语言，参考 Eli Bendersky 的<span class="exturl" data-url="aHR0cHM6Ly9lbGkudGhlZ3JlZW5wbGFjZS5uZXQvMjAxNC8wNi8wNC91c2luZy1hc2RsLXRvLWRlc2NyaWJlLWFzdHMtaW4tY29tcGlsZXJz">博文</span>）。</p>
+<p>AST 中几乎所有的定义都与特定的语法构造有关，比如 if 语句或者属性查找（attribute lookup）。</p>
+<p>在 CPython 的实现中，AST 节点以 C 结构体的形式定义在 Include/<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L0luY2x1ZGUvUHl0aG9uLWFzdC5o">Python-ast.h</span> 中。实际上，这些结构体是通过 Python 代码生成的，<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1BhcnNlci9hc2RsX2MucHk=">Parser/asdl_c.py</span> 模块可以根据 AST 的 asdl 定义来生成它们。比如说，语句（statement）节点的结构体一部分定义如下</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">struct</span> <span class="token class-name">_stmt</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">enum</span> <span class="token class-name">_stmt_kind</span> kind<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">union</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>            identifier name<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>            arguments_ty args<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            asdl_seq <span class="token operator">*</span>body<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            asdl_seq <span class="token operator">*</span>decorator_list<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>            expr_ty returns<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>            string type_comment<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>        <span class="token punctuation">&#125;</span> FunctionDef<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            identifier name<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>            arguments_ty args<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>            asdl_seq <span class="token operator">*</span>body<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>            asdl_seq <span class="token operator">*</span>decorator_list<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>            expr_ty returns<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>            string type_comment<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>        <span class="token punctuation">&#125;</span> AsyncFunctionDef<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="21"></td><td><pre></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>            identifier name<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="24"></td><td><pre>            asdl_seq <span class="token operator">*</span>bases<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="25"></td><td><pre>            asdl_seq <span class="token operator">*</span>keywords<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>            asdl_seq <span class="token operator">*</span>body<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>            asdl_seq <span class="token operator">*</span>decorator_list<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="28"></td><td><pre>        <span class="token punctuation">&#125;</span> ClassDef<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="29"></td><td><pre></pre></td></tr><tr><td data-num="30"></td><td><pre>        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></pre></td></tr><tr><td data-num="31"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="32"></td><td><pre>    <span class="token keyword">int</span> lineno<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token keyword">int</span> col_offset<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="34"></td><td><pre>    <span class="token keyword">int</span> end_lineno<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="35"></td><td><pre>    <span class="token keyword">int</span> end_col_offset<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="36"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>上面的代码中，union 类型用来表示任意一个位于其中的 C 类型。文件 Python/ast.c 中的<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1B5dGhvbi9hc3QuYyNMODgz"> PyAST_FromNode</span> 函数能够根据 parse_tree 来生成 AST 之后，生成 AST 之后，下一个就是根据 AST 来生成字节码了。</p>
+<h3 id="构建符号表"><a class="markdownIt-Anchor" href="#构建符号表">#</a> 构建符号表</h3>
+<p>生成 AST 之后，下一步是生成符号表（symbol table）。符号表就如同它的名字所暗示的那样，是一个代码块（code block）与上下文（context）中所使用到的名字的集合。</p>
+<blockquote>
+<p>符号表的构建过程涉及到对一个代码块中所包含的所有名字以及这些名字正确作用域赋值的分析。在讨论复杂的符号表生成之前，首先对一些名字（names）、绑定（bindings）相关概念进行讨论。</p>
+</blockquote>
+<h4 id="名字与绑定"><a class="markdownIt-Anchor" href="#名字与绑定">#</a> 名字与绑定</h4>
+<p>在 Python 中，对象通过名字进行引用，names 与 C++ 和 Java 中变量并不一样。</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> x <span class="token operator">=</span> <span class="token number">5</span></pre></td></tr></table></figure><p>上述代码，x 其实是一个对于对象 5 的引用，将对象 5 的引用赋值给名字（name）x 的过程称为绑定（bindind）。一个绑定行为所产生的结果是一个名字在执行过程中最内层的作用域中与一个对象产生关联。</p>
+<p>绑定可能发生在几个不同的情况下，比如在变量赋值过程中，或者发生在函数或者方法调用时实参与型参的绑定。</p>
+<blockquote>
+<p>名字只是符号，它们并没有与类型相关联，名字只是对带有类型的对象的引用而已</p>
+</blockquote>
+<h4 id="代码块"><a class="markdownIt-Anchor" href="#代码块">#</a> 代码块</h4>
+<blockquote>
+<p>代码块（code block）是 Python 的重要概念之一，对于理解 Python 虚拟机的内部机制非常重要。</p>
+</blockquote>
+<p>代码块是一个能够在 Python 中作为独立单元执行的代码片段，比如模块、函数和类，REPL 中的命令，命令行中使用 - c 参数执行的脚本也是代码块。一个代码块由多个与它相关的 namespace，比如一个模块代码能够访问 global namespace，一个函数代码块可以同时访问 local 和 global namespace。</p>
+<h4 id="namespace"><a class="markdownIt-Anchor" href="#namespace">#</a> Namespace</h4>
+<p>namespace，名字空间，可以理解为一个环境（context）在其中，一系列名字与对象被绑定在一起。比如 builtin namespace 是一个包含了所有 built-in 函数的 namespace，它可以通过__builtins__.__dict__被访问。解释器能够访问多个 namespace，包括 global，builtin，local。这些 namespace 在不同的时间点被创建，具有不同的生命周期。比如一个新的 local namespace 在一个函数调用时创建，在一个函数退出或返回时销毁。global namespace 在一个模块开始执行时被创建，并且所有定义在其中的名字能够在模块级别上进行访问。而 built-in namespace 则在解释器被调用时创建，并且其中包含了所有的 builtin names。这三者是 Python 解释器中所主要使用的 namespace。</p>
+<h4 id="scope"><a class="markdownIt-Anchor" href="#scope">#</a> Scope</h4>
+<p>一个作用域（scope）是程序中的一块区域，在作用域中 namespace 可以不通过任何的 . （dotnotaion）直接访问。在运行时（runtime）中存在以下几种作用域：</p>
+<ol>
+<li>局部命名空间的最内层作用域</li>
+<li>闭合函数（enclosing functions）作用域（存在嵌套函数时有用）</li>
+<li>当前模块的 globals 作用域</li>
+<li>包含 builtin namespace 的作用域</li>
+</ol>
+<p>当一个名字在 Python 中可用时，解释器会在 scope 的 namespace 中以由内到外的顺序进行搜索，如果在所有的 namespace 中都没有找到，就会抛出 NameError 异常，Python 支持静态作用域（static scoping），也被称为词法作用域（lexical scoping），也就是说通过对程序代码的检查就可以推到出名字绑定。</p>
+<blockquote>
+<p>未定义行为，在函数内修改 locals ()，会报错</p>
+</blockquote>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> def func<span class="token punctuation">(</span><span class="token punctuation">)</span>:</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">..</span>.     locals<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">..</span>.     print<span class="token punctuation">(</span>locals<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">]</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">..</span>.     print<span class="token punctuation">(</span>a<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">..</span>.     <span class="token builtin class-name">return</span> locals<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> func<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token number">1</span></pre></td></tr><tr><td data-num="9"></td><td><pre>Traceback <span class="token punctuation">(</span>most recent call last<span class="token punctuation">)</span>:</pre></td></tr><tr><td data-num="10"></td><td><pre>  File <span class="token string">"&lt;stdin>"</span>, line <span class="token number">1</span>, <span class="token keyword">in</span> <span class="token operator">&lt;</span>module<span class="token operator">></span></pre></td></tr><tr><td data-num="11"></td><td><pre>  File <span class="token string">"&lt;stdin>"</span>, line <span class="token number">4</span>, <span class="token keyword">in</span> func</pre></td></tr><tr><td data-num="12"></td><td><pre>NameError: name <span class="token string">'a'</span> is not defined</pre></td></tr></table></figure><blockquote>
+<p>这是一个 Python 中的未定义行为，可以参考<span class="exturl" data-url="aHR0cHM6Ly93d3cucHl0aG9uLm9yZy9kZXYvcGVwcy9wZXAtMDU1OC8="> PEP558</span></p>
+</blockquote>
+<p>Python 中存在一个作用域规则，看起来很奇怪，它会阻止在 local 作用域中修改 global 作用域中的对象。如果发生这样的行为，解释器会抛出 UnBoundLocalError 异常。</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> a <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> def inc_a<span class="token punctuation">(</span><span class="token punctuation">)</span>:</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">..</span>.     a <span class="token operator">+=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> inc_a<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>Traceback <span class="token punctuation">(</span>most recent call last<span class="token punctuation">)</span>:</pre></td></tr><tr><td data-num="7"></td><td><pre>  File <span class="token string">"&lt;stdin>"</span>, line <span class="token number">1</span>, <span class="token keyword">in</span> <span class="token operator">&lt;</span>module<span class="token operator">></span></pre></td></tr><tr><td data-num="8"></td><td><pre>  File <span class="token string">"&lt;stdin>"</span>, line <span class="token number">2</span>, <span class="token keyword">in</span> inc_a</pre></td></tr><tr><td data-num="9"></td><td><pre>UnboundLocalError: <span class="token builtin class-name">local</span> variable <span class="token string">'a'</span> referenced before assignment</pre></td></tr></table></figure><p>在函数内的 a 在查找时被编译为 LOAD_FAST 字节码，会在局部作用域中查找</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">case</span> <span class="token function">TARGET</span><span class="token punctuation">(</span>LOAD_FAST<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject <span class="token operator">*</span>value <span class="token operator">=</span> <span class="token function">GETLOCAL</span><span class="token punctuation">(</span>oparg<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>value <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token comment">// 找不到，抛出异常</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token function">format_exc_check_arg</span><span class="token punctuation">(</span>tstate<span class="token punctuation">,</span> PyExc_UnboundLocalError<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="6"></td><td><pre>                                UNBOUNDLOCAL_ERROR_MSG<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="7"></td><td><pre>                                <span class="token function">PyTuple_GetItem</span><span class="token punctuation">(</span>co<span class="token operator">-></span>co_varnames<span class="token punctuation">,</span> oparg<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">goto</span> error<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token comment">// ......</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>为了能够在局部作用域中对全局作用域中的对象进行修改，需要使用 global 关键字</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> a <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> def inc_a<span class="token punctuation">(</span><span class="token punctuation">)</span>:</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">..</span>.     global a</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">..</span>.     a <span class="token operator">+=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> inc_a<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> a</pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token number">2</span></pre></td></tr></table></figure><p>最终 a 被编译为 LOAD_GLOBAL，会在全局作用域中或者内置里查找，再通过 STORE_GLOBAL 设置</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">case</span> <span class="token function">TARGET</span><span class="token punctuation">(</span>LOAD_GLOBAL<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject <span class="token operator">*</span>name<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    PyObject <span class="token operator">*</span>v<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">PyDict_CheckExact</span><span class="token punctuation">(</span>f<span class="token operator">-></span>f_globals<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token operator">&amp;&amp;</span> <span class="token function">PyDict_CheckExact</span><span class="token punctuation">(</span>f<span class="token operator">-></span>f_builtins<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token comment">// ......</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token comment">// ......</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>Python 还有一个 nonlocal 关键字用来在内层的作用域中修改一个外层的非全局作用域。比如嵌套函数（闭包（closure））</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> def make_counter<span class="token punctuation">(</span><span class="token punctuation">)</span>:</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">..</span>.     count <span class="token operator">=</span> <span class="token number">0</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">..</span>.     def counter<span class="token punctuation">(</span><span class="token punctuation">)</span>:</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">..</span>.         nonlocal count</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">..</span>.         count <span class="token operator">+=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">..</span>.         <span class="token builtin class-name">return</span> count</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token punctuation">..</span>.     <span class="token builtin class-name">return</span> counter</pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> counter_1 <span class="token operator">=</span> make_counter<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> counter_2 <span class="token operator">=</span> make_counter<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> counter_1<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token number">1</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> counter_1<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token number">2</span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> counter_2<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token number">1</span></pre></td></tr><tr><td data-num="17"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> counter_2<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token number">2</span></pre></td></tr></table></figure><p>了解 names 与 binding 的概念之后，来看如何根据 AST 生成符号表</p>
+<p>符号表涉及到一系列的函数调用：</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>run_mod <span class="token operator">-></span> PyAST_CompileObject <span class="token operator">-></span> PySymtable_BuildObject</pre></td></tr></table></figure><p>函数<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1B5dGhvbi9zeW10YWJsZS5jI0wyNTE="> PySymtable_BuildObject</span> 所接受的两个参数分别是之前生成的 AST 对象与该模块的文件名。符号表的创建算法可以分为两个步骤，第一个步骤中，被作为参数传递给 PySymtable_BuildObject 的 AST 中的每个节点都会被按照顺序遍历，创建出一系列在 AST 中被使用的符号。</p>
+<p>伪代码描述</p>
+<figure class="highlight txt"><figcaption data-lang="txt"></figcaption><table><tr><td data-num="1"></td><td><pre># 从AST创建符号表的算法</pre></td></tr><tr><td data-num="2"></td><td><pre>for node in AST: # 遍历AST</pre></td></tr><tr><td data-num="3"></td><td><pre>    if (node 是一个 code block 的起始):</pre></td></tr><tr><td data-num="4"></td><td><pre>        ste = 新建符号表项目()</pre></td></tr><tr><td data-num="5"></td><td><pre>        st.st_stack_push(ste) # 新的符号表入栈</pre></td></tr><tr><td data-num="6"></td><td><pre>        st.current_ste.children.append(st) # 将新表项加入上一个表项的子表项</pre></td></tr><tr><td data-num="7"></td><td><pre>        st.current_ste = ste # 将符号表的当前表项设置为新建的符号表项</pre></td></tr><tr><td data-num="8"></td><td><pre>        for node1 in code_block.nodes: # 遍历code_block里的所有节点</pre></td></tr><tr><td data-num="9"></td><td><pre>            # 递归访问node1创建符号加入表项中，XXX是node1的类型</pre></td></tr><tr><td data-num="10"></td><td><pre>            symtable_visit_XXX(node1)</pre></td></tr><tr><td data-num="11"></td><td><pre>        st.st_stack.pop() # 将当前表项移出栈</pre></td></tr><tr><td data-num="12"></td><td><pre>        st.current_st = st_stack.pop()</pre></td></tr><tr><td data-num="13"></td><td><pre>    else:</pre></td></tr><tr><td data-num="14"></td><td><pre>        递归访问node与sub_nodes(node) 创建符号加入符号表</pre></td></tr></table></figure><p>在第一轮在 AST 上进行的算法完成后，符号表内已经包含了模块中使用的所有名字，但并不包含这些名字的上下文信息，比如说，解释器不能告诉你一个给定的变量是一个全局变量，局部变量还是自由变量（free variables）。</p>
+<p>符号表生成的第二阶段从一个对 Python/symtable.c 中 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1B5dGhvbi9zeW10YWJsZS5jI0w4OTc=">symtable_analyze</span> 函数调用开始。这个阶段的算法将对第一个阶段中产生的符号分配作用域（local、global、free）。</p>
+<p>Parser/symtable.c 文件中的注释信息十分丰富设置九分（压力吗斯内）</p>
+<blockquote>
+<p>符号表需要两个 pass 才能确定每个名称的范围，第一个 pass 通过 symtable visit * 函数从 AST 收集原始信息，而第二个 pass 通过 pass1 中创建 PySTEntryObject 分析这些信息。</p>
+<p>在 pass2 中输入函数时，父级将传递对其子级可见的所有名称绑定集，这些绑定用于确定非全局变量是自由变量还是隐式全局变量，在这组可见名称中必须存在明确声明为非本地的名称，如果不存在，则会引发语法错误。进行局部分析后，它使用在第 1 遍过程中创建的一组更新的名称绑定分析每个子块。</p>
+<p>全局变量也有两种，隐式和显式。使用全局语句声明显式全局变量。隐式全局变量是一个自由变量，编译器在封闭的函数范围内未发现其绑定。隐式全局是全局或内置的。</p>
+<p>Python 的模块和类块使用 xxx_NAME 操作码来处理这些名称，以实现稍微奇怪的语义。在这样的块中，名称被分配为全局名称，直到被分配给该名称为止。然后将其视为本地对象。</p>
+<p>子代更新自由变量（free variables）集合。如果将局部变量添加到子级设置的自由变量中，则该变量将标记为单元格。定义的功能对象必须为可能超过功能范围的变量提供运行时存储。在分析函数返回其父级之前，将单元变量从自由集合中删除。</p>
+</blockquote>
+<p>尽管注释试图用简单清晰的语言来解释过程，但仍有比较模糊的地方。比如：passes the set of all name bindings visible to its children，parent 与 children 指的是什么？我们来看下符号表的数据结构</p>
+<h4 id="符号表数据结构"><a class="markdownIt-Anchor" href="#符号表数据结构">#</a> 符号表数据结构</h4>
+<p>符号表生成过程中有两个核心的数据结构：</p>
+<ol>
+<li>The symbol table data structure（符号表）</li>
+<li>The symbol table entry data structure（符号表项目）</li>
+</ol>
+<p>符号表数据结构定义在头文件 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L0luY2x1ZGUvc3ltdGFibGUuaCNMMTg=">Include/symtable.h</span> 中，我们可以认为符号表由一系列持有给定模块中不同 code blocks 信息的表项所组成。</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">struct</span> <span class="token class-name">symtable</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject <span class="token operator">*</span>st_filename<span class="token punctuation">;</span>          <span class="token comment">/* name of file being compiled,</pre></td></tr><tr><td data-num="3"></td><td><pre>                                       decoded from the filesystem encoding */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">_symtable_entry</span> <span class="token operator">*</span>st_cur<span class="token punctuation">;</span> <span class="token comment">/* current symbol table entry */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">_symtable_entry</span> <span class="token operator">*</span>st_top<span class="token punctuation">;</span> <span class="token comment">/* symbol table entry for module */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    PyObject <span class="token operator">*</span>st_blocks<span class="token punctuation">;</span>            <span class="token comment">/* dict: map AST node addresses</pre></td></tr><tr><td data-num="7"></td><td><pre>                                     *       to symbol table entries */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    PyObject <span class="token operator">*</span>st_stack<span class="token punctuation">;</span>             <span class="token comment">/* list: stack of namespace info */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    PyObject <span class="token operator">*</span>st_global<span class="token punctuation">;</span>            <span class="token comment">/* borrowed ref to st_top->ste_symbols */</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token keyword">int</span> st_nblocks<span class="token punctuation">;</span>                 <span class="token comment">/* number of blocks used. kept for</pre></td></tr><tr><td data-num="11"></td><td><pre>                                       consistency with the corresponding</pre></td></tr><tr><td data-num="12"></td><td><pre>                                       compiler structure */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    PyObject <span class="token operator">*</span>st_private<span class="token punctuation">;</span>           <span class="token comment">/* name of current class or NULL */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    PyFutureFeatures <span class="token operator">*</span>st_future<span class="token punctuation">;</span>    <span class="token comment">/* module's future features that affect</pre></td></tr><tr><td data-num="15"></td><td><pre>                                       the symbol table */</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token keyword">int</span> recursion_depth<span class="token punctuation">;</span>            <span class="token comment">/* current recursion depth */</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token keyword">int</span> recursion_limit<span class="token punctuation">;</span>            <span class="token comment">/* recursion limit */</span></pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>一个 Python 模块可能包含多个 code block，比如多个函数定义。结构体中的 st_blocks 字段是一个所有 code block（AST node）到符号表项的映射。st_top 字段是一个符号表项，对应于一个被编译的模块（注意，模块也是一个 code block），所以它将包含所有定义在模块 global namespace 中的名字。st_cur 字段指向一个符号表项目，该表项对应于正在被处理的 code block（AST node）。模块中的每个 code block 都有一个它自己的符号表项，它持有所有定义在其中的符号。</p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/11/08/f2fb0b14b62f9b97.png" alt=""></p>
+<p>再来看一下 Include/symtable.h 中 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L0luY2x1ZGUvc3ltdGFibGUuaCNMMzc=">_symtable_entry</span> 的定义，对于理解这种数据结构的作用很有帮助</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_symtable_entry</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject_HEAD</pre></td></tr><tr><td data-num="3"></td><td><pre>    PyObject <span class="token operator">*</span>ste_id<span class="token punctuation">;</span>        <span class="token comment">/* int: key in ste_table->st_blocks */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyObject <span class="token operator">*</span>ste_symbols<span class="token punctuation">;</span>   <span class="token comment">/* dict: variable names to flags */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    PyObject <span class="token operator">*</span>ste_name<span class="token punctuation">;</span>      <span class="token comment">/* string: name of current block */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    PyObject <span class="token operator">*</span>ste_varnames<span class="token punctuation">;</span>  <span class="token comment">/* list of function parameters */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    PyObject <span class="token operator">*</span>ste_children<span class="token punctuation">;</span>  <span class="token comment">/* list of child blocks */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    PyObject <span class="token operator">*</span>ste_directives<span class="token punctuation">;</span><span class="token comment">/* locations of global and nonlocal statements */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    _Py_block_ty ste_type<span class="token punctuation">;</span>   <span class="token comment">/* module, class, or function */</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token keyword">int</span> ste_nested<span class="token punctuation">;</span>      <span class="token comment">/* true if block is nested */</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">unsigned</span> ste_free <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>        <span class="token comment">/* true if block has free variables */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token keyword">unsigned</span> ste_child_free <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>  <span class="token comment">/* true if a child block has free vars,</pre></td></tr><tr><td data-num="13"></td><td><pre>                                     including free refs to globals */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">unsigned</span> ste_generator <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>   <span class="token comment">/* true if namespace is a generator */</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token keyword">unsigned</span> ste_coroutine <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>   <span class="token comment">/* true if namespace is a coroutine */</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token keyword">unsigned</span> ste_comprehension <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">/* true if namespace is a list comprehension */</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token keyword">unsigned</span> ste_varargs <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>     <span class="token comment">/* true if block has varargs */</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token keyword">unsigned</span> ste_varkeywords <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">/* true if block has varkeywords */</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token keyword">unsigned</span> ste_returns_value <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>  <span class="token comment">/* true if namespace uses return with</pre></td></tr><tr><td data-num="20"></td><td><pre>                                        an argument */</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token keyword">unsigned</span> ste_needs_class_closure <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">/* for class scopes, true if a</pre></td></tr><tr><td data-num="22"></td><td><pre>                                             closure over __class__</pre></td></tr><tr><td data-num="23"></td><td><pre>                                             should be created */</span></pre></td></tr><tr><td data-num="24"></td><td><pre>    <span class="token keyword">unsigned</span> ste_comp_iter_target <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">/* true if visiting comprehension target */</span></pre></td></tr><tr><td data-num="25"></td><td><pre>    <span class="token keyword">int</span> ste_comp_iter_expr<span class="token punctuation">;</span> <span class="token comment">/* non-zero if visiting a comprehension range expression */</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    <span class="token keyword">int</span> ste_lineno<span class="token punctuation">;</span>          <span class="token comment">/* first line of block */</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token keyword">int</span> ste_col_offset<span class="token punctuation">;</span>      <span class="token comment">/* offset of first line of block */</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token keyword">int</span> ste_opt_lineno<span class="token punctuation">;</span>      <span class="token comment">/* lineno of last exec or import * */</span></pre></td></tr><tr><td data-num="29"></td><td><pre>    <span class="token keyword">int</span> ste_opt_col_offset<span class="token punctuation">;</span>  <span class="token comment">/* offset of last exec or import * */</span></pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">symtable</span> <span class="token operator">*</span>ste_table<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="31"></td><td><pre><span class="token punctuation">&#125;</span> PySTEntryObject<span class="token punctuation">;</span></pre></td></tr></table></figure><p>ste_symbols 字段是一个包含了该 code block 中所确认到的所有符号到 flag 的映射，其中 flag 是一个数值类型的值，它提供了符号在该环境中所具有的含义。比如，一个符号可能是一个函数参数或者是一个全局定义。flag 具体被定义在文件 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L0luY2x1ZGUvc3ltdGFibGUuaCNMODQ=">Include/stmtable.h</span> 中</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">/* Flags for def-use information */</span></pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">DEF_GLOBAL</span> <span class="token expression"><span class="token number">1</span>           </span><span class="token comment">/* global stmt */</span></span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">DEF_LOCAL</span> <span class="token expression"><span class="token number">2</span>            </span><span class="token comment">/* assignment in code block */</span></span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">DEF_PARAM</span> <span class="token expression"><span class="token number">2</span><span class="token operator">&lt;&lt;</span><span class="token number">1</span>         </span><span class="token comment">/* formal parameter */</span></span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">DEF_NONLOCAL</span> <span class="token expression"><span class="token number">2</span><span class="token operator">&lt;&lt;</span><span class="token number">2</span>      </span><span class="token comment">/* nonlocal stmt */</span></span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">USE</span> <span class="token expression"><span class="token number">2</span><span class="token operator">&lt;&lt;</span><span class="token number">3</span>               </span><span class="token comment">/* name is used */</span></span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">DEF_FREE</span> <span class="token expression"><span class="token number">2</span><span class="token operator">&lt;&lt;</span><span class="token number">4</span>          </span><span class="token comment">/* name used but not defined in nested block */</span></span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">DEF_FREE_CLASS</span> <span class="token expression"><span class="token number">2</span><span class="token operator">&lt;&lt;</span><span class="token number">5</span>    </span><span class="token comment">/* free variable from class's method */</span></span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">DEF_IMPORT</span> <span class="token expression"><span class="token number">2</span><span class="token operator">&lt;&lt;</span><span class="token number">6</span>        </span><span class="token comment">/* assignment occurred via import */</span></span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">DEF_ANNOT</span> <span class="token expression"><span class="token number">2</span><span class="token operator">&lt;&lt;</span><span class="token number">7</span>         </span><span class="token comment">/* this name is annotated */</span></span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">DEF_COMP_ITER</span> <span class="token expression"><span class="token number">2</span><span class="token operator">&lt;&lt;</span><span class="token number">8</span>     </span><span class="token comment">/* this name is a comprehension iteration variable */</span></span></pre></td></tr></table></figure><p>假设一个模块包含如下代码：</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">make_counter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    count <span class="token operator">=</span> <span class="token number">0</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">counter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token keyword">nonlocal</span> count</pre></td></tr><tr><td data-num="5"></td><td><pre>        count <span class="token operator">+=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token keyword">return</span> count</pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">return</span> counter</pre></td></tr></table></figure><p>那么它被编译后会产生三个符号表项：</p>
+<ol>
+<li>第一个表项是模块级别的表项，它将包含定义一个带有局部作用域的 make_counter</li>
+<li>第二个表项是进入到 make_counter 函数中，它包含定义在局部作用域的 count 和 counter</li>
+<li>第三个表项是进入到嵌套定义的 counter 函数，它包含一个被标记为 free 的 count 变量</li>
+</ol>
+<p>值得注意的是，虽然 make_counter 在模块 code block 表项中是局部的，但它会被看作是被全局定义在模块 code block 中，因为符号表的 st_global 字段指向了 st_top 对应的符号，也就是模块 code block 下的符号（st_top-&gt;ste_symbols）。</p>
+<h3 id="从ast到code-objects"><a class="markdownIt-Anchor" href="#从ast到code-objects">#</a> 从 AST 到 code objects</h3>
+<p>符号表生成之后，编译过程的下一步就是根据 AST 以及符号表中的信息来生成 code object。负责这个过程的处理函数定义在文件 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1B5dGhvbi9jb21waWxlLmM=">Python/compile.c</span> 中。生成 code object 也是一个多步的过程。在第一步中，AST 被转换为 Python 字节码指令的基础块（basic blocks）。这里使用的算法与生成符号表时的算法很相似。由一系列命名为 compiler_visit_xx 的函数来进行，xx 指的是节点的类型，这些函数都会递归地访问每一个 AST 节点，并在访问过程中产生 Python 字节码指令的基础块。基础指令块以及块之间的路劲被隐式的表示为图（graph）结构，也称之为控制流图（control flow graph，CFG）。这个图体现了在运行过程中的代码路径。然后进入 code object 生成的第二阶段，以后缀深度优先遍历的方式将前一步生成的控制流图扁平化（flatten），图被扁平化之后，跳转偏移量被计算出来作为 jump 指令的参数。然后再根据这些指令生成 code object，为了更好理解，看如下函数</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">fizzbuzz</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">if</span> n <span class="token operator">%</span> <span class="token number">3</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token keyword">and</span> n <span class="token operator">%</span> <span class="token number">5</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        <span class="token keyword">return</span> <span class="token string">'FizzBuzz'</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">elif</span> n <span class="token operator">%</span> <span class="token number">3</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token keyword">return</span> <span class="token string">'Fizz'</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">elif</span> n <span class="token operator">%</span> <span class="token number">5</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token keyword">return</span> <span class="token string">'Buzz'</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">else</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        <span class="token keyword">return</span> <span class="token builtin">str</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span></pre></td></tr></table></figure><p>函数对应的 AST 如图：<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/11/08/f084323ab2f25cd3.png" alt=""></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2022/11/08/6f532a81c1b505af.png" alt=""></p>
+<blockquote>
+<p>fizzbuzz 函数对应的控制流图，其中的直线代表代码正常的运行顺序，曲线代表跳转。</p>
+</blockquote>
+<p>接下来看看看看每个 block 对应的字节码</p>
+<p>Block 1：在这个 block 表达式中 n % 3 == 0 and n % 5 == 0 通过以下指令实现</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token number">2</span>           <span class="token number">0</span> LOAD_FAST                <span class="token number">0</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre>            <span class="token number">2</span> LOAD_CONST               <span class="token number">1</span> <span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>            <span class="token number">4</span> BINARY_MODULO</pre></td></tr><tr><td data-num="4"></td><td><pre>            <span class="token number">6</span> LOAD_CONST               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>            <span class="token number">8</span> COMPARE_OP               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token operator">==</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>            <span class="token number">10</span> POP_JUMP_IF_FALSE       <span class="token number">28</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            <span class="token number">12</span> LOAD_FAST                <span class="token number">0</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            <span class="token number">14</span> LOAD_CONST               <span class="token number">3</span> <span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>            <span class="token number">16</span> BINARY_MODULO</pre></td></tr><tr><td data-num="10"></td><td><pre>            <span class="token number">18</span> LOAD_CONST               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>            <span class="token number">20</span> COMPARE_OP               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token operator">==</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>            <span class="token number">22</span> POP_JUMP_IF_FALSE       <span class="token number">28</span></pre></td></tr></table></figure><p>有两个途径可以离开这个 block，直接执行完毕之后离开或者执行 POP_JUMP_IF_FALSE 指令跳转离开进入 block 2。</p>
+<p>当解释器执行 if 语句的字节码指令时，它会从栈上读取一个对象，根据对象的布尔值来决定执行下一条指令或者跳转到另一个地方继续执行那里的指令。指令 POP_JUMP_IF_FALSE 就是一个负责跳转的指令。</p>
+<p>Block 2：包含以下指令</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token number">4</span>     <span class="token operator">>></span>   <span class="token number">28</span> LOAD_FAST                <span class="token number">0</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre>           <span class="token number">30</span> LOAD_CONST               <span class="token number">1</span> <span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>           <span class="token number">32</span> BINARY_MODULO</pre></td></tr><tr><td data-num="4"></td><td><pre>           <span class="token number">34</span> LOAD_CONST               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre>           <span class="token number">36</span> COMPARE_OP               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token operator">==</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>           <span class="token number">38</span> POP_JUMP_IF_FALSE       <span class="token number">44</span></pre></td></tr></table></figure><p>elif 语句和 n % 3 == 0 在同一个 block 中，原因很明显，因为该 block 不需要额外的 jump 出口。</p>
+<p>Block 3：与 Block 2 相似，只是指令的参数不同</p>
+<p>Block 4：映射到最终的 orElse AST 指令节点</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token number">9</span>     <span class="token operator">>></span>   <span class="token number">60</span> LOAD_GLOBAL              <span class="token number">0</span> <span class="token punctuation">(</span>str<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre>           <span class="token number">62</span> LOAD_FAST                <span class="token number">0</span> <span class="token punctuation">(</span>n<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>           <span class="token number">64</span> CALL_FUNCTION            <span class="token number">1</span></pre></td></tr><tr><td data-num="4"></td><td><pre>           <span class="token number">66</span> RETURN_VALUE</pre></td></tr><tr><td data-num="5"></td><td><pre>           <span class="token number">68</span> LOAD_CONST               <span class="token number">0</span> <span class="token punctuation">(</span>None<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>           <span class="token number">70</span> RETURN_VALUE</pre></td></tr></table></figure><p>LOAD_GLOBAL 接受一个 str 参数，将 str 函数加载到栈上。LOAD_FAST 将参数 n 加载到栈上。RETURN_VALUE 将把栈上调用 CALL_FUNCTION 后得到的值返回。</p>
+<h4 id="编译器数据结构"><a class="markdownIt-Anchor" href="#编译器数据结构">#</a> 编译器数据结构</h4>
+<p>下图展示了组成 CFG 基础块生成过程中涉及到的主要数据结构之间的关系：<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/11/08/9ccc9beaae134b83.png" alt=""></p>
+<p>在顶层是一个 compiler 数据结构，它捕获了模块的全局编译过程，这个结构体定义在 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy41L1B5dGhvbi9jb21waWxlLmMjTDE1MQ==">Python/compile.c</span> 文件中。</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">struct</span> <span class="token class-name">compiler</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject <span class="token operator">*</span>c_filename<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">symtable</span> <span class="token operator">*</span>c_st<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyFutureFeatures <span class="token operator">*</span>c_future<span class="token punctuation">;</span> <span class="token comment">/* pointer to module's __future__ */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    PyCompilerFlags <span class="token operator">*</span>c_flags<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">int</span> c_optimize<span class="token punctuation">;</span>              <span class="token comment">/* optimization level */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">int</span> c_interactive<span class="token punctuation">;</span>           <span class="token comment">/* true if in interactive mode */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">int</span> c_nestlevel<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token keyword">int</span> c_do_not_emit_bytecode<span class="token punctuation">;</span>  <span class="token comment">/* The compiler won't emit any bytecode</pre></td></tr><tr><td data-num="11"></td><td><pre>                                    if this value is different from zero.</pre></td></tr><tr><td data-num="12"></td><td><pre>                                    This can be used to temporarily visit</pre></td></tr><tr><td data-num="13"></td><td><pre>                                    nodes without emitting bytecode to</pre></td></tr><tr><td data-num="14"></td><td><pre>                                    check only errors. */</span></pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre>    PyObject <span class="token operator">*</span>c_const_cache<span class="token punctuation">;</span>     <span class="token comment">/* Python dict holding all constants,</pre></td></tr><tr><td data-num="17"></td><td><pre>                                    including names tuple */</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">compiler_unit</span> <span class="token operator">*</span>u<span class="token punctuation">;</span> <span class="token comment">/* compiler state for current block */</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    PyObject <span class="token operator">*</span>c_stack<span class="token punctuation">;</span>           <span class="token comment">/* Python list holding compiler_unit ptrs */</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    PyArena <span class="token operator">*</span>c_arena<span class="token punctuation">;</span>            <span class="token comment">/* pointer to memory allocation arena */</span></pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><ol>
+<li>*c_st：指向之前生成的符号表</li>
+<li>*u：一个到 compiler unit 结构体的引用。这个结构体封装了与一个 code block 进行交互所需的信息。本字段指向目前正在处理的 code block 所对应的 compiler unit。</li>
+<li>*c_stack：一个到 compiler unit 栈的引用。当一个 code block 由多个 code block 所组成时，这个字段负责当前遇到一个新的 block 时 compiler unit 结构体的储存与恢复。当进入一个新的 code block 时，一个新的作用域被创建，然后 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1B5dGhvbi9jb21waWxlLmMjTDU0MA==">compiler_enter_scope()</span> 会将当前的 compiler unit（<em>u）push 到栈中。同时</em> c_stack 创建一个新的 compiler unit 对象，并将其设置为当前 compiler unit。当离开一个 block 时，*c_stack 会根据复原状态进行弹出。</li>
+</ol>
+<p>对于每个被编译的模块，对应一个被初始化的 complier 数据结构。当 AST 被遍历，其中每一个 code block 对应的 compiler_unit 数据结构会被生成。</p>
+<h4 id="compiler_unit数据结构"><a class="markdownIt-Anchor" href="#compiler_unit数据结构">#</a> compiler_unit 数据结构</h4>
+<p>compiler_unit 结构体定义，它持有生成一个 code block 对应的字节码指令所需的信息。</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">struct</span> <span class="token class-name">compiler_unit</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PySTEntryObject <span class="token operator">*</span>u_ste<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyObject <span class="token operator">*</span>u_name<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    PyObject <span class="token operator">*</span>u_qualname<span class="token punctuation">;</span>  <span class="token comment">/* dot-separated qualified name (lazy) */</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">int</span> u_scope_type<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token comment">/* The following fields are dicts that map objects to</pre></td></tr><tr><td data-num="9"></td><td><pre>       the index of them in co_XXX.      The index is used as</pre></td></tr><tr><td data-num="10"></td><td><pre>       the argument for opcodes that refer to those collections.</pre></td></tr><tr><td data-num="11"></td><td><pre>    */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    PyObject <span class="token operator">*</span>u_consts<span class="token punctuation">;</span>    <span class="token comment">/* all constants */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    PyObject <span class="token operator">*</span>u_names<span class="token punctuation">;</span>     <span class="token comment">/* all names */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    PyObject <span class="token operator">*</span>u_varnames<span class="token punctuation">;</span>  <span class="token comment">/* local variables */</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    PyObject <span class="token operator">*</span>u_cellvars<span class="token punctuation">;</span>  <span class="token comment">/* cell variables */</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    PyObject <span class="token operator">*</span>u_freevars<span class="token punctuation">;</span>  <span class="token comment">/* free variables */</span></pre></td></tr><tr><td data-num="17"></td><td><pre></pre></td></tr><tr><td data-num="18"></td><td><pre>    PyObject <span class="token operator">*</span>u_private<span class="token punctuation">;</span>        <span class="token comment">/* for private name mangling */</span></pre></td></tr><tr><td data-num="19"></td><td><pre></pre></td></tr><tr><td data-num="20"></td><td><pre>    Py_ssize_t u_argcount<span class="token punctuation">;</span>        <span class="token comment">/* number of arguments for block */</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    Py_ssize_t u_posonlyargcount<span class="token punctuation">;</span>        <span class="token comment">/* number of positional only arguments for block */</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    Py_ssize_t u_kwonlyargcount<span class="token punctuation">;</span> <span class="token comment">/* number of keyword only arguments for block */</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token comment">/* Pointer to the most recently allocated block.  By following b_list</pre></td></tr><tr><td data-num="24"></td><td><pre>       members, you can reach all early allocated blocks. */</span></pre></td></tr><tr><td data-num="25"></td><td><pre>    basicblock <span class="token operator">*</span>u_blocks<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    basicblock <span class="token operator">*</span>u_curblock<span class="token punctuation">;</span> <span class="token comment">/* pointer to current block */</span></pre></td></tr><tr><td data-num="27"></td><td><pre></pre></td></tr><tr><td data-num="28"></td><td><pre>    <span class="token keyword">int</span> u_nfblocks<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">fblockinfo</span> u_fblock<span class="token punctuation">[</span>CO_MAXBLOCKS<span class="token punctuation">]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="30"></td><td><pre></pre></td></tr><tr><td data-num="31"></td><td><pre>    <span class="token keyword">int</span> u_firstlineno<span class="token punctuation">;</span> <span class="token comment">/* the first lineno of the block */</span></pre></td></tr><tr><td data-num="32"></td><td><pre>    <span class="token keyword">int</span> u_lineno<span class="token punctuation">;</span>          <span class="token comment">/* the lineno for the current stmt */</span></pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token keyword">int</span> u_col_offset<span class="token punctuation">;</span>      <span class="token comment">/* the offset of the current stmt */</span></pre></td></tr><tr><td data-num="34"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>字段 u_blocks 与 u_curblock 用于引用那些组成被编译的 code block 的基础块。*u_ste 字段为到一个被编译的 code block 中的符号表项的引用。其余字段从名字上比较好理解。组成 code block 的不同节点在编译过程中被遍历，并且根据一个节点类型是否能够起始一个 basic block，一个含有 node 对应指令的 basic block 会被创建，或者有新指令被添加到已有的 basic block 中。能够起始一个 basic block 的节点类型包括但不限于：</p>
+<ol>
+<li>函数节点</li>
+<li>跳转目标</li>
+<li>异常处理</li>
+<li>布尔运算等</li>
+</ol>
+<h4 id="basic-block-与-instruction-数据结构"><a class="markdownIt-Anchor" href="#basic-block-与-instruction-数据结构">#</a> basic block 与 instruction 数据结构</h4>
+<p>一个 basic block 是一个具有单一入口与多个出口的指令序列。</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">basicblock_</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token comment">/* Each basicblock in a compilation unit is linked via b_list in the</pre></td></tr><tr><td data-num="3"></td><td><pre>       reverse order that the block are allocated.  b_list points to the next</pre></td></tr><tr><td data-num="4"></td><td><pre>       block, not to be confused with b_next, which is next by control flow. */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">basicblock_</span> <span class="token operator">*</span>b_list<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token comment">/* number of instructions used */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">int</span> b_iused<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token comment">/* length of instruction array (b_instr) */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token keyword">int</span> b_ialloc<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token comment">/* pointer to an array of instructions, initially NULL */</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">instr</span> <span class="token operator">*</span>b_instr<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token comment">/* If b_next is non-NULL, it is a pointer to the next</pre></td></tr><tr><td data-num="13"></td><td><pre>       block reached by normal control flow. */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">basicblock_</span> <span class="token operator">*</span>b_next<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token comment">/* b_seen is used to perform a DFS of basicblocks. */</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token keyword">unsigned</span> b_seen <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token comment">/* b_return is true if a RETURN_VALUE opcode is inserted. */</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    <span class="token keyword">unsigned</span> b_return <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token comment">/* depth of stack upon entry of block, computed by stackdepth() */</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token keyword">int</span> b_startdepth<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token comment">/* instruction offset for block, computed by assemble_jump_offsets() */</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">int</span> b_offset<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="23"></td><td><pre><span class="token punctuation">&#125;</span> basicblock<span class="token punctuation">;</span></pre></td></tr></table></figure><p>CFG 由一系列 basic blocks 以及它们之间的连接所组成。*b_instr 字段引用到一个指令结构体的数组，一个指令结构体对应一条字节码指令，字节码指令的编号可在头文件 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L0luY2x1ZGUvb3Bjb2RlLmg=">Include/opcode.h</span> 中找到。指令结构体 instr 定义在文件 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1B5dGhvbi9jb21waWxlLmMjTDQ0">Python/compile.c</span> 中</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">//instr 数据结构</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token keyword">struct</span> <span class="token class-name">instr</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">unsigned</span> i_jabs <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">// 绝对跳转 jump absolute</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">unsigned</span> i_jrel <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">// 相对跳转 jump relative</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">unsigned</span> <span class="token keyword">char</span> i_opcode<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">int</span> i_oparg<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">basicblock_</span> <span class="token operator">*</span>i_target<span class="token punctuation">;</span> <span class="token comment">/* target block (if jump instruction) */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">int</span> i_lineno<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>在上面的控制流图中，可以看到 block1 到 block2 存在两条可行的路径。第一条路径是正常执行由 block1 到 block2，第二条是在第一次比较时直接跳转到 block2。现在跳转的目标还是 basic block，但实际过程中 code object 中只有字节码流（bytecodes stream），并且只能通过偏移量对它进行索引，与 basic block 没有关系。我们必须将使用 block 中创建的隐式图作为跳转目标，并以某种方式将这些具有偏移的 block 替换为指令数组。这就是 basic blocks 的汇编（assembling）过程。</p>
+<h4 id="汇编-basic-blocks"><a class="markdownIt-Anchor" href="#汇编-basic-blocks">#</a> 汇编 basic blocks</h4>
+<p>一旦 CFG 被生成，basic blocks 包含了字节码指令，但目前这些 blocks 还不是线性排列的。跳转指令的目标仍是 basic block 而不是指令流中的绝对偏移量。<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1B5dGhvbi9jb21waWxlLmMjTDU0ODI=">assemble</span> 函数将会把 CFG 进行线性排列，生成 code object。</p>
+<p>首先，assemble 函数会在任何没有 return 语句的 block 结尾添加一个 return None，现在你就直到为什么可以在函数和方法中可以不写 return 了吧。然后会以后序深度优先（post-order deep first）的方式遍历 CFG 图，对它进行扁平化。后序遍历指的是在遍历时先访问所有的子节点，再访问根节点。</p>
+<blockquote>
+<p>图遍历<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/11/09/bf382c6b25373d9d.png" alt=""><br>
+在对一个图进行后序深度优先遍历时，我们首先会递归的访问一个根节点的左子节点，然后是右子节点，然后才是这个根节点自己。比如以上面这个图结构，以后序深度优先遍历对它进行扁平化时，对节点的访问顺序是： H -&gt; D -&gt; I -&gt; J -&gt; E -&gt; B -&gt; K -&gt; L -&gt; F -&gt; G -&gt; C -&gt; A。如果是前序遍历的话：A -&gt; B -&gt; D -&gt; H -&gt; E -&gt; I -&gt; J -&gt; C -&gt; F -&gt; K -&gt; L -&gt; G。如果是中序遍历：H -&gt; D -&gt; B -&gt; I -&gt; E -&gt; J -&gt; A -&gt; K -&gt; L -&gt; F -&gt; C -&gt; G</p>
+</blockquote>
+<p>fizzbuzz 函数的 CFG 相对比较简单，如果对它进行后序遍历，顺序是 block5 -&gt; block4 -&gt; block3 -&gt; block2 -&gt; block1。当 CFG 被扁平化（线性化）后，扁平化图的跳转指令的跳转偏移量就可以被 <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3B5dGhvbi9jcHl0aG9uL2Jsb2IvMy43L1B5dGhvbi9jb21waWxlLmMjTDUyNjI=">assemble_jump_offsets</span> 函数计算出来了。</p>
+<p>对跳转偏移量的汇编需要两个阶段，第一个阶段，每条指令的偏移量会被计算出来放进指令数组中，向下面代码，这是一个简单的循环，它从被 CFG 扁平化后得到的数组的末尾开始从 0 开始生成每一个 block 对应的偏移量。</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">// 计算字节码偏移量</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment">// ......</span></pre></td></tr><tr><td data-num="3"></td><td><pre>totsize <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> a<span class="token operator">-></span>a_nblocks <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    b <span class="token operator">=</span> a<span class="token operator">-></span>a_postorder<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    bsize <span class="token operator">=</span> <span class="token function">blocksize</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    b<span class="token operator">-></span>b_offset <span class="token operator">=</span> totsize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    totsize <span class="token operator">+=</span> bsize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token comment">// ......</span></pre></td></tr></table></figure><p>在第二阶段，跳转指令的跳转目标偏移量被计算出来，这一步涉及到计算绝对跳转与相对跳转的跳转地址：</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">// 汇编跳转目标偏移量</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment">// ......</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token keyword">for</span> <span class="token punctuation">(</span>b <span class="token operator">=</span> c<span class="token operator">-></span>u<span class="token operator">-></span>u_blocks<span class="token punctuation">;</span> b <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span> b <span class="token operator">=</span> b<span class="token operator">-></span>b_list<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    bsize <span class="token operator">=</span> b<span class="token operator">-></span>b_offset<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> b<span class="token operator">-></span>b_iused<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token keyword">struct</span> <span class="token class-name">instr</span> <span class="token operator">*</span>instr <span class="token operator">=</span> <span class="token operator">&amp;</span>b<span class="token operator">-></span>b_instr<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token keyword">int</span> isize <span class="token operator">=</span> <span class="token function">instrsize</span><span class="token punctuation">(</span>instr<span class="token operator">-></span>i_oparg<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token comment">/* Relative jumps are computed relative to</pre></td></tr><tr><td data-num="9"></td><td><pre>            the instruction pointer after fetching</pre></td></tr><tr><td data-num="10"></td><td><pre>            the jump instruction.</pre></td></tr><tr><td data-num="11"></td><td><pre>        */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        bsize <span class="token operator">+=</span> isize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>instr<span class="token operator">-></span>i_jabs <span class="token operator">||</span> instr<span class="token operator">-></span>i_jrel<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            instr<span class="token operator">-></span>i_oparg <span class="token operator">=</span> instr<span class="token operator">-></span>i_target<span class="token operator">-></span>b_offset<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span>instr<span class="token operator">-></span>i_jrel<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>                instr<span class="token operator">-></span>i_oparg <span class="token operator">-=</span> bsize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>            instr<span class="token operator">-></span>i_oparg <span class="token operator">*=</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>_Py_CODEUNIT<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">instrsize</span><span class="token punctuation">(</span>instr<span class="token operator">-></span>i_oparg<span class="token punctuation">)</span> <span class="token operator">!=</span> isize<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>                extended_arg_recompile <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>            <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="24"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="25"></td><td><pre><span class="token comment">// ......</span></pre></td></tr></table></figure><p>随着跳转地址被计算，扁平化后的 CFG 内的指令以反向后序顺序（reverse post order）被生成。反向后序顺序是对 CFG 的拓扑排序，也就是说对于 CFG 中所有的边（u, v），在这个排序中 u 都会排在 v 前面。这样做的原因，一般来说想要把跳转的起点放在终点之前。当字节码生成完毕，code object 对象就可以根据这些字节码以及符号表中的信息进行生成，code object 对象返回给调用函数的时候，整个编译过程就在此结束了。</p>
+<blockquote>
+<p>来源：<span class="exturl" data-url="aHR0cHM6Ly9sZWFucHViLmNvbS9pbnNpZGV0aGVweXRob252aXJ0dWFsbWFjaGluZQ==">https://leanpub.com/insidethepythonvirtualmachine</span></p>
+</blockquote>
+
+      <div class="tags">
+          <a href="/tags/Inside-The-Python-Virtual-Machine/" rel="tag"><i class="ic i-tag"></i> Inside The Python Virtual Machine</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2022-11-09 17:08:48" itemprop="dateModified" datetime="2022-11-09T17:08:48+08:00">2022-11-09</time>
+  </span>
+  <span id="2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/" class="item leancloud_visitors" data-flag-title="Inside The Python Virtual Machine - Compliling Python Source Code" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> Donate</button>
+  <p>Give me a cup of [coffee]~(￣▽￣)~*</p>
+  <div id="qr">
+      
+      <div>
+        <img data-src="/images/wechatpay.png" alt="小芳芳 WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div>
+        <img data-src="/images/alipay.png" alt="小芳芳 Alipay">
+        <p>Alipay</p>
+      </div>
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>石理一淡 <i class="ic i-at"><em>@</em></i>士多啤梨苹果橙
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/" title="Inside The Python Virtual Machine - Compliling Python Source Code">http://example.com/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2022/11/04/%E6%81%90%E9%AC%BC%E7%97%87%E5%8D%95%E9%80%9A-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9A%BE%E5%BA%A6-%E6%97%A0%E8%BA%B2%E8%97%8F%E7%82%B9/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;s3.bmp.ovh&#x2F;imgs&#x2F;2022&#x2F;11&#x2F;04&#x2F;dca8e5d18cf0e11b.webp" title="恐鬼症单通 自定义难度 无躲藏点!">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> game</span>
+  <h3>恐鬼症单通 自定义难度 无躲藏点!</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#compiling-python-source-code"><span class="toc-number">1.</span> <span class="toc-text"> Compiling Python Source Code</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%B0parse-tree"><span class="toc-number">1.0.1.</span> <span class="toc-text"> 从源码到 parse tree</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#python-tokens"><span class="toc-number">1.0.2.</span> <span class="toc-text"> Python tokens</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8Eparse-tree%E5%88%B0ast"><span class="toc-number">1.0.3.</span> <span class="toc-text"> 从 parse tree 到 AST</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E7%AC%A6%E5%8F%B7%E8%A1%A8"><span class="toc-number">1.0.4.</span> <span class="toc-text"> 构建符号表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8D%E5%AD%97%E4%B8%8E%E7%BB%91%E5%AE%9A"><span class="toc-number">1.0.4.1.</span> <span class="toc-text"> 名字与绑定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%9D%97"><span class="toc-number">1.0.4.2.</span> <span class="toc-text"> 代码块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#namespace"><span class="toc-number">1.0.4.3.</span> <span class="toc-text"> Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#scope"><span class="toc-number">1.0.4.4.</span> <span class="toc-text"> Scope</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E8%A1%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.0.4.5.</span> <span class="toc-text"> 符号表数据结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8East%E5%88%B0code-objects"><span class="toc-number">1.0.5.</span> <span class="toc-text"> 从 AST 到 code objects</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.0.5.1.</span> <span class="toc-text"> 编译器数据结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#compiler_unit%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.0.5.2.</span> <span class="toc-text"> compiler_unit 数据结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#basic-block-%E4%B8%8E-instruction-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.0.5.3.</span> <span class="toc-text"> basic block 与 instruction 数据结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B1%87%E7%BC%96-basic-blocks"><span class="toc-number">1.0.5.4.</span> <span class="toc-text"> 汇编 basic blocks</span></a></li></ol></li></ol></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+        <ul>
+          <li class="active"><a href="/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/" rel="bookmark" title="Inside The Python Virtual Machine - Compliling Python Source Code">Inside The Python Virtual Machine - Compliling Python Source Code</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="小芳芳"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">小芳芳</p>
+  <div class="description" itemprop="description"></div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">15</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">10</span>
+        <span class="name">categories</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">9</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0NMQVktemhhbw==" title="https:&#x2F;&#x2F;github.com&#x2F;CLAY-zhao"><i class="ic i-github"></i></span>
+      <span class="exturl item bilibili" data-url="aHR0cHM6Ly9zcGFjZS5iaWxpYmlsaS5jb20vMjkxMzUwNTA=" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;29135050"><i class="ic i-bilibili"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>Home</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>About</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>Archives</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>Categories</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>Tags</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>friends</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/links/" rel="section"><i class="ic i-magic"></i>links</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
+</div>
+
+    <span><a href="/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/" title="Inside The Python Virtual Machine - Compliling Python Source Code">Inside The Python Virtual Machine - Compliling Python Source Code</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Life/" title="In Life">Life</a>
+</div>
+
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Python/" title="In Python">Python</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Python/Django/" title="In Django">Django</a>
+</div>
+
+    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/11/02/Python%E7%9A%84%E5%B1%9E%E6%80%A7%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/" title="Python的属性是如何工作的">Python的属性是如何工作的</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
+</div>
+
+    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/11/04/%E6%81%90%E9%AC%BC%E7%97%87%E5%8D%95%E9%80%9A-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9A%BE%E5%BA%A6-%E6%97%A0%E8%BA%B2%E8%97%8F%E7%82%B9/" title="恐鬼症单通 自定义难度 无躲藏点!">恐鬼症单通 自定义难度 无躲藏点!</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小芳芳 @ Leayoos Chui</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>
