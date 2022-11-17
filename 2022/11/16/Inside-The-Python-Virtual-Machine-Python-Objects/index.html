@@ -1,0 +1,584 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="士多啤梨苹果橙" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="士多啤梨苹果橙" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="士多啤梨苹果橙" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Inside The Python Virtual Machine" />
+
+
+<link rel="canonical" href="http://example.com/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/">
+
+
+
+  <title>
+Inside The Python Virtual Machine - Python Objects - CPython C |
+Leayoos Chui = 士多啤梨苹果橙</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Inside The Python Virtual Machine - Python Objects
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2022-11-16 10:01:29">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-11-16T10:01:29+08:00">2022-11-16</time>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Leayoos Chui</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipet4bz0yj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclwuom7cj20zk0m8dvn.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclxxcb6rj20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipevgoki5j20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipeu1usa7j20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipeu7txpzj20zk0m81kx.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span><i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/CPython-C/" itemprop="item" rel="index" title="In CPython C"><span itemprop="name">CPython C</span></a>
+<meta itemprop="position" content="1" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="en">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="小芳芳">
+    <meta itemprop="description" content=", ">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="士多啤梨苹果橙">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h3 id="pyobject"><a class="markdownIt-Anchor" href="#pyobject">#</a> PyObject</h3>
+<p>CPython 源码中可以注意到 PyObject 结构的普遍性，当解释器循环处理求值堆栈上的值时，所有这些值都会被视为 PyObject。我们不妨称其为 Python 对象的超类，值实际上从未被声明为 PyObject，但可以将指向任何对象的指针强制转换为 PyObject，即任何对象都可以视为 PyObject 结构，因为所有对象的初始段实际上都是 PyObject 结构。</p>
+<p>PyObject 结构体的定义，它由多个字段组成，这些字段必须被全部填上才能将它视为对象</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_object</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    _PyObject_HEAD_EXTRA</pre></td></tr><tr><td data-num="3"></td><td><pre>    Py_ssize_t ob_refcnt<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">_typeobject</span> <span class="token operator">*</span>ob_type<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span> PyObject<span class="token punctuation">;</span></pre></td></tr></table></figure><p>_PyObject_HEAD_EXTRA 是一个 C 宏，它定义了一个指向之前分配对象的字段和指向下一个对象的字段，这些字段能够形成所有活动对象的隐式双链表。ob_refcnt 字段用于内存管理，而 * ob_type 是指向类型对象的指针，类型决定了对象代表什么、所包含的数据类型以及可以对它执行的操作类型。</p>
+<p>以下代码，name 指向一个字符串对象，对象的类型为 str</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> name <span class="token operator">=</span> <span class="token string">'obj'</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> type<span class="token punctuation">(</span>name<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token operator">&lt;</span>class <span class="token string">'str'</span><span class="token operator">></span></pre></td></tr></table></figure><p>str 类型字段指向 type 对象，那么 type 对象的 * ob_type 字段指向什么？实际上 type 的 ob_type 指向自身，或者说 type 类型还是 type。</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> type<span class="token punctuation">(</span>type<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">&lt;</span>class <span class="token string">'type'</span><span class="token operator">></span></pre></td></tr></table></figure><blockquote>
+<p><strong>关于引用计数</strong> <br>
+CPython 使用引用计数进行内存管理，这是一种相对简单的方法，只要在创建一个对象的新引用时，对象的引用计数就会增加。反之亦然，每当对一个对象的引用消失（如使用 del 删除该引用），引用计数就会减少。当对象引用计数变为 0 时，虚拟机可以将其释放。在虚拟机中，Py_INCREF 和 Py_DECREF 用于增加和减少对象的引用计数。</p>
+</blockquote>
+<h3 id="类型对象的字段"><a class="markdownIt-Anchor" href="#类型对象的字段">#</a> 类型对象的字段</h3>
+<p>Include/Object.h 中定义的_typeobject 结构是所有 Python 类型的基本结构。它定义了许多字段，这些字段大多是指向实现给定类型的某些函数的 C 函数指针。</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">_typeobject</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject_VAR_HEAD</pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span>tp_name<span class="token punctuation">;</span> <span class="token comment">/* For printing, in format "&lt;module>.&lt;name>" */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    Py_ssize_t tp_basicsize<span class="token punctuation">,</span> tp_itemsize<span class="token punctuation">;</span> <span class="token comment">/* For allocation */</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token comment">/* Methods to implement standard operations */</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>    destructor tp_dealloc<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    printfunc tp_print<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    getattrfunc tp_getattr<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    setattrfunc tp_setattr<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    PyAsyncMethods <span class="token operator">*</span>tp_as_async<span class="token punctuation">;</span> <span class="token comment">/* formerly known as tp_compare (Python 2)</pre></td></tr><tr><td data-num="13"></td><td><pre>                                    or tp_reserved (Python 3) */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    reprfunc tp_repr<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="15"></td><td><pre></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token comment">/* Method suites for standard classes */</span></pre></td></tr><tr><td data-num="17"></td><td><pre></pre></td></tr><tr><td data-num="18"></td><td><pre>    PyNumberMethods <span class="token operator">*</span>tp_as_number<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    PySequenceMethods <span class="token operator">*</span>tp_as_sequence<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    PyMappingMethods <span class="token operator">*</span>tp_as_mapping<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="21"></td><td><pre></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token comment">/* More standard operations (here for binary compatibility) */</span></pre></td></tr><tr><td data-num="23"></td><td><pre></pre></td></tr><tr><td data-num="24"></td><td><pre>    hashfunc tp_hash<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="25"></td><td><pre>    ternaryfunc tp_call<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    reprfunc tp_str<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    getattrofunc tp_getattro<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    setattrofunc tp_setattro<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="29"></td><td><pre></pre></td></tr><tr><td data-num="30"></td><td><pre>    <span class="token comment">/* Functions to access object as input/output buffer */</span></pre></td></tr><tr><td data-num="31"></td><td><pre>    PyBufferProcs <span class="token operator">*</span>tp_as_buffer<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="32"></td><td><pre></pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token comment">/* Flags to define presence of optional/expanded features */</span></pre></td></tr><tr><td data-num="34"></td><td><pre>    <span class="token keyword">unsigned</span> <span class="token keyword">long</span> tp_flags<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="35"></td><td><pre></pre></td></tr><tr><td data-num="36"></td><td><pre>    <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span>tp_doc<span class="token punctuation">;</span> <span class="token comment">/* Documentation string */</span></pre></td></tr><tr><td data-num="37"></td><td><pre></pre></td></tr><tr><td data-num="38"></td><td><pre>    <span class="token comment">/* Assigned meaning in release 2.0 */</span></pre></td></tr><tr><td data-num="39"></td><td><pre>    <span class="token comment">/* call function for all accessible objects */</span></pre></td></tr><tr><td data-num="40"></td><td><pre>    traverseproc tp_traverse<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="41"></td><td><pre></pre></td></tr><tr><td data-num="42"></td><td><pre>    <span class="token comment">/* delete references to contained objects */</span></pre></td></tr><tr><td data-num="43"></td><td><pre>    inquiry tp_clear<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="44"></td><td><pre></pre></td></tr><tr><td data-num="45"></td><td><pre>    <span class="token comment">/* Assigned meaning in release 2.1 */</span></pre></td></tr><tr><td data-num="46"></td><td><pre>    <span class="token comment">/* rich comparisons */</span></pre></td></tr><tr><td data-num="47"></td><td><pre>    richcmpfunc tp_richcompare<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="48"></td><td><pre></pre></td></tr><tr><td data-num="49"></td><td><pre>    <span class="token comment">/* weak reference enabler */</span></pre></td></tr><tr><td data-num="50"></td><td><pre>    Py_ssize_t tp_weaklistoffset<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="51"></td><td><pre></pre></td></tr><tr><td data-num="52"></td><td><pre>    <span class="token comment">/* Iterators */</span></pre></td></tr><tr><td data-num="53"></td><td><pre>    getiterfunc tp_iter<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="54"></td><td><pre>    iternextfunc tp_iternext<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="55"></td><td><pre></pre></td></tr><tr><td data-num="56"></td><td><pre>    <span class="token comment">/* Attribute descriptor and subclassing stuff */</span></pre></td></tr><tr><td data-num="57"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">PyMethodDef</span> <span class="token operator">*</span>tp_methods<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="58"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">PyMemberDef</span> <span class="token operator">*</span>tp_members<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="59"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">PyGetSetDef</span> <span class="token operator">*</span>tp_getset<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="60"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">_typeobject</span> <span class="token operator">*</span>tp_base<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="61"></td><td><pre>    PyObject <span class="token operator">*</span>tp_dict<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="62"></td><td><pre>    descrgetfunc tp_descr_get<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="63"></td><td><pre>    descrsetfunc tp_descr_set<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="64"></td><td><pre>    Py_ssize_t tp_dictoffset<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="65"></td><td><pre>    initproc tp_init<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="66"></td><td><pre>    allocfunc tp_alloc<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="67"></td><td><pre>    newfunc tp_new<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="68"></td><td><pre>    freefunc tp_free<span class="token punctuation">;</span> <span class="token comment">/* Low-level free-memory routine */</span></pre></td></tr><tr><td data-num="69"></td><td><pre>    inquiry tp_is_gc<span class="token punctuation">;</span> <span class="token comment">/* For PyObject_IS_GC */</span></pre></td></tr><tr><td data-num="70"></td><td><pre>    PyObject <span class="token operator">*</span>tp_bases<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="71"></td><td><pre>    PyObject <span class="token operator">*</span>tp_mro<span class="token punctuation">;</span> <span class="token comment">/* method resolution order */</span></pre></td></tr><tr><td data-num="72"></td><td><pre>    PyObject <span class="token operator">*</span>tp_cache<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="73"></td><td><pre>    PyObject <span class="token operator">*</span>tp_subclasses<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="74"></td><td><pre>    PyObject <span class="token operator">*</span>tp_weaklist<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="75"></td><td><pre>    destructor tp_del<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="76"></td><td><pre></pre></td></tr><tr><td data-num="77"></td><td><pre>    <span class="token comment">/* Type attribute cache version tag. Added in version 2.6 */</span></pre></td></tr><tr><td data-num="78"></td><td><pre>    <span class="token keyword">unsigned</span> <span class="token keyword">int</span> tp_version_tag<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="79"></td><td><pre></pre></td></tr><tr><td data-num="80"></td><td><pre>    destructor tp_finalize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="81"></td><td><pre></pre></td></tr><tr><td data-num="82"></td><td><pre>    <span class="token comment">/* these must be last and never explicitly initialized */</span></pre></td></tr><tr><td data-num="83"></td><td><pre>    Py_ssize_t tp_allocs<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="84"></td><td><pre>    Py_ssize_t tp_frees<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="85"></td><td><pre>    Py_ssize_t tp_maxalloc<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="86"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">_typeobject</span> <span class="token operator">*</span>tp_prev<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="87"></td><td><pre>    <span class="token keyword">struct</span> <span class="token class-name">_typeobject</span> <span class="token operator">*</span>tp_next<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="88"></td><td><pre><span class="token punctuation">&#125;</span> PyTypeObject<span class="token punctuation">;</span></pre></td></tr></table></figure><p>PyObject_VAR_HEAD 字段是 PyObject 字段的扩展，该扩展为具有长度概念的对象添加了一个 ob_size 字段，Python C/API 文档中提供了此类型对象结构中每个字段的详细说明。需要注意的是，结构中每个字段都实现了部分类型行为。这些字段中大多数是可以被称为对象接口或协议，因为它们对应于可以在 Python 对象上调用的函数，但是其实际实现方式取决于类型。例如，tp_hash 字段是给定类型的哈希函数的引用，如果类型实例不能被哈希，则该字段可以不带值（不实现）。在该类型的实力上调用 hash 方法时，将调用 tp_hash 字段中的函数。类型对象包括字段 tp_methods，它引用该类型特有的方法（如该类型支持什么方法调用）。tp_new 是对用来创建该类型实例的函数引用。其中一些字段（如 tp_init）是可选的，并非每种类型都需要运行初始化函数，尤其是对该类型是不可变（如元组）但其它字段（如 tp_new）是必需的。</p>
+<p>这些字段中还有用于实现其它 Python 协议的字段，例如：</p>
+<ol>
+<li>Number protocol：实现此协议的类型将具有 PyNumberMethods *tp_as_number 字段的实现。该字段是对一组实现数字操作的函数的引用，这意味着该类型将支持在 tp_as_number 集合中包含实现的算术。例如，非数字的 set 类型在此字段中有一个条目，因为它支持一些算术运算，如 -，&lt;= 等。</li>
+<li>Sequence protocol：实现此协议的类型将在 PySequenceMethods *tp_as_sequence 字段具有一个值。这意味着该类型将支持部分或全部序列操作，例如 len、in 等。</li>
+<li>Mapping protocol：实现该协议的类型会在 PyMappingMethods *tp_as_mapping 字段具有一个值。这将允许使用字典下标语法来设置和访问键 - 值映射，从而将此类型视为 Python 字典。</li>
+<li>Iterator protocol：实现此协议的类型将在 getiterfunc tp_iter 以及 iternextfunc tp_iternext 字段具有一个值，从而使该类型的实例能够像 Python 迭代器一样被使用。</li>
+<li>Buffer protocol：实现此协议的类型将在 PyBufferProcs *tp_as_buffer 字段具有一个值。这将允许访问该类型的实例作为输入 / 输出缓冲区。</li>
+</ol>
+<h3 id="类型对象案例研究"><a class="markdownIt-Anchor" href="#类型对象案例研究">#</a> 类型对象案例研究</h3>
+<h4 id="tuple类型"><a class="markdownIt-Anchor" href="#tuple类型">#</a> tuple 类型</h4>
+<p>来看下元组类型，了解是如何填充类型对象的字段</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>PyTypeObject PyTuple_Type <span class="token operator">=</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token function">PyVarObject_HEAD_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>PyType_Type<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token string">"tuple"</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">sizeof</span><span class="token punctuation">(</span>PyTupleObject<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">sizeof</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">,</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token punctuation">(</span>destructor<span class="token punctuation">)</span>tupledealloc<span class="token punctuation">,</span>                   <span class="token comment">/* tp_dealloc */</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_print */</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_getattr */</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_setattr */</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_reserved */</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token punctuation">(</span>reprfunc<span class="token punctuation">)</span>tuplerepr<span class="token punctuation">,</span>                        <span class="token comment">/* tp_repr */</span></pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_as_number */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>    <span class="token operator">&amp;</span>tuple_as_sequence<span class="token punctuation">,</span>                         <span class="token comment">/* tp_as_sequence */</span></pre></td></tr><tr><td data-num="14"></td><td><pre>    <span class="token operator">&amp;</span>tuple_as_mapping<span class="token punctuation">,</span>                          <span class="token comment">/* tp_as_mapping */</span></pre></td></tr><tr><td data-num="15"></td><td><pre>    <span class="token punctuation">(</span>hashfunc<span class="token punctuation">)</span>tuplehash<span class="token punctuation">,</span>                        <span class="token comment">/* tp_hash */</span></pre></td></tr><tr><td data-num="16"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_call */</span></pre></td></tr><tr><td data-num="17"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_str */</span></pre></td></tr><tr><td data-num="18"></td><td><pre>    PyObject_GenericGetAttr<span class="token punctuation">,</span>                    <span class="token comment">/* tp_getattro */</span></pre></td></tr><tr><td data-num="19"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_setattro */</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_as_buffer */</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    Py_TPFLAGS_DEFAULT <span class="token operator">|</span> Py_TPFLAGS_HAVE_GC <span class="token operator">|</span></pre></td></tr><tr><td data-num="22"></td><td><pre>        Py_TPFLAGS_BASETYPE <span class="token operator">|</span> Py_TPFLAGS_TUPLE_SUBCLASS<span class="token punctuation">,</span> <span class="token comment">/* tp_flags */</span></pre></td></tr><tr><td data-num="23"></td><td><pre>    tuple_new__doc__<span class="token punctuation">,</span>                           <span class="token comment">/* tp_doc */</span></pre></td></tr><tr><td data-num="24"></td><td><pre>    <span class="token punctuation">(</span>traverseproc<span class="token punctuation">)</span>tupletraverse<span class="token punctuation">,</span>                <span class="token comment">/* tp_traverse */</span></pre></td></tr><tr><td data-num="25"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_clear */</span></pre></td></tr><tr><td data-num="26"></td><td><pre>    tuplerichcompare<span class="token punctuation">,</span>                           <span class="token comment">/* tp_richcompare */</span></pre></td></tr><tr><td data-num="27"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_weaklistoffset */</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    tuple_iter<span class="token punctuation">,</span>                                 <span class="token comment">/* tp_iter */</span></pre></td></tr><tr><td data-num="29"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_iternext */</span></pre></td></tr><tr><td data-num="30"></td><td><pre>    tuple_methods<span class="token punctuation">,</span>                              <span class="token comment">/* tp_methods */</span></pre></td></tr><tr><td data-num="31"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_members */</span></pre></td></tr><tr><td data-num="32"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_getset */</span></pre></td></tr><tr><td data-num="33"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_base */</span></pre></td></tr><tr><td data-num="34"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_dict */</span></pre></td></tr><tr><td data-num="35"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_descr_get */</span></pre></td></tr><tr><td data-num="36"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_descr_set */</span></pre></td></tr><tr><td data-num="37"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_dictoffset */</span></pre></td></tr><tr><td data-num="38"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_init */</span></pre></td></tr><tr><td data-num="39"></td><td><pre>    <span class="token number">0</span><span class="token punctuation">,</span>                                          <span class="token comment">/* tp_alloc */</span></pre></td></tr><tr><td data-num="40"></td><td><pre>    tuple_new<span class="token punctuation">,</span>                                  <span class="token comment">/* tp_new */</span></pre></td></tr><tr><td data-num="41"></td><td><pre>    PyObject_GC_Del<span class="token punctuation">,</span>                            <span class="token comment">/* tp_free */</span></pre></td></tr><tr><td data-num="42"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><ol>
+<li>PyObject_VAR_HEAD：已使用类型对象 PyType_Type 作为类型进行初始化。type 对象的类型是 type。查看 PyType_Type 类型对象可发现 PyType_Type 的类型为自身</li>
+<li>tp_name：初始化为类型的名称，叫 tuple</li>
+<li>tp_basicsize 和 tp_itemsize：引用元组对象和元组对象中包含的项目的大小，并相应地进行填充</li>
+<li>tupledealloc：一种内存管理功能，用于在销毁元组对象时处理内存的重新分配</li>
+<li>tuplerepr：是以元组实例作为参数调用 repr 函数时调用的函数</li>
+<li>tuple_as_sequence：是元组实现的序列方法的集合，比如元组支持的 len 等序列方法</li>
+<li>tuple_as_mapping：是元组支持的一组映射方法，在这种情况下，键只能是整数索引</li>
+<li>tuplehash：在计算元组对象的哈希值时被调用的函数。当元组被作为字典的 key 使用时能起到作用</li>
+<li>PyObject_GenericGetAttr 是引用元组对象的属性时调用的通用函数</li>
+<li>tuple_doc：元组对象的文档字符串</li>
+<li>tupletraverse：是用于元组对象垃圾回收的遍历函数。垃圾收集器使用此功能来帮助检测引用周期</li>
+<li>tuple_iter：在 tuple 对象上调用 iter 函数时将被调用的方法。在这种情况下，将返回完全不同的 tuple_iterator 类型，因此 tp_iternext 方法没有实现</li>
+<li>tuple_methods：元组类型的实际方法</li>
+<li>tuple_new：用于创建新的元组类型实例的函数</li>
+<li>PyObject_GC_Del：是引用内存管理函数的另一个字段</li>
+</ol>
+<p>其余具有 0 值的字段保留位空，因此元组的功能不需要它们。以 tp_init 字段为例，元组是 immutable，因此一旦创建它就不能更改，除了 tp_new 引用的函数中发生的事情外，不需要任何初始化，所以该字段保留位空。</p>
+<h4 id="type类型"><a class="markdownIt-Anchor" href="#type类型">#</a> type 类型</h4>
+<p>所有内置类型以及用户定义的普通类型的元类型（用户可以定义一个新的元类型）。注意在初始化 PyVarObject_HEAD_INIT 中的元组对象时如何使用此类型，在讨论类型时，重要的是区分以 type 位类型的对象和以用户定义类型为类型的对象。在处理对象中的属性引用时，非常重要。</p>
+<h4 id="object类型"><a class="markdownIt-Anchor" href="#object类型">#</a> object 类型</h4>
+<p>另一个重要的类型是 object 类型，它与 type 类型相似。object 类型是所有用户定义类型的根类型，并提供一些默认值，用于填充用户定义类型的类型字段。与 type 相比，用户定义的类型的行为方式有所不同，object 类型提供的属性解析算法之类的函数与 type 类型所提供的函数有很大不同。</p>
+<h3 id="创建类型实例"><a class="markdownIt-Anchor" href="#创建类型实例">#</a> 创建类型实例</h3>
+
+      <div class="tags">
+          <a href="/tags/Inside-The-Python-Virtual-Machine/" rel="tag"><i class="ic i-tag"></i> Inside The Python Virtual Machine</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2022-11-16 18:07:32" itemprop="dateModified" datetime="2022-11-16T18:07:32+08:00">2022-11-16</time>
+  </span>
+  <span id="2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" class="item leancloud_visitors" data-flag-title="Inside The Python Virtual Machine - Python Objects" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> Donate</button>
+  <p>Give me a cup of [coffee]~(￣▽￣)~*</p>
+  <div id="qr">
+      
+      <div>
+        <img data-src="/images/wechatpay.png" alt="小芳芳 WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div>
+        <img data-src="/images/alipay.png" alt="小芳芳 Alipay">
+        <p>Alipay</p>
+      </div>
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>石理一淡 <i class="ic i-at"><em>@</em></i>士多啤梨苹果橙
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" title="Inside The Python Virtual Machine - Python Objects">http://example.com/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2022/11/14/Cookie-Run-Kingdom%E6%B4%BB%E5%8A%A8-B-A-D-4/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclhpw3lwj20zk0m8gvw.jpg" title="Cookie Run Kingdom活动 - B.A.D.4">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> game</span>
+  <h3>Cookie Run Kingdom活动 - B.A.D.4</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#pyobject"><span class="toc-number">1.</span> <span class="toc-text"> PyObject</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%AD%97%E6%AE%B5"><span class="toc-number">2.</span> <span class="toc-text"> 类型对象的字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E5%AF%B9%E8%B1%A1%E6%A1%88%E4%BE%8B%E7%A0%94%E7%A9%B6"><span class="toc-number">3.</span> <span class="toc-text"> 类型对象案例研究</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#tuple%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.1.</span> <span class="toc-text"> tuple 类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#type%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.2.</span> <span class="toc-text"> type 类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#object%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.3.</span> <span class="toc-text"> object 类型</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%B1%BB%E5%9E%8B%E5%AE%9E%E4%BE%8B"><span class="toc-number">4.</span> <span class="toc-text"> 创建类型实例</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+        <ul>
+          <li><a href="/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/" rel="bookmark" title="Inside The Python Virtual Machine - Compliling Python Source Code">Inside The Python Virtual Machine - Compliling Python Source Code</a></li><li class="active"><a href="/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" rel="bookmark" title="Inside The Python Virtual Machine - Python Objects">Inside The Python Virtual Machine - Python Objects</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="小芳芳"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">小芳芳</p>
+  <div class="description" itemprop="description"></div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">17</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">10</span>
+        <span class="name">categories</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">10</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0NMQVktemhhbw==" title="https:&#x2F;&#x2F;github.com&#x2F;CLAY-zhao"><i class="ic i-github"></i></span>
+      <span class="exturl item bilibili" data-url="aHR0cHM6Ly9zcGFjZS5iaWxpYmlsaS5jb20vMjkxMzUwNTA=" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;29135050"><i class="ic i-bilibili"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>Home</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>About</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>Archives</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>Categories</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>Tags</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>friends</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/links/" rel="section"><i class="ic i-magic"></i>links</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
+</div>
+
+    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/11/02/Python%E7%9A%84%E5%B1%9E%E6%80%A7%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/" title="Python的属性是如何工作的">Python的属性是如何工作的</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Python/" title="In Python">Python</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Python/Django/" title="In Django">Django</a>
+</div>
+
+    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/11/04/%E6%81%90%E9%AC%BC%E7%97%87%E5%8D%95%E9%80%9A-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9A%BE%E5%BA%A6-%E6%97%A0%E8%BA%B2%E8%97%8F%E7%82%B9/" title="恐鬼症单通 自定义难度 无躲藏点!">恐鬼症单通 自定义难度 无躲藏点!</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
+</div>
+
+    <span><a href="/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/" title="Inside The Python Virtual Machine - Compliling Python Source Code">Inside The Python Virtual Machine - Compliling Python Source Code</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小芳芳 @ Leayoos Chui</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>
