@@ -102,12 +102,12 @@ Leayoos Chui = 士多啤梨苹果橙</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicmnywqgpj20zk0m8dwx.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclgrvbd6j20zk0m8qv5.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipexe4oykj20zk0m87ji.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipetlbztpj20zk0m84qp.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclgi503lj20zk0m8hdt.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipetfk5zwj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipew28b65j20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giciuja1j1j20zk0m8kjl.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giciszlczyj20zk0m816d.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicis081o9j20zk0m8dmr.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclflwv2aj20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipeun65urj20zk0m81ii.jpg"></li>
         </ul>
       </div>
     </header>
@@ -267,7 +267,7 @@ tp_new 函数应该调用 subtype-&gt;tp_alloc (subtype, nitems) 为对象分配
 <p>PyObject_GenericGetDict 和实际获取实例字典的关联辅助函数。实际的获取 dict 的函数是_PyObject_GetDictPtr 函数，该函数查询对象的 dictoffset 并将用于计算实例 dict 的地址。在此函数返回空值的情况下，PyObject_GenericGetDict 可以继续向调用函数返回新的字典。</p>
 <figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre>PyObject <span class="token operator">*</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">PyObject_GenericGetDict</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>obj<span class="token punctuation">,</span> <span class="token keyword">void</span> <span class="token operator">*</span>context<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyObject <span class="token operator">*</span>dict<span class="token punctuation">,</span> <span class="token operator">*</span><span class="token operator">*</span>dictptr <span class="token operator">=</span> <span class="token function">_PyObject_GetDictPtr</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>dictptr <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token function">PyErr_SetString</span><span class="token punctuation">(</span>PyExc_AttributeError<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="7"></td><td><pre>                        <span class="token string">"This object has no __dict__"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    dict <span class="token operator">=</span> <span class="token operator">*</span>dictptr<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>dict <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="12"></td><td><pre>        PyTypeObject <span class="token operator">*</span>tp <span class="token operator">=</span> <span class="token function">Py_TYPE</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="13"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>tp<span class="token operator">-></span>tp_flags <span class="token operator">&amp;</span> Py_TPFLAGS_HEAPTYPE<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token function">CACHED_KEYS</span><span class="token punctuation">(</span>tp<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>            <span class="token function">dictkeys_incref</span><span class="token punctuation">(</span><span class="token function">CACHED_KEYS</span><span class="token punctuation">(</span>tp<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>            <span class="token operator">*</span>dictptr <span class="token operator">=</span> dict <span class="token operator">=</span> <span class="token function">new_dict_with_shared_keys</span><span class="token punctuation">(</span><span class="token function">CACHED_KEYS</span><span class="token punctuation">(</span>tp<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="17"></td><td><pre>        <span class="token keyword">else</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="18"></td><td><pre>            <span class="token operator">*</span>dictptr <span class="token operator">=</span> dict <span class="token operator">=</span> <span class="token function">PyDict_New</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="21"></td><td><pre>    <span class="token function">Py_XINCREF</span><span class="token punctuation">(</span>dict<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="22"></td><td><pre>    <span class="token keyword">return</span> dict<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="23"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="24"></td><td><pre></pre></td></tr><tr><td data-num="25"></td><td><pre>PyObject <span class="token operator">*</span><span class="token operator">*</span></pre></td></tr><tr><td data-num="26"></td><td><pre><span class="token function">_PyObject_GetDictPtr</span><span class="token punctuation">(</span>PyObject <span class="token operator">*</span>obj<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="27"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="28"></td><td><pre>    Py_ssize_t dictoffset<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>    PyTypeObject <span class="token operator">*</span>tp <span class="token operator">=</span> <span class="token function">Py_TYPE</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="30"></td><td><pre></pre></td></tr><tr><td data-num="31"></td><td><pre>    dictoffset <span class="token operator">=</span> tp<span class="token operator">-></span>tp_dictoffset<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="32"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>dictoffset <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="33"></td><td><pre>        <span class="token keyword">return</span> <span class="token constant">NULL</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="34"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>dictoffset <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="35"></td><td><pre>        Py_ssize_t tsize <span class="token operator">=</span> <span class="token function">Py_SIZE</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="36"></td><td><pre>        <span class="token keyword">if</span> <span class="token punctuation">(</span>tsize <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="37"></td><td><pre>            tsize <span class="token operator">=</span> <span class="token operator">-</span>tsize<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="38"></td><td><pre>        <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="39"></td><td><pre>        <span class="token class-name">size_t</span> size <span class="token operator">=</span> <span class="token function">_PyObject_VAR_SIZE</span><span class="token punctuation">(</span>tp<span class="token punctuation">,</span> tsize<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="40"></td><td><pre></pre></td></tr><tr><td data-num="41"></td><td><pre>        dictoffset <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span>size<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="42"></td><td><pre>        <span class="token function">_PyObject_ASSERT</span><span class="token punctuation">(</span>obj<span class="token punctuation">,</span> dictoffset <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="43"></td><td><pre>        <span class="token function">_PyObject_ASSERT</span><span class="token punctuation">(</span>obj<span class="token punctuation">,</span> dictoffset <span class="token operator">%</span> SIZEOF_VOID_P <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="44"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="45"></td><td><pre>    <span class="token keyword">return</span> <span class="token punctuation">(</span>PyObject <span class="token operator">*</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">char</span> <span class="token operator">*</span><span class="token punctuation">)</span>obj <span class="token operator">+</span> dictoffset<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="46"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>该解释简要总结了如何根据类型使用描述符来实现自定义属性的访问。在整个 VM 中，对于使用描述符执行属性访问的其它实例，使用上述相同策略。描述符在虚拟机中无处不在，__slots__，静态方法和类方法，属性也只是使用描述符实现的语言功能而已。</p>
 <h3 id="方法解析顺序mro"><a class="markdownIt-Anchor" href="#方法解析顺序mro">#</a> 方法解析顺序（MRO）</h3>
-<p>在讨论属性引用时，提到了 MRO，这里进行详细的介绍。在 Python 中，类型可以有多重继承关系，因此，当一个类型从多个类继承时，需要一种顺序来搜索方法。如我们在属性参考解析算法中所看到的，在搜索其他非方法属性时，也是极使用了称为方法解析顺序（Method Resolution Order，MRO）的该顺序，文档<span class="exturl" data-url="aHR0cHM6Ly93d3cucHl0aG9uLm9yZy9kb3dubG9hZC9yZWxlYXNlcy8yLjMvbXJvLw=="> Python 2.3 Method Resolution Order</span> 是有关 Python 中使用的方法解析算法的出色易读文档。</p>
+<p>在讨论属性引用时，提到了 MRO，这里进行详细的介绍。在 Python 中，类型可以有多重继承关系，因此，当一个类型从多个类继承时，需要一种顺序来搜索方法。如我们在属性参考解析算法中所看到的，在搜索其他非方法属性时，也是使用了称为方法解析顺序（Method Resolution Order，MRO）的该顺序，文档<span class="exturl" data-url="aHR0cHM6Ly93d3cucHl0aG9uLm9yZy9kb3dubG9hZC9yZWxlYXNlcy8yLjMvbXJvLw=="> Python 2.3 Method Resolution Order</span> 是有关 Python 中使用的方法解析算法的出色易读文档。</p>
 <p>当一个类型从多个基本类型继承时，Python 使用 C3 算法来构建方法的解析顺序（也成为线性化）。</p>
 <figure class="highlight txt"><figcaption data-lang="txt"></figcaption><table><tr><td data-num="1"></td><td><pre>C1 C2 ... CN 代表一系列类，放在一个列表（list）中：[C1, C2, C3, ..., CN]</pre></td></tr><tr><td data-num="2"></td><td><pre></pre></td></tr><tr><td data-num="3"></td><td><pre>头（head）是第一个元素：head = C1</pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>尾巴（tail）是其余元素：tail = C2, ..., CN</pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>C + (C1 C2 ... CN) = C C1 C2 ... CN 代表列表的加和：[C] + [C1, C2, ..., CN]</pre></td></tr></table></figure><p>考虑多重继承层次结构中的类型 C，其中 C 从基本类型 B1，B2，…，BN 继承，则 C 的线性化是 C 加上父项的线性化与 B 的列表合并：L [C (B1 … BN)] = C + merge (L [B1] … L [BN], B1 … BN)。没有父对象的对象类型的线性化是微不足道的 L [object] = object。合并操作是根据以下算法计算的：</p>
 <blockquote>
@@ -297,7 +297,7 @@ tp_new 函数应该调用 subtype-&gt;tp_alloc (subtype, nitems) 为对象分配
       <i class="ic i-calendar-check"></i>
     </span>
     <span class="text">Edited on</span>
-    <time title="Modified: 2022-11-18 11:29:35" itemprop="dateModified" datetime="2022-11-18T11:29:35+08:00">2022-11-18</time>
+    <time title="Modified: 2022-11-18 11:30:39" itemprop="dateModified" datetime="2022-11-18T11:30:39+08:00">2022-11-18</time>
   </span>
   <span id="2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" class="item leancloud_visitors" data-flag-title="Inside The Python Virtual Machine - Python Objects" title="Views">
       <span class="icon">
@@ -355,7 +355,7 @@ tp_new 函数应该调用 subtype-&gt;tp_alloc (subtype, nitems) 为对象分配
     <div class="item left">
       
 
-  <a href="/2022/11/14/Cookie-Run-Kingdom%E6%B4%BB%E5%8A%A8-B-A-D-4/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giciub8ja1j20zk0m81ky.jpg" title="Cookie Run Kingdom活动 - B.A.D.4">
+  <a href="/2022/11/14/Cookie-Run-Kingdom%E6%B4%BB%E5%8A%A8-B-A-D-4/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipevgoki5j20zk0m84qp.jpg" title="Cookie Run Kingdom活动 - B.A.D.4">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> game</span>
   <h3>Cookie Run Kingdom活动 - B.A.D.4</h3>
@@ -492,6 +492,84 @@ tp_new 函数应该调用 subtype-&gt;tp_alloc (subtype, nitems) 为对象分配
   <li class="item">
     
 <div class="breadcrumb">
+<a href="/categories/Python/" title="In Python">Python</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Python/Django/" title="In Django">Django</a>
+</div>
+
+    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/11/04/%E6%81%90%E9%AC%BC%E7%97%87%E5%8D%95%E9%80%9A-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9A%BE%E5%BA%A6-%E6%97%A0%E8%BA%B2%E8%97%8F%E7%82%B9/" title="恐鬼症单通 自定义难度 无躲藏点!">恐鬼症单通 自定义难度 无躲藏点!</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
+</div>
+
+    <span><a href="/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/" title="Inside The Python Virtual Machine - Compliling Python Source Code">Inside The Python Virtual Machine - Compliling Python Source Code</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
+</div>
+
+    <span><a href="/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" title="Inside The Python Virtual Machine - Python Objects">Inside The Python Virtual Machine - Python Objects</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
@@ -522,86 +600,6 @@ tp_new 函数应该调用 subtype-&gt;tp_alloc (subtype, nitems) 为对象分配
 </div>
 
     <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/game/" title="In game">game</a>
-</div>
-
-    <span><a href="/2022/11/14/Cookie-Run-Kingdom%E6%B4%BB%E5%8A%A8-B-A-D-4/" title="Cookie Run Kingdom活动 - B.A.D.4">Cookie Run Kingdom活动 - B.A.D.4</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Life/" title="In Life">Life</a>
-</div>
-
-    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Python/" title="In Python">Python</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/Python/Django/" title="In Django">Django</a>
-</div>
-
-    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
   </li>
 
   </ul>
