@@ -27,12 +27,12 @@
   <meta name="keywords" content="python,mitmproxy" />
 
 
-<link rel="canonical" href="http://example.com/2022/11/22/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%96%B0%E7%89%88%E6%9C%AC%E6%8A%93%E5%8C%85/">
+<link rel="canonical" href="http://example.com/2022/11/22/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/">
 
 
 
   <title>
-小程序新版本抓包 - python |
+微信小程序抓包 - python |
 Leayoos Chiu = 士多啤梨苹果橙</title>
 <meta name="generator" content="Hexo 5.4.2"></head>
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -60,7 +60,7 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
         <div id="brand">
           <div class="pjax">
           
-  <h1 itemprop="name headline">小程序新版本抓包
+  <h1 itemprop="name headline">微信小程序抓包
   </h1>
   
 <div class="meta">
@@ -103,11 +103,11 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
       <div id="imgs" class="pjax">
         <ul>
           <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giph4fomxoj20zk0m8axp.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclhnx9glj20zk0m8npd.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicliwyw55j20zk0m8hdt.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicivghyooj20zk0m8dir.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicmnywqgpj20zk0m8dwx.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclxfdlttj20zk0m8npd.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclhpw3lwj20zk0m8gvw.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giclj61ylzj20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipey84bjtj20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicit31ffoj20zk0m8naf.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeyonbf9j20zk0m8e81.jpg"></li>
         </ul>
       </div>
     </header>
@@ -138,7 +138,7 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
 </div>
 
     <article itemscope itemtype="http://schema.org/Article" class="post block" lang="en">
-  <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/22/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%96%B0%E7%89%88%E6%9C%AC%E6%8A%93%E5%8C%85/">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/22/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/">
 
   <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="image" content="/images/avatar.png">
@@ -153,8 +153,7 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
   <div class="body md" itemprop="articleBody">
     
 
-    <h3 id="小程序抓包"><a class="markdownIt-Anchor" href="#小程序抓包">#</a> 小程序抓包</h3>
-<h3 id="旧版本抓包"><a class="markdownIt-Anchor" href="#旧版本抓包">#</a> 旧版本抓包</h3>
+    <h3 id="旧版本抓包"><a class="markdownIt-Anchor" href="#旧版本抓包">#</a> 旧版本抓包</h3>
 <p>最近按照领导要求，需要在微信小程序抓点数据，在这里记录一下小程序抓包的配置</p>
 <p>在微信新版本（&gt; 3.5.0）中，无法通过 fiddler 抓包，如果要使用 fiddler 的话，你要把微信降级到 3.5.0</p>
 <p>然后在电脑上安装 fiddler 证书，先打开微信小程序，再打开任务管理器（Ctrl + Shift + Esc），找到小程序应用程序，点击右键打开文件所在位置。</p>
@@ -191,7 +190,7 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
 <p>然后再设置名称解析，取消勾选 DNS 选择，勾选通过代理解析主机名（resolve hostnames through proxy），点击确定，基本配置就完成了，然后你可能需要重启一下 mitmweb。</p>
 <figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre>mitmweb <span class="token parameter variable">-p</span> <span class="token number">6666</span></pre></td></tr></table></figure><p>这时候再访问小程序，你就可以抓到数据包啦<br>
 <img data-src="https://s3.uuu.ovh/imgs/2022/11/22/62a9e565046920a7.png" alt=""></p>
-<div align=center width=100%><iframe class="video-frame" height=500 width=80% frameborder=0 allowfullscreen src="//player.bilibili.com/player.html?aid=298264089&bvid=BV1DF411g7qz&cid=578805113&page=1" ></iframe></div>
+<div align=center width=100%><iframe class="video-frame" height=500 width=80% frameborder=0 allowfullscreen src="//player.bilibili.com/player.html?aid=74587624&bvid=BV17E411B74A&cid=127578183&page=1" ></iframe></div>
 
       <div class="tags">
           <a href="/tags/python/" rel="tag"><i class="ic i-tag"></i> python</a>
@@ -207,9 +206,9 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
       <i class="ic i-calendar-check"></i>
     </span>
     <span class="text">Edited on</span>
-    <time title="Modified: 2022-11-22 12:29:57" itemprop="dateModified" datetime="2022-11-22T12:29:57+08:00">2022-11-22</time>
+    <time title="Modified: 2022-11-22 14:42:08" itemprop="dateModified" datetime="2022-11-22T14:42:08+08:00">2022-11-22</time>
   </span>
-  <span id="2022/11/22/小程序新版本抓包/" class="item leancloud_visitors" data-flag-title="小程序新版本抓包" title="Views">
+  <span id="2022/11/22/微信小程序抓包/" class="item leancloud_visitors" data-flag-title="微信小程序抓包" title="Views">
       <span class="icon">
         <i class="ic i-eye"></i>
       </span>
@@ -246,7 +245,7 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
   </li>
   <li class="link">
     <strong>Post link: </strong>
-    <a href="http://example.com/2022/11/22/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%96%B0%E7%89%88%E6%9C%AC%E6%8A%93%E5%8C%85/" title="小程序新版本抓包">http://example.com/2022/11/22/小程序新版本抓包/</a>
+    <a href="http://example.com/2022/11/22/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/" title="微信小程序抓包">http://example.com/2022/11/22/微信小程序抓包/</a>
   </li>
   <li class="license">
     <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
@@ -265,7 +264,7 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
     <div class="item left">
       
 
-  <a href="/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeyonbf9j20zk0m8e81.jpg" title="Inside The Python Virtual Machine - Python Objects">
+  <a href="/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giph4baakhj20zk0m8h5q.jpg" title="Inside The Python Virtual Machine - Python Objects">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> CPython C</span>
   <h3>Inside The Python Virtual Machine - Python Objects</h3>
@@ -289,11 +288,11 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
   <div class="panels">
     <div class="inner">
       <div class="contents panel pjax" data-title="Contents">
-          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85"><span class="toc-number">1.</span> <span class="toc-text"> 小程序抓包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A7%E7%89%88%E6%9C%AC%E6%8A%93%E5%8C%85"><span class="toc-number">2.</span> <span class="toc-text"> 旧版本抓包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E7%89%88%E6%9C%AC%E6%8A%93%E5%8C%85"><span class="toc-number">3.</span> <span class="toc-text"> 新版本抓包</span></a></li></ol>
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A7%E7%89%88%E6%9C%AC%E6%8A%93%E5%8C%85"><span class="toc-number">1.</span> <span class="toc-text"> 旧版本抓包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E7%89%88%E6%9C%AC%E6%8A%93%E5%8C%85"><span class="toc-number">2.</span> <span class="toc-text"> 新版本抓包</span></a></li></ol>
       </div>
       <div class="related panel pjax" data-title="Related">
         <ul>
-          <li class="active"><a href="/2022/11/22/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%96%B0%E7%89%88%E6%9C%AC%E6%8A%93%E5%8C%85/" rel="bookmark" title="小程序新版本抓包">小程序新版本抓包</a></li>
+          <li class="active"><a href="/2022/11/22/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/" rel="bookmark" title="微信小程序抓包">微信小程序抓包</a></li>
         </ul>
       </div>
       <div class="overview panel" data-title="Overview">
@@ -402,32 +401,80 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
   <li class="item">
     
 <div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/11/04/%E6%81%90%E9%AC%BC%E7%97%87%E5%8D%95%E9%80%9A-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9A%BE%E5%BA%A6-%E6%97%A0%E8%BA%B2%E8%97%8F%E7%82%B9/" title="恐鬼症单通 自定义难度 无躲藏点!">恐鬼症单通 自定义难度 无躲藏点!</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
   </li>
 
       
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
 </div>
 
-    <span><a href="/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/" title="Inside The Python Virtual Machine - Compliling Python Source Code">Inside The Python Virtual Machine - Compliling Python Source Code</a></span>
+    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
   </li>
 
       
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/Life/" title="In Life">Life</a>
+<a href="/categories/python/" title="In python">python</a>
 </div>
 
-    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+    <span><a href="/2022/11/22/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/" title="微信小程序抓包">微信小程序抓包</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/11/14/Cookie-Run-Kingdom%E6%B4%BB%E5%8A%A8-B-A-D-4/" title="Cookie Run Kingdom活动 - B.A.D.4">Cookie Run Kingdom活动 - B.A.D.4</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Python/" title="In Python">Python</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Python/Django/" title="In Django">Django</a>
+</div>
+
+    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Office/" title="In Office">Office</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Office/PowerPoint/" title="In PowerPoint">PowerPoint</a>
+</div>
+
+    <span><a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" title="PPT结构组成（工作中的总结）">PPT结构组成（工作中的总结）</a></span>
   </li>
 
       
@@ -451,44 +498,6 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
-</div>
-
-    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
     <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
   </li>
 
@@ -496,22 +505,12 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/Office/" title="In Office">Office</a>
+<a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
-<a href="/categories/Office/PowerPoint/" title="In PowerPoint">PowerPoint</a>
+<a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" title="PPT结构组成（工作中的总结）">PPT结构组成（工作中的总结）</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/python/" title="In python">python</a>
-</div>
-
-    <span><a href="/2022/11/22/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%96%B0%E7%89%88%E6%9C%AC%E6%8A%93%E5%8C%85/" title="小程序新版本抓包">小程序新版本抓包</a></span>
+    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
   </li>
 
   </ul>
@@ -539,7 +538,7 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
   </div>
 <script data-config type="text/javascript">
   var LOCAL = {
-    path: '2022/11/22/小程序新版本抓包/',
+    path: '2022/11/22/微信小程序抓包/',
     favicon: {
       show: "（●´3｀●）Goooood",
       hide: "(´Д｀)Booooom"
