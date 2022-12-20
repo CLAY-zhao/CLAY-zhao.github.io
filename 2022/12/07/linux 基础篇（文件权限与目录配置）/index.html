@@ -1,0 +1,871 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="士多啤梨苹果橙" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="士多啤梨苹果橙" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="士多啤梨苹果橙" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Linux" />
+
+
+<link rel="canonical" href="http://example.com/2022/12/07/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE%EF%BC%89/">
+
+
+
+  <title>
+linux 基础篇（文件权限与目录配置） - Linux |
+Leayoos Chiu = 士多啤梨苹果橙</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">linux 基础篇（文件权限与目录配置）
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2022-12-07 16:28:01">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-12-07T16:28:01+08:00">2022-12-07</time>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Leayoos Chiu</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicitspjpbj20zk0m81ky.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipexw3o58j20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giciundwu5j20zk0m8n9e.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicli3sbvtj20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giph4wqtg4j20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclga70tsj20zk0m84mr.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span><i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Linux/" itemprop="item" rel="index" title="In Linux"><span itemprop="name">Linux</span></a>
+<meta itemprop="position" content="1" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="en">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/07/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE%EF%BC%89/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="小芳芳">
+    <meta itemprop="description" content=", ">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="士多啤梨苹果橙">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <blockquote>
+<p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmdraW5nNDA3L2FydGljbGUvZGV0YWlscy8xMDAxMzk0MDk=">https://blog.csdn.net/wangking407/article/details/100139409</span></p>
+</blockquote>
+<h3 id="linux文件权限与目录配置"><a class="markdownIt-Anchor" href="#linux文件权限与目录配置">#</a> Linux 文件权限与目录配置</h3>
+<p>在 Linux 中，默认情况下，所有的系统下的账号与一般身份使用者，还有 root 的相关信息，都是记录在 /etc/passwd 这个文件内的。至于个人的密码则都是记录在 /etc/shadow 这个文件下。此外，Linux 所有的组名都记录在 /etc/group 内！这三个文件可以说是 Linux 系统里面账号、密码、群组信息的集中地，不要随便删除这三个文件。</p>
+<h4 id="linux文件权限概念"><a class="markdownIt-Anchor" href="#linux文件权限概念">#</a> Linux 文件权限概念</h4>
+<p>当你屏幕出现【Permission deny】时，“肯定是权限设置错了啦”。</p>
+<h5 id="linux文件属性"><a class="markdownIt-Anchor" href="#linux文件属性">#</a> Linux 文件属性</h5>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre>/home/user/data <span class="token comment"># ls -al                                                        </span></pre></td></tr><tr><td data-num="2"></td><td><pre>total <span class="token number">5</span>                                                                         </pre></td></tr><tr><td data-num="3"></td><td><pre>drwxr-sr-x    <span class="token number">9</span> user     user           <span class="token number">272</span> Dec  <span class="token number">8</span> 02:27 <span class="token builtin class-name">.</span>                      </pre></td></tr><tr><td data-num="4"></td><td><pre>drwxr-sr-x   <span class="token number">10</span> user     user           <span class="token number">311</span> Dec  <span class="token number">8</span> 02:27 <span class="token punctuation">..</span>                                    </pre></td></tr><tr><td data-num="5"></td><td><pre>-rw-r--r--    <span class="token number">1</span> user     user             <span class="token number">1</span> Dec  <span class="token number">8</span> 02:28 <span class="token number">1</span>.txt                  </pre></td></tr><tr><td data-num="6"></td><td><pre>-rw-r--r--    <span class="token number">1</span> user     user             <span class="token number">1</span> Dec  <span class="token number">8</span> 02:28 <span class="token number">2</span>.txt                  </pre></td></tr><tr><td data-num="7"></td><td><pre>-rw-r--r--    <span class="token number">1</span> user     user             <span class="token number">1</span> Dec  <span class="token number">8</span> 02:28 <span class="token number">3</span>.txt                  </pre></td></tr><tr><td data-num="8"></td><td><pre>drwxr-sr-x    <span class="token number">2</span> root     user             <span class="token number">0</span> Dec  <span class="token number">8</span> 03:46 .config                 </pre></td></tr><tr><td data-num="9"></td><td><pre>-rw-r--r--    <span class="token number">1</span> root     user             <span class="token number">1</span> Dec  <span class="token number">8</span> 03:47 initial-setup-ks.cfg   </pre></td></tr><tr><td data-num="10"></td><td><pre>drwxr-sr-x    <span class="token number">2</span> root     user             <span class="token number">0</span> Dec  <span class="token number">8</span> 03:47 rules </pre></td></tr><tr><td data-num="11"></td><td><pre>   <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>       <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span>      <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span>           <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span>     <span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span>        <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="12"></td><td><pre>  <span class="token punctuation">[</span>权限<span class="token punctuation">]</span>   <span class="token punctuation">[</span>连结<span class="token punctuation">]</span><span class="token punctuation">[</span>拥有者<span class="token punctuation">]</span> <span class="token punctuation">[</span>群组<span class="token punctuation">]</span>       <span class="token punctuation">[</span>文件容量<span class="token punctuation">]</span> <span class="token punctuation">[</span>修改日期<span class="token punctuation">]</span>  <span class="token punctuation">[</span>档名<span class="token punctuation">]</span></pre></td></tr></table></figure><p>ls 是 list 的意思，重点在显示文件的文件名与相关属性。而选项 -al 则表示列出所有文件详细的权限与属性（包含隐藏文件，就是文件名第一个字符为。的文件）。</p>
+<p><img data-src="https://s3.uuu.ovh/imgs/2022/12/08/403987b6e1901e61.png" alt="文件属性示意图"></p>
+<p><strong>第一栏代表这个文件的类型与权限，可以发现这一栏其实共有 10 个字符</strong></p>
+<p><img data-src="https://s3.uuu.ovh/imgs/2022/12/08/6255c4fa2ad8273a.png" alt="文件的类型与权限内容"></p>
+<ul>
+<li>
+<p>第一个字符代表这个文件是目录、文件或者连结文件等：</p>
+<ul>
+<li>当为 d 则是目录，例如上面名为 .config 的那行</li>
+<li>当为 - 则是文件，例如上面名为 initial-setup-ks.cfg 那行</li>
+<li>若为 l 则表示为连结档（link file）</li>
+<li>若为 b 则表示为装置文件里面的可供存储的接口设备（可随机存储装置）</li>
+<li>若是 c 则表示装置文件里面的串行端口设备，例如键盘、鼠标（一次性读取装置）</li>
+</ul>
+</li>
+<li>
+<p>接下来的字符中，以三个为一组，且均为 rwx 的三个参数的组合，其中 r 表示可读、w 表示可写、x 表示可执行。要注意，这三个权限的位置不会改变，如果没有权限，就会出现减号 - 而已。</p>
+<ul>
+<li>第一组为 “文件拥有者可具备的权限”，以 initial-setup-ks.cfg 文件为例，该文件的拥有者可以读写，但不可执行</li>
+<li>第二组为 “加入此群组之账号的权限”</li>
+<li>第三组为 “非本人且没有加入本群组之其它账号的权限”</li>
+</ul>
+</li>
+</ul>
+<p><strong>第二栏表示有多少档名连结到此节点（i-node）</strong></p>
+<p>每个文件都会将它的权限与属性记录到文件系统的 i-node 中，不过我们使用的目录树却是使用文件名来记录，因此每个档名就会连结到一个 i-node</p>
+<p><strong>第三栏表示这个文件 / 目录的拥有者账号</strong></p>
+<p><strong>第四栏表示这个文件的所属群组</strong></p>
+<p>在 Linux 系统下，你的账号会加入一个或多个群组中比如 class1、class2、class3 属于 project-a 群租，有一个 project-b 群组，且有文件的权限为（-rwxrwx—），则 class1~3 三人对该文件都具有可读可写可执行的权限，但如果不属于 project-a 的其它账号，则就不具有任何权限</p>
+<p><strong>第六栏表示这个文件的建档日期或者最近的修改日期</strong></p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># ll /etc/services /root/initial-setup-ks.cfg</span></pre></td></tr><tr><td data-num="2"></td><td><pre>-rw-r--r--. <span class="token number">1</span> root root <span class="token number">670293</span> Jun <span class="token number">7</span> <span class="token number">2013</span> /etc/services</pre></td></tr><tr><td data-num="3"></td><td><pre>-rw-r--r--. <span class="token number">1</span> root root <span class="token number">1864</span> May <span class="token number">4</span> <span class="token number">18</span>:01 /root/initial-setup-ks.cfg</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token comment"># 如上所示，/etc/services 为 2013 年所修改过的文件，离现在太远之故，所以只显示年份；</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token comment"># 至于 /root/initial-setup-ks.cfg 是今年 (2015) 所建立的，所以就显示完整的时间了。</span></pre></td></tr></table></figure><p><strong>第七栏表示这个文件的档名</strong></p>
+<p>如果档名之前多一个 . ，则表示这个文件为隐藏档，你可以使用 ls 或 ls -a 来查询</p>
+<h4 id="如何改变文件属性与权限"><a class="markdownIt-Anchor" href="#如何改变文件属性与权限">#</a> 如何改变文件属性与权限</h4>
+<ul>
+<li>chgrp：改变文件所属群组</li>
+<li>chown：改变文件拥有者</li>
+<li>chmod：改变文件的权限，SUID，SGID，SBIT 等等的特性</li>
+</ul>
+<h5 id="改变所属群组-chgrp"><a class="markdownIt-Anchor" href="#改变所属群组-chgrp">#</a> 改变所属群组 chgrp</h5>
+<p>假设你是 root 用户，你的目录有一个名为 initial-setup-ks.cfg 的文件，如何将该文件的群组改变一下？假设在 /etc/group 中已经存在一个名为 users 的群组，但是 testing 这个群组名字不存在 /etc/group 中，此时改变群组成为 users 与 testing 会发生什么</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chgrp [-R] dirname/filename ...</span></pre></td></tr><tr><td data-num="2"></td><td><pre>选项与参数：</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token parameter variable">-R</span> <span class="token builtin class-name">:</span> 进行递归<span class="token punctuation">(</span>recursive<span class="token punctuation">)</span>的持续变更，亦即连同次目录下的所有文件、目录</pre></td></tr><tr><td data-num="4"></td><td><pre> 都更新成为这个群组之意。常常用在变更某一目录内所有的文件之情况。</pre></td></tr><tr><td data-num="5"></td><td><pre>范例：</pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chgrp users initial-setup-ks.cfg</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># ls -l</span></pre></td></tr><tr><td data-num="8"></td><td><pre>-rw-r--r--. <span class="token number">1</span> root <span class="token function">users</span> <span class="token number">1864</span> May <span class="token number">4</span> <span class="token number">18</span>:01 initial-setup-ks.cfg</pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chgrp testing initial-setup-ks.cfg</span></pre></td></tr><tr><td data-num="10"></td><td><pre>chgrp: invalid group: `testing' <span class="token operator">&lt;=</span><span class="token operator">=</span> 发生错误讯息啰～找不到这个群组名～</pre></td></tr></table></figure><h5 id="改变文件拥有者-chown"><a class="markdownIt-Anchor" href="#改变文件拥有者-chown">#</a> 改变文件拥有者 chown</h5>
+<p>用户必须是已经存在系统中的账号，也就是在 /etc/passwd 这个文件中有记录的用户名称才能改变</p>
+<p>chown 还可以顺便直接修改群组的名称，此外，如果要连目录下的所有次目录或文件同时更改文件拥有者的话，直接加上 - R 即可</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chown [-R] 账号名称 文件或目录</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chown [-R] 账号名称：组名 文件或目录</span></pre></td></tr><tr><td data-num="3"></td><td><pre>选项与参数：</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token parameter variable">-R</span> <span class="token builtin class-name">:</span> 进行递归<span class="token punctuation">(</span>recursive<span class="token punctuation">)</span>的持续变更，亦即连同次目录下的所有文件都变更</pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>范例：将 initial-setup-ks.cfg 的拥有者改为 bin 这个账号：</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chown bin initial-setup-ks.cfg</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># ls -l</span></pre></td></tr><tr><td data-num="9"></td><td><pre>-rw-r--r--. <span class="token number">1</span> bin <span class="token function">users</span> <span class="token number">1864</span> May <span class="token number">4</span> <span class="token number">18</span>:01 initial-setup-ks.cfg</pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>范例：将 initial-setup-ks.cfg 的拥有者与群组改回为 root：</pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chown root:root initial-setup-ks.cfg</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># ls -l</span></pre></td></tr><tr><td data-num="14"></td><td><pre>-rw-r--r--. <span class="token number">1</span> root root <span class="token number">1864</span> May <span class="token number">4</span> <span class="token number">18</span>:01 initial-setup-ks.cfg</pre></td></tr></table></figure><p>什么时候会使用到 chown 或 chgrp 呢？比如你复制文件给你之外的其他人</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># cp 来源文件 目标文件</span></pre></td></tr></table></figure><p>假如将.bashrc 文件拷贝成.bashrc_test 档名</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># cp .bashrc .bashrc_test</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># ls -al .bashrc*</span></pre></td></tr><tr><td data-num="3"></td><td><pre>-rw-r--r--. <span class="token number">1</span> root root <span class="token number">176</span> Dec <span class="token number">29</span> <span class="token number">2013</span> .bashrc</pre></td></tr><tr><td data-num="4"></td><td><pre>-rw-r--r--. <span class="token number">1</span> root root <span class="token number">176</span> Jun <span class="token number">3</span> 00:04 .bashrc_test <span class="token operator">&lt;=</span><span class="token operator">=</span>新文件的属性没变</pre></td></tr></table></figure><p>由于复制行为（cp）会复制执行者的属性与权限，所以，.bashrc_test 还是属于 root，如果将该文件给其它使用者，他仍然无法修改，所以你可以通过改变权限。</p>
+<h5 id="改变权限-chmod"><a class="markdownIt-Anchor" href="#改变权限-chmod">#</a> 改变权限 chmod</h5>
+<p>权限的设定方法有两种，分别可以使用数字或符号来进行权限的变更</p>
+<p>Linux 文件的基本权限就有九个，分别是 owner/group/others 三种身份各有自己的 read/write/execute 权限</p>
+<ul>
+<li>数字类型改变文件权限
+<ul>
+<li>r：4</li>
+<li>w：2</li>
+<li>x：1</li>
+</ul>
+</li>
+</ul>
+<p>每种身份（owner/group/others）各自的三个权限（r/w/x）分数是需要累加的，例如当权限为：[-rwxrwx—] 分数则是：</p>
+<ul>
+<li>owner = rwx = 4 + 2 + 1 = 7</li>
+<li>group = rwx = 4 + 2 + 1 = 7</li>
+<li>others = — = 0 + 0 + 0 = 0</li>
+</ul>
+<p>所以我们设定权限的变更时，该文件的权限数字就是 770</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chmod [-R] xyz 文件或目录</span></pre></td></tr><tr><td data-num="2"></td><td><pre>选项与参数：</pre></td></tr><tr><td data-num="3"></td><td><pre>xyz <span class="token builtin class-name">:</span> 就是刚刚提到的数字类型的权限属性，为 rwx 属性数值的相加。</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token parameter variable">-R</span> <span class="token builtin class-name">:</span> 进行递归<span class="token punctuation">(</span>recursive<span class="token punctuation">)</span>的持续变更，亦即连同次目录下的所有文件都会变更</pre></td></tr></table></figure><p>如果要将.bashrc 下所有文件的权限都设定启用</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># ls -al .bashrc</span></pre></td></tr><tr><td data-num="2"></td><td><pre>-rw-r--r--. <span class="token number">1</span> root root <span class="token number">176</span> Dec <span class="token number">29</span> <span class="token number">2013</span> .bashrc</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chmod 777 .bashrc</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># ls -al .bashrc</span></pre></td></tr><tr><td data-num="5"></td><td><pre>-rwxrwxrwx. <span class="token number">1</span> root root <span class="token number">176</span> Dec <span class="token number">29</span> <span class="token number">2013</span> .bashrc</pre></td></tr></table></figure><p>如果要将权限变成 [-rwxr-xr–]，那么权限的分数就为 [4+2+1][4+0+1][4+0+0]=754，所以只要 chmod 754 filename。</p>
+<p>常常我们以 shell 编辑一个批处理后，它的权限通常是 - rw-rw-r–，也就是 644，如果要变为可执行文件，并且不要让他人修改，就需要 -rwxr-xr-x 这样的权限，chmod 755 <span class="exturl" data-url="aHR0cDovL3Rlc3Quc2g=">test.sh</span>。</p>
+<p>如果有些文件不希望被其他人看到，那么应该将文件的权限设定为：[-rwxr-----]，chmod 740 filename。</p>
+<h5 id="符号类型改变文件权限"><a class="markdownIt-Anchor" href="#符号类型改变文件权限">#</a> 符号类型改变文件权限</h5>
+<p>基本权限分别是 user、group、others 三种身份，我们可以用 u、g、o 来代替三种身份的权限，a 则代表 all，全部身份，那么读写权限就可以写成 r、w、x。</p>
+<p><img data-src="https://s3.uuu.ovh/imgs/2022/12/08/620cb6ba4733b72f.png" alt=""></p>
+<p>假如我们要设定一个文件的权限为 [-rwxr-xr-x] 时，基本上就是：</p>
+<ul>
+<li>user（u）：具有可读、可写、可执行的权限</li>
+<li>group 与 others（g/o）：具有可读可执行的权限</li>
+</ul>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chmod u=rwx,go=rx .bashrc</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token comment"># 注意喔！那个 u=rwx,go=rx 是连在一起的，中间并没有任何空格符！</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># ls -al .bashrc</span></pre></td></tr><tr><td data-num="4"></td><td><pre>-rwxr-xr-x. <span class="token number">1</span> root root <span class="token number">176</span> Dec <span class="token number">29</span> <span class="token number">2013</span> .bashrc</pre></td></tr></table></figure><p>如果我不知道原先的文件属性，而我只想增加.bashrc 这个文件的每个人均可写入的权限，我们可以这样</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># ls -al .bashrc</span></pre></td></tr><tr><td data-num="2"></td><td><pre>-rwxr-xr-x. <span class="token number">1</span> root root <span class="token number">176</span> Dec <span class="token number">29</span> <span class="token number">2013</span> .bashrc</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chmod a+w .bashrc</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># ls -al .bashrc</span></pre></td></tr><tr><td data-num="5"></td><td><pre>-rwxrwxrwx. <span class="token number">1</span> root root <span class="token number">176</span> Dec <span class="token number">29</span> <span class="token number">2013</span> .bashrc</pre></td></tr></table></figure><p>如果要将权限去掉而不更动其它已存在的权限，例如拿掉所有人的可执行权限</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chmod a-x .bashrc</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># ls -al .bashrc</span></pre></td></tr><tr><td data-num="3"></td><td><pre>-rw-rw-rw-. <span class="token number">1</span> root root <span class="token number">176</span> Dec <span class="token number">29</span> <span class="token number">2013</span> .bashrc</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># chmod 644 .bashrc # 测试完毕得要改回来喔！</span></pre></td></tr></table></figure><h4 id="目录与文件之权限意义"><a class="markdownIt-Anchor" href="#目录与文件之权限意义">#</a> 目录与文件之权限意义</h4>
+<p>前面已知道能使用 chown、chgrp、chmod 修改权限与属性，可以使用 ls -l 来查看属性</p>
+<h5 id="那么权限对于文件的重要性"><a class="markdownIt-Anchor" href="#那么权限对于文件的重要性">#</a> 那么权限对于文件的重要性</h5>
+<p>文件是实际含有数据的地方，包括一般文本文件、数据库内容文件、二进制可执行文件（binary program）等，因此，权限对于文件的意义：</p>
+<ul>
+<li>r（read）：可读取此文件的实际内容</li>
+<li>w（write）：可以编辑、新增或者修改文件的内容（但不含删除文件）</li>
+<li>x（execute）：该文件具有可以被执行的权限</li>
+</ul>
+<h5 id="权限对目录的重要性"><a class="markdownIt-Anchor" href="#权限对目录的重要性">#</a> 权限对目录的重要性</h5>
+<p>目录主要的内容在记录文件名列表，文件名与目录有强烈的关连，针对目录时，rwx 的意义是什么？</p>
+<ul>
+<li>r（read contents in directory）：表示具有读取目录结构列表的权限，当你具有读取（r）一个目录的权限时，表示你可以查询该目录下的文件名数据，所以你就可以利用 ls 将该目录的内容显示出来</li>
+<li>w（modify contents of directory）：这个可写入的权限对目录来说，非常了不起，因为它表示你具有异动该目录结构列表的权限，也就是以下的权限：
+<ul>
+<li>建立新的文件与目录</li>
+<li>删除已存在的文件与目录（不论该文件的权限如何！）</li>
+<li>将已存在的文件或目录进行更名</li>
+<li>搬移该目录内的文件、目录位置</li>
+</ul>
+</li>
+<li>x（access directory）：目录的执行权限有什么用途？目录只是记录文件名而已，并不能执行，而 x 代表的是用户能否进入该目录成为工作目录的用途。所谓工作目录（work directory）就是你目前所在的目录</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">组件</th>
+<th style="text-align:left">内容</th>
+<th style="text-align:center">迭代物件</th>
+<th style="text-align:left">r</th>
+<th style="text-align:left">w</th>
+<th style="text-align:left">x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">文件</td>
+<td style="text-align:left">详细资料 data</td>
+<td style="text-align:center">文件文件夹</td>
+<td style="text-align:left">读到文件内容</td>
+<td style="text-align:left">修改文件内容</td>
+<td style="text-align:left">执行文件内容</td>
+</tr>
+<tr>
+<td style="text-align:center">目录</td>
+<td style="text-align:left">档名</td>
+<td style="text-align:center">可分类抽屉</td>
+<td style="text-align:left">读到档名</td>
+<td style="text-align:left">修改档名</td>
+<td style="text-align:left">进入该目录的权限（key）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>例题：有个目录的权限如下所示 drwxr–r-- 3 root root 4096 Jun 25 08:35 .ssh 系统有个账号名称为 vbird，这个账号并没有支持 root 群组，请问 vbird 对这个目录有何权限？是否可切换到此目录中？<br>
+答：vbird 对其目录具有 r 的权限，因此 vbird 可以查询此目录下的文件名列表，但 vbird 不具有 x 权限，所以 vbird 并不能切换到该目录内。</p>
+</blockquote>
+<blockquote>
+<p>例题：假设有个账号名称为 dmtsai，他的家目录在 /home/dmtsai/，dmtsai 对此目录具有 [rwx] 的权限。 若在此目录下有个名为 the_root.data 的文件，该文件的权限如下：-rwx------ 1 root root 4365 Sep 19 23:20 the_root.data，请问 dmtsai 对此文件的权限为何？可否删除此文件？<br>
+答：由于 dmtsai 对文件来说是 others 身份，因此它无法读、写、执行，但是由于这个文件在它的家目录下，它具有此目录下 rwx 的完整权限，所以 the_root.data 文件对于它，dmtsai 用户是能够删除这个文件的。</p>
+</blockquote>
+<h4 id="用户操作功能与权限"><a class="markdownIt-Anchor" href="#用户操作功能与权限">#</a> 用户操作功能与权限</h4>
+<p>假设有两个档名，分别为：</p>
+<ul>
+<li>/dir1/file1</li>
+<li>/dir2</li>
+</ul>
+<p>现在系统使用 dmtsai 账号，那么这个账号针对 /dir1、/dir1/file1、/dir2 三个档名来说，分别需要哪些最小的权限能达成目的？</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">操作动作</th>
+<th style="text-align:left">/dir1</th>
+<th style="text-align:center">/dir1/file1</th>
+<th style="text-align:left">/dir2</th>
+<th style="text-align:left">重点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">读取 file1 内容</td>
+<td style="text-align:left">x</td>
+<td style="text-align:center">r</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">要能够进入 /dir1 才能读到里面的文件数据</td>
+</tr>
+<tr>
+<td style="text-align:center">修改 file1 内容</td>
+<td style="text-align:left">x</td>
+<td style="text-align:center">rw</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">能够进入 /dir1 且修改 file1 才行</td>
+</tr>
+<tr>
+<td style="text-align:center">执行 file1 内容</td>
+<td style="text-align:left">x</td>
+<td style="text-align:center">rx</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">能够进入 /dir1 且 file1 能运作才行</td>
+</tr>
+<tr>
+<td style="text-align:center">删除 file1 内容</td>
+<td style="text-align:left">wx</td>
+<td style="text-align:center">-</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">能够进入 /dir1 具有目录修改的权限即可</td>
+</tr>
+<tr>
+<td style="text-align:center">将 file1 复制到 /dir2</td>
+<td style="text-align:left">x</td>
+<td style="text-align:center">r</td>
+<td style="text-align:left">wx</td>
+<td style="text-align:left">能够读取 file1 且能够修改 /dir2 内的数据</td>
+</tr>
+</tbody>
+</table>
+<p>为什么有时候 /dir1 不必需要 r，但还是加上了，其实 r 是非必要的，只不过没有 r 的话，在你使用 tab 时，它就无法帮你补全（相当于摸黑）</p>
+<h4 id="linux文件种类与扩展名"><a class="markdownIt-Anchor" href="#linux文件种类与扩展名">#</a> Linux 文件种类与扩展名</h4>
+<p>在我们使用 ls -l 时，观察第一栏字符，第一个字符为文件的类型。除了常见的文件（-）和目录文件（d），还有其他类型</p>
+<ul>
+<li>正规文件（regular file）：第一个字符为 -，例如 - rwxrwxrwx，依照文件的内容，又可以分为：
+<ul>
+<li>纯文本档（ASCII）：这是 Linux 系统重最多的一种文件类型，称为纯文本档，是因为内容为我们人类可以直接读到的数据，例如数字、字母等，几乎只要我们可以用来作为设定的文件都属于这一种文件类型。例如使用 cat ~/.bashrc 就可以看到该文件的内容（cat 是将一个文件的内容读出来的指令）。</li>
+<li>二进制文件（binary）：系统其实仅认识且可以执行二进制文件（binary file）吧？刚刚的 cat 指令就是一个 binary file</li>
+<li>数据格式文件（data）：有些程序在运作的过程中会读取某些特定格式的文件，那些文件可以被称为数据文件（data file）。比如 Linux 在使用者登录时，都会将登录的数据记录在 /var/log/wtmp 文件内，该文件是一个 data file，它能透过 last 这个指令读出来，但使用 cat 时，会读出乱码，因为它是一个特殊格式的文件。</li>
+</ul>
+</li>
+<li>目录（directory）：就是目录啰～第一个属性为 d，例如 drwxrwxrwx。</li>
+<li>连结档（link）：类型 window 的快捷方式，第一个属性为 l，例如 lrwxrwxrwx。</li>
+<li>设备与装置文件（device）：与系统周边及存储等相关的一些文件，通常都集中在 /dev 目录下，通常又分为两种：
+<ul>
+<li>区块（block）设备档：就是一些存储数据，以提供系统随机存取的接口设备，比如硬盘与软盘，你可以随机的在硬盘的不同区块读写，这种装置就是成组设备，可以查一下 /dev/sda，会发现第一个属性为 b。</li>
+<li>字符（character）设备文件：一些串行端口的接口设备，例如键盘、鼠标等，这些设备的特色就是一次性读取的，不能够截断输出，比如你不可能让鼠标跳到另一个画面，而是连续性滑动到另一个地方，第一个属性为 c。</li>
+</ul>
+</li>
+<li>资料接口文件（sockets）：既然称为数据接口文件，那么这种类型的文件通常被用在网络上的数据承接了。我们可以启动一个程序来监听客户端的请求，而客户端就可以透过这个 socket 来进行数据的沟通了。第一个属性为 s，最常在 /run 或 /tmp 这些目录中看到这种类型文件。</li>
+<li>数据传输文件（FIFO，pipe）：FIFO 也是一种特殊的文件类型，它主要的目的在解决多个程序同时存取一个文件所造成的错误问题。FIFO 是 first in first out 的缩写。第一个属性为 p。</li>
+</ul>
+<blockquote>
+<p>Linux 文件名的限制，最好可以避免一些特殊字符比较好，比如：* ? &gt; &lt;; &amp; ! [] | \ ’ &quot; ` ( )</p>
+</blockquote>
+<h3 id="linux目录配置"><a class="markdownIt-Anchor" href="#linux目录配置">#</a> Linux 目录配置</h3>
+<h4 id="linux目录配置的依据-fhs"><a class="markdownIt-Anchor" href="#linux目录配置的依据-fhs">#</a> Linux 目录配置的依据 - FHS</h4>
+<p>根据<span class="exturl" data-url="aHR0cHM6Ly9iYWlrZS5iYWlkdS5jb20vaXRlbS9GSFMvMTUwMTczOD9mcj1hbGFkZGlu"> FHS</span> 的标准文件指出，它们的目的是希望使用者可以了解到已安装软件通常放置于哪个目录下，所以它们希望独立的软件开发商、操作系统制作者、以及想要维护系统的用户，都能够遵守 FHS 的标准。也就是说 FHS 的重点在于规范每个特定的目录下应该要放置什么样子的数据而已。这样的好处非常多，因为 Linux 系统能够在既有的面貌下（目录架构不变）发展出开发者想要的独特风格。</p>
+<p><img data-src="https://s3.uuu.ovh/imgs/2022/12/09/54495a3226c0a436.png" alt=""></p>
+<p>上图中的目录是一些代表性的目录，先了解下那四个类型</p>
+<ul>
+<li>可分享的：可以分享给其它系统挂载使用的目录，所以包括执行文件与用户的邮件等数据，是能够分享给网络上其它主机挂载用的目录</li>
+<li>不可分享的：自己机器上面运作的装置文件，或者是与程序有关的 socket 文件等，由于仅与自身机器有关，所以当然就不适合分享给其它主机了</li>
+<li>不变的：有些数据是不会经常变动的，跟随着 distribution 而不变动。例如函式库、文件说明、系统管理员所管理的主机服务配置文件等</li>
+<li>可变动的：经常改变的数据，例如登录文件、一般用户可自行收受的新闻组等</li>
+</ul>
+<p>事实上，FHS 针对目录树架构仅定义三层目录底层应该放置什么数据而已，分别是底下这三个目录的定义：</p>
+<ul>
+<li>/（root，根目录）：与开机系统有关</li>
+<li>/usr（unix software resource）：与软件安装 / 执行有关</li>
+<li>/var（variable）：与系统运作过程有关</li>
+</ul>
+<table>
+    <tr>
+        <td>目录</td> 
+        <td>应放置文件内容</td> 
+   </tr>
+    <tr>
+        <td colspan="2" style="text-align: center; background: rgba(236, 240, 241, .4)">第一部分：FHS要求必须要存在的目录</td>
+    </tr>
+    <tr>
+        <td>/bin</td>
+        <td>系统有很多放置执行文件的目录，但/bin比较特殊。因为/bin放置的是在单人维护模式下还能够被操作的指令。在/bin底下的指令可以被root与一般账号所使用，主要有：cat、chmod、chown、date、mv、mkdir、cp、bash等常用指令</td>
+    </tr>
+    <tr>
+      <td>/boot</td>
+      <td>这个目录主要放置开机会使用到的文件，包括Linux核心文件以及开机选单与开机所需配置文件等。Linux kernel常用的档名为：vmlinuz，如果使用的是grub2这个开机管理程序，则还会存在/boot/grub2这个目录</td>
+    </tr>
+    <tr>
+      <td>/dev</td>
+      <td>在Linux系统上，任何装置与接口设备都是以文件的形态存在于这个目录中，只要透过存取这个目录底下的某个文件，就等于存取某个装置，比较重要的文件有/dev/null、/dev/zero、/dev/tty、/dev/loop*、/dev/sd* 等</td>
+    </tr>
+    <tr>
+      <td>/etc</td>
+      <td>系统主要的配置文件几乎都放置在这个目录内，例如人员的账号密码、各种服务的启始档等。一般来说，这个目录下的各文件属性是可以让一般使用者查阅的，但是只有root有权力修改。FHS建议不要放置可执行文件（binary）在这个目录中。比较重要的文件有：/etc/modprobe.d、/etc/passwd、/etc/fstab、/etc/issue等。另外FHS还规范几个重要的目录最好要存在/etc/目录下：
+      1. /etc/opt（必要）：这个目录在放置第三方协力软件/opt的相关配置文件
+      2. /etc/X11（建议）：与X Window有关的各种配置文件都在这里，尤其是xorg.conf这个X Server的配置文件
+      3. /etc/sgml（建议）：与SGML格式有关的各项配置文件
+      4. /etc/xml（建议）：与XML格式有关的各项配置文件
+      </td>
+    </tr>
+    <tr>
+      <td>/lib</td>
+      <td>系统的函式库非常多，而/lib放置的则是在开机时会用到的函式库，以及在/bin或/sbin底下的指令会呼叫的函式库而已。/lib/modules/这个目录主要放置可抽换式的核心相关的模块（驱动程序）</td>
+    </tr>
+    <tr>
+      <td>/media</td>
+      <td>media是媒体的英文，底下放置的就是可移除的装置，包括软盘、光盘、DVD等等装置都暂时挂载于此。常见的档名又：/media/floppy、/media/cdrom</td>
+    </tr>
+    <tr>
+      <td>/mnt</td>
+      <td>如果想要暂时挂载某些额外的装置，一般建议你可以放置到这个目录中。在以前，这个目录的用户与/media相同，只是有了/media之后，这个目录就用来暂时挂载用了</td>
+    </tr>
+    <tr>
+      <td>/opt</td>
+      <td>这个是给第三方协力软件放置的目录。什么是第三方协力软件啊？举例来说，KDE这个桌面管理系统是一个独立的计划，不过他可以安装到Linux系统中，因此KDE的软件就建议放置到此目录下了。另外，如果妳想要自行安装额外的软件(非原本的 distribution 提供的)，那么也能够将你的软件安装到这里来。不过，以前的Linux系统中，我们还是习惯放置在/usr/local目录下</td>
+    </tr>
+    <tr>
+      <td>/home</td>
+      <td>这时系统默认的用户家目录（home directory）。你在新增一个一般使用者账号时，默认的用户家目录都会规范到这里。家目录有两种代号，~：代表目前这个用户的家目录。~dmtsai：则代表dmtsai的家目录</td>
+    </tr>
+    <tr>
+      <td>/root</td>
+      <td>系统管理员（root）的家目录，之所以放这里，是因为如果进入单人维护模式而仅挂载根目录时，该目录就能够拥有root的家目录，所以我们会希望root的家目录与根目录放置在同一个分区槽中</td>
+    </tr>
+</table>
+<h3 id="重点回顾"><a class="markdownIt-Anchor" href="#重点回顾">#</a> 重点回顾</h3>
+<ul>
+<li>Linux 的每个文件中，可分别给予使用者、群组与其他人三种身份个别的 rwx 权限</li>
+<li>群组最有用的功能之一，就是当你在团队开发资源的时候，且每个账号都可以有多个群组的支持</li>
+<li>利用 ls -l 显示的文件属性中，第一个字段是文件的权限，共有十个位，第一位是文件类型，接下来三个为一组，共三组，为使用者、群组、其他人的权限，权限有 r，w，x 三种</li>
+<li>如果档名之前多一个.，则表示这个文件为隐藏档</li>
+<li>若需要 root 的权限时，可以使用 su - 这个指令来切换身份。处理完毕则使用 exit 离开 su 的指令环境</li>
+<li>更改文件的群组支持可用 chgrp，修改文件的拥有者可用 chown，修改文件的权限可用 chmod</li>
+<li>chmod 修改权限的方法有两种，分别是符号法与数字法，数字法中 r、w、x 分数为 4、2、1</li>
+<li>对于文件来讲，权限的效能为：
+<ul>
+<li>r：可读取此一文件的实际内容，如读取文本文件的文字内容等</li>
+<li>w：可以编辑、新增或者修改该文件的内容（但不含删除该文件）</li>
+<li>x：该文件具有可以被系统执行的权限</li>
+</ul>
+</li>
+<li>对于目录来说，权限的效能为：
+<ul>
+<li>r：read contents in directory</li>
+<li>w：modify contents of directory</li>
+<li>x：access directory</li>
+</ul>
+</li>
+<li>要开放目录给任何人浏览时，应该至少也要给予 r 及 x 的权限，但 w 权限不可随便给</li>
+<li>能够读取到某个文件内容，跟该文件所在的目录权限也有关系（目录至少需要有 x 的权限）</li>
+<li>Linux 档名的限制为：单一文件或目录的最大容许文件名为 255 个英文字符或 128 个汉字字符</li>
+<li>根据 FHS 的官方文件指出，它们的主要目的是希望让使用者可以了解到已安装软件通常放置于哪个目录下</li>
+<li>FHS 订定出来的四种目录特点为：shareable、unshareable、static、variable 等四类</li>
+<li>FHS 所定义的三层主目录为：/，/var，/usr 三层</li>
+<li>绝对路径文件名为从根目录 / 开始写起，否则都是相对路径的文件名</li>
+</ul>
+
+      <div class="tags">
+          <a href="/tags/Linux/" rel="tag"><i class="ic i-tag"></i> Linux</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2022-12-20 12:12:17" itemprop="dateModified" datetime="2022-12-20T12:12:17+08:00">2022-12-20</time>
+  </span>
+  <span id="2022/12/07/linux 基础篇（文件权限与目录配置）/" class="item leancloud_visitors" data-flag-title="linux 基础篇（文件权限与目录配置）" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> Donate</button>
+  <p>Give me a cup of [coffee]~(￣▽￣)~*</p>
+  <div id="qr">
+      
+      <div>
+        <img data-src="/images/wechatpay.png" alt="小芳芳 WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div>
+        <img data-src="/images/alipay.png" alt="小芳芳 Alipay">
+        <p>Alipay</p>
+      </div>
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>石理一淡 <i class="ic i-at"><em>@</em></i>士多啤梨苹果橙
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2022/12/07/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE%EF%BC%89/" title="linux 基础篇（文件权限与目录配置）">http://example.com/2022/12/07/linux 基础篇（文件权限与目录配置）/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2022/11/22/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicitht3xtj20zk0m8k5v.jpg" title="微信小程序抓包">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> python</span>
+  <h3>微信小程序抓包</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/2022/12/11/%E5%87%B1%E5%A8%9C%EF%BC%9A%E7%B2%BE%E7%A5%9E%E4%B9%8B%E6%A9%8B%EF%BC%88BOSS%E9%97%9C%E5%8D%A1%E8%A8%98%E9%8C%84%EF%BC%89/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeubcbajj20zk0m8h1h.jpg" title="凱娜：精神之橋（BOSS關卡記錄）">
+  <span class="type">Next Post</span>
+  <span class="category"><i class="ic i-flag"></i> game</span>
+  <h3>凱娜：精神之橋（BOSS關卡記錄）</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text"> Linux 文件权限与目录配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#linux%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text"> Linux 文件权限概念</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#linux%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7"><span class="toc-number">1.1.1.</span> <span class="toc-text"> Linux 文件属性</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%94%B9%E5%8F%98%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7%E4%B8%8E%E6%9D%83%E9%99%90"><span class="toc-number">1.2.</span> <span class="toc-text"> 如何改变文件属性与权限</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%94%B9%E5%8F%98%E6%89%80%E5%B1%9E%E7%BE%A4%E7%BB%84-chgrp"><span class="toc-number">1.2.1.</span> <span class="toc-text"> 改变所属群组 chgrp</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%94%B9%E5%8F%98%E6%96%87%E4%BB%B6%E6%8B%A5%E6%9C%89%E8%80%85-chown"><span class="toc-number">1.2.2.</span> <span class="toc-text"> 改变文件拥有者 chown</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%94%B9%E5%8F%98%E6%9D%83%E9%99%90-chmod"><span class="toc-number">1.2.3.</span> <span class="toc-text"> 改变权限 chmod</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E7%B1%BB%E5%9E%8B%E6%94%B9%E5%8F%98%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90"><span class="toc-number">1.2.4.</span> <span class="toc-text"> 符号类型改变文件权限</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E4%B8%8E%E6%96%87%E4%BB%B6%E4%B9%8B%E6%9D%83%E9%99%90%E6%84%8F%E4%B9%89"><span class="toc-number">1.3.</span> <span class="toc-text"> 目录与文件之权限意义</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%82%A3%E4%B9%88%E6%9D%83%E9%99%90%E5%AF%B9%E4%BA%8E%E6%96%87%E4%BB%B6%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="toc-number">1.3.1.</span> <span class="toc-text"> 那么权限对于文件的重要性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E5%AF%B9%E7%9B%AE%E5%BD%95%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="toc-number">1.3.2.</span> <span class="toc-text"> 权限对目录的重要性</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E6%93%8D%E4%BD%9C%E5%8A%9F%E8%83%BD%E4%B8%8E%E6%9D%83%E9%99%90"><span class="toc-number">1.4.</span> <span class="toc-text"> 用户操作功能与权限</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#linux%E6%96%87%E4%BB%B6%E7%A7%8D%E7%B1%BB%E4%B8%8E%E6%89%A9%E5%B1%95%E5%90%8D"><span class="toc-number">1.5.</span> <span class="toc-text"> Linux 文件种类与扩展名</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text"> Linux 目录配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#linux%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE%E7%9A%84%E4%BE%9D%E6%8D%AE-fhs"><span class="toc-number">2.1.</span> <span class="toc-text"> Linux 目录配置的依据 - FHS</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E7%82%B9%E5%9B%9E%E9%A1%BE"><span class="toc-number">3.</span> <span class="toc-text"> 重点回顾</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+        <ul>
+          <li class="active"><a href="/2022/12/07/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE%EF%BC%89/" rel="bookmark" title="linux 基础篇（文件权限与目录配置）">linux 基础篇（文件权限与目录配置）</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="小芳芳"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">小芳芳</p>
+  <div class="description" itemprop="description"></div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">20</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">12</span>
+        <span class="name">categories</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">14</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0NMQVktemhhbw==" title="https:&#x2F;&#x2F;github.com&#x2F;CLAY-zhao"><i class="ic i-github"></i></span>
+      <span class="exturl item bilibili" data-url="aHR0cHM6Ly9zcGFjZS5iaWxpYmlsaS5jb20vMjkxMzUwNTA=" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;29135050"><i class="ic i-bilibili"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于我</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>文章</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分類</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>標簽</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>友鏈</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/links/" rel="section"><i class="ic i-magic"></i>網址</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/2022/11/22/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/" rel="prev" title="Previous Post"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/2022/12/11/%E5%87%B1%E5%A8%9C%EF%BC%9A%E7%B2%BE%E7%A5%9E%E4%B9%8B%E6%A9%8B%EF%BC%88BOSS%E9%97%9C%E5%8D%A1%E8%A8%98%E9%8C%84%EF%BC%89/" rel="next" title="Next Post"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/11/04/%E6%81%90%E9%AC%BC%E7%97%87%E5%8D%95%E9%80%9A-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9A%BE%E5%BA%A6-%E6%97%A0%E8%BA%B2%E8%97%8F%E7%82%B9/" title="恐鬼症单通 自定义难度 无躲藏点!">恐鬼症单通 自定义难度 无躲藏点!</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/11/14/Cookie-Run-Kingdom%E6%B4%BB%E5%8A%A8-B-A-D-4/" title="Cookie Run Kingdom活动 - B.A.D.4">Cookie Run Kingdom活动 - B.A.D.4</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/python/" title="In python">python</a>
+</div>
+
+    <span><a href="/2022/11/22/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/" title="微信小程序抓包">微信小程序抓包</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/11/02/Python%E7%9A%84%E5%B1%9E%E6%80%A7%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/" title="Python的属性是如何工作的">Python的属性是如何工作的</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Life/" title="In Life">Life</a>
+</div>
+
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2022</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小芳芳 @ Leayoos Chiu</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2022/12/07/linux 基础篇（文件权限与目录配置）/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>
