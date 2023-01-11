@@ -1,0 +1,569 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="士多啤梨苹果橙" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="士多啤梨苹果橙" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="士多啤梨苹果橙" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Linux" />
+
+
+<link rel="canonical" href="http://example.com/2022/12/20/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%89/">
+
+
+
+  <title>
+linux 基础篇（文件与目录管理） - Linux |
+Leayoos Chiu = 士多啤梨苹果橙</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">linux 基础篇（文件与目录管理）
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2022-12-20 12:19:42">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-12-20T12:19:42+08:00">2022-12-20</time>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Leayoos Chiu</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?420391"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?27859"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?169295"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?152127"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?43662"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?226009"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span><i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Linux/" itemprop="item" rel="index" title="In Linux"><span itemprop="name">Linux</span></a>
+<meta itemprop="position" content="1" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="en">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/20/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%89/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="小芳芳">
+    <meta itemprop="description" content=", ">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="士多啤梨苹果橙">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h3 id="目录相关操作"><a class="markdownIt-Anchor" href="#目录相关操作">#</a> 目录相关操作</h3>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token builtin class-name">.</span>           代表此层目录</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">..</span>          代表上一次目录</pre></td></tr><tr><td data-num="3"></td><td><pre>-           代表前一个工作目录</pre></td></tr><tr><td data-num="4"></td><td><pre>~           代表【目前用户身份】所在的家目录</pre></td></tr><tr><td data-num="5"></td><td><pre>~account    代表account这个用户的家目录（account是个账号名称）</pre></td></tr></table></figure><p>需要注意，在所在目录底下都会存在两个目录，分别是。与 …，分别代表此层与上层目录的意思</p>
+<blockquote>
+<p>在 Linux 底下，根目录下有没有上层目录（…）存在？<br>
+若使用 ls -al / 去查询，可以看到根目录下确实存在。与 … 两个目录，再仔细查阅，可发现这两个目录的属性与权限完全一致，这代表根目录的上一层（…）与根目录自己（.）是同一个目录</p>
+</blockquote>
+<p>常见的处理目录指令：</p>
+<ul>
+<li>cd：变换目录</li>
+<li>pwd：显示当前目录</li>
+<li>mkdir：建立一个新的目录</li>
+<li>rmdir：删除一个空的目录</li>
+</ul>
+<h3 id="文件内容查询"><a class="markdownIt-Anchor" href="#文件内容查询">#</a> 文件内容查询</h3>
+<p>如果要查阅一个文件的内容时，该如何是好？最常使用的显示文件内容的指令可以说是 cat 和 less 以及 more，此外，如果需要查看一个很大的文件（好几百 M 时），我们只需要后面的几行字而已，可以使用 tail，此外，tac 这个指令也可以达到这个目的</p>
+<ul>
+<li>cat：由第一行开始显示文件内容</li>
+<li>tac：从最后一行开始显示，可以看出 tac 是 cat 的倒着写</li>
+<li>nl：显示的时候，顺便输出行号</li>
+<li>more：一页一页的显示文件内容</li>
+<li>less：与 more 类似，但比 more 更好，可以往前翻页</li>
+<li>head：只看头几行</li>
+<li>tail：只看尾巴几行</li>
+<li>od：以二级制的放置读取文件内容</li>
+</ul>
+<h4 id="直接检视文件内容"><a class="markdownIt-Anchor" href="#直接检视文件内容">#</a> 直接检视文件内容</h4>
+<p>直接查阅一个文件的内容可以使用 cat、tac、nl 指令</p>
+<p>cat（concatenate）</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># cat [-AbEnTv]</span></pre></td></tr><tr><td data-num="2"></td><td><pre>选项与参数：</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token parameter variable">-A</span> ：相当于 <span class="token parameter variable">-vET</span> 的整合选项，可列出一些特殊字符而不是空白而已；</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token parameter variable">-b</span> ：列出行号，仅针对非空白行做行号显示，空白行不标行号！</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token parameter variable">-E</span> ：将结尾的断行字符 $ 显示出来；</pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token parameter variable">-n</span> ：打印出行号，连同空白行也会有行号，与 <span class="token parameter variable">-b</span> 的选项不同；</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token parameter variable">-T</span> ：将 <span class="token punctuation">[</span>tab<span class="token punctuation">]</span> 按键以 ^I 显示出来；</pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token parameter variable">-v</span> ：列出一些看不出来的特殊字符</pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre>范例一：检阅 /etc/issue 这个文件的内容</pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># cat /etc/issue</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token punctuation">\</span>S</pre></td></tr><tr><td data-num="13"></td><td><pre>Kernel <span class="token punctuation">\</span>r on an <span class="token punctuation">\</span>m</pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre>范例二：如果要加上行号</pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># cat -n /etc/issue</span></pre></td></tr><tr><td data-num="17"></td><td><pre> <span class="token number">1</span> <span class="token punctuation">\</span>S</pre></td></tr><tr><td data-num="18"></td><td><pre> <span class="token number">2</span> Kernel <span class="token punctuation">\</span>r on an <span class="token punctuation">\</span>m</pre></td></tr><tr><td data-num="19"></td><td><pre> <span class="token number">3</span></pre></td></tr><tr><td data-num="20"></td><td><pre><span class="token comment"># 所以这个文件有三行！看到了吧！可以印出行号呢！这对于大文件要找某个特定的行时，有点用处！</span></pre></td></tr><tr><td data-num="21"></td><td><pre><span class="token comment"># 如果不想要编排空白行的行号，可以使用『cat -b /etc/issue』，</span></pre></td></tr><tr><td data-num="22"></td><td><pre></pre></td></tr><tr><td data-num="23"></td><td><pre>范例三：将 /etc/man_db.conf 的内容完整的显示出来<span class="token punctuation">(</span>包含特殊字符<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="24"></td><td><pre><span class="token punctuation">[</span>root@study ~<span class="token punctuation">]</span><span class="token comment"># cat -A /etc/man_db.conf</span></pre></td></tr><tr><td data-num="25"></td><td><pre><span class="token comment"># $</span></pre></td></tr><tr><td data-num="26"></td><td><pre><span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">(</span>中间省略<span class="token punctuation">)</span><span class="token punctuation">..</span><span class="token punctuation">..</span></pre></td></tr><tr><td data-num="27"></td><td><pre>MANPATH_MAP^I/bin^I^I^I/usr/share/man$</pre></td></tr><tr><td data-num="28"></td><td><pre>MANPATH_MAP^I/usr/bin^I^I/usr/share/man$</pre></td></tr><tr><td data-num="29"></td><td><pre>MANPATH_MAP^I/sbin^I^I^I/usr/share/man$</pre></td></tr><tr><td data-num="30"></td><td><pre>MANPATH_MAP^I/usr/sbin^I^I/usr/share/man$</pre></td></tr></table></figure>
+      <div class="tags">
+          <a href="/tags/Linux/" rel="tag"><i class="ic i-tag"></i> Linux</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2023-01-04 11:31:02" itemprop="dateModified" datetime="2023-01-04T11:31:02+08:00">2023-01-04</time>
+  </span>
+  <span id="2022/12/20/linux 基础篇（文件与目录管理）/" class="item leancloud_visitors" data-flag-title="linux 基础篇（文件与目录管理）" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> Donate</button>
+  <p>Give me a cup of [coffee]~(￣▽￣)~*</p>
+  <div id="qr">
+      
+      <div>
+        <img data-src="/images/wechatpay.png" alt="小芳芳 WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div>
+        <img data-src="/images/alipay.png" alt="小芳芳 Alipay">
+        <p>Alipay</p>
+      </div>
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>石理一淡 <i class="ic i-at"><em>@</em></i>士多啤梨苹果橙
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2022/12/20/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%89/" title="linux 基础篇（文件与目录管理）">http://example.com/2022/12/20/linux 基础篇（文件与目录管理）/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2022/12/11/%E5%87%B1%E5%A8%9C%EF%BC%9A%E7%B2%BE%E7%A5%9E%E4%B9%8B%E6%A9%8B%EF%BC%88BOSS%E9%97%9C%E5%8D%A1%E8%A8%98%E9%8C%84%EF%BC%89/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tuapi.eees.cc&#x2F;api.php?category&#x3D;dongman&amp;type&#x3D;302&amp;?593633" title="凱娜：精神之橋（BOSS關卡記錄）">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> game</span>
+  <h3>凱娜：精神之橋（BOSS關卡記錄）</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/2023/01/04/Docker%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E7%AF%87/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tuapi.eees.cc&#x2F;api.php?category&#x3D;dongman&amp;type&#x3D;302&amp;?815209" title="Docker基本操作篇">
+  <span class="type">Next Post</span>
+  <span class="category"><i class="ic i-flag"></i> Linux Docker</span>
+  <h3>Docker基本操作篇</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text"> 目录相关操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E6%9F%A5%E8%AF%A2"><span class="toc-number">2.</span> <span class="toc-text"> 文件内容查询</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E6%A3%80%E8%A7%86%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-number">2.1.</span> <span class="toc-text"> 直接检视文件内容</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+        <ul>
+          <li><a href="/2022/12/07/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE%EF%BC%89/" rel="bookmark" title="linux 基础篇（文件权限与目录配置）">linux 基础篇（文件权限与目录配置）</a></li><li class="active"><a href="/2022/12/20/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%89/" rel="bookmark" title="linux 基础篇（文件与目录管理）">linux 基础篇（文件与目录管理）</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="小芳芳"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">小芳芳</p>
+  <div class="description" itemprop="description"></div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">22</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">13</span>
+        <span class="name">categories</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">15</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0NMQVktemhhbw==" title="https:&#x2F;&#x2F;github.com&#x2F;CLAY-zhao"><i class="ic i-github"></i></span>
+      <span class="exturl item bilibili" data-url="aHR0cHM6Ly9zcGFjZS5iaWxpYmlsaS5jb20vMjkxMzUwNTA=" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;29135050"><i class="ic i-bilibili"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于我</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>文章</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分類</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>標簽</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>友鏈</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/links/" rel="section"><i class="ic i-magic"></i>網址</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/2022/12/11/%E5%87%B1%E5%A8%9C%EF%BC%9A%E7%B2%BE%E7%A5%9E%E4%B9%8B%E6%A9%8B%EF%BC%88BOSS%E9%97%9C%E5%8D%A1%E8%A8%98%E9%8C%84%EF%BC%89/" rel="prev" title="Previous Post"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/2023/01/04/Docker%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E7%AF%87/" rel="next" title="Next Post"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/11/14/Cookie-Run-Kingdom%E6%B4%BB%E5%8A%A8-B-A-D-4/" title="Cookie Run Kingdom活动 - B.A.D.4">Cookie Run Kingdom活动 - B.A.D.4</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/12/11/%E5%87%B1%E5%A8%9C%EF%BC%9A%E7%B2%BE%E7%A5%9E%E4%B9%8B%E6%A9%8B%EF%BC%88BOSS%E9%97%9C%E5%8D%A1%E8%A8%98%E9%8C%84%EF%BC%89/" title="凱娜：精神之橋（BOSS關卡記錄）">凱娜：精神之橋（BOSS關卡記錄）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
+</div>
+
+    <span><a href="/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/" title="Inside The Python Virtual Machine - Compliling Python Source Code">Inside The Python Virtual Machine - Compliling Python Source Code</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Life/" title="In Life">Life</a>
+</div>
+
+    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Python/" title="In Python">Python</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Python/Django/" title="In Django">Django</a>
+</div>
+
+    <span><a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" title="Python Django服务启动时做了什么?">Python Django服务启动时做了什么?</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Office/" title="In Office">Office</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/Office/PowerPoint/" title="In PowerPoint">PowerPoint</a>
+</div>
+
+    <span><a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" title="PPT结构组成（工作中的总结）">PPT结构组成（工作中的总结）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小芳芳 @ Leayoos Chiu</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2022/12/20/linux 基础篇（文件与目录管理）/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>
