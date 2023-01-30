@@ -1,0 +1,552 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="士多啤梨苹果橙" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="士多啤梨苹果橙" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="士多啤梨苹果橙" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Linux Docker" />
+
+
+<link rel="canonical" href="http://example.com/2023/01/12/Docker%E5%BA%94%E7%94%A8%E7%AF%87/">
+
+
+
+  <title>
+Docker应用篇 - Linux Docker |
+Leayoos Chiu = 士多啤梨苹果橙</title>
+<meta name="generator" content="Hexo 5.4.2"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Docker应用篇
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2023-01-12 11:23:24">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2023-01-12T11:23:24+08:00">2023-01-12</time>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Leayoos Chiu</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?736136"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?549337"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?643923"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?453243"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?533967"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?732126"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span><i class="ic i-angle-right"></i>
+<span  class="current" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="/categories/Linux-Docker/" itemprop="item" rel="index" title="In Linux Docker"><span itemprop="name">Linux Docker</span></a>
+<meta itemprop="position" content="1" /></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="en">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2023/01/12/Docker%E5%BA%94%E7%94%A8%E7%AF%87/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="小芳芳">
+    <meta itemprop="description" content=", ">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="士多啤梨苹果橙">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h2 id="nginx"><a class="markdownIt-Anchor" href="#nginx">#</a> Nginx</h2>
+<p>Nginx 是一个功能强大的开源反向代理服务器，支持 HTTP、HTTPS、SMTP、POP3、IMAP 等协议。它也可以做负载均衡器、HTTP 缓存或 Web 服务器。</p>
+<p>Nginx 特性：</p>
+<ul>
+<li>热部署：采用 master 管理进程与 worker 工作进程的分离设计，支持热部署。在不间断服务的前提下，可以直接升级版本。也可以在不停止服务的情况下修改配置文件，更换日志文件等</li>
+<li>高并发连接：Nginx 可以轻松支持超过 100K 的并发，理论上支持的并发连接上限取决于机器内存</li>
+<li>低内存消耗：在一般的情况下，10K 个非活跃的 HTTP keep-alive 连接在 Nginx 中仅消耗 2.5MB 的内存，这也是 Nginx 支持高并发连接的基础</li>
+<li>响应快：在正常情况下，单次请求会得到更快的相应。在高峰期，Nginx 可以比其它 Web 服务器更快地响应请求</li>
+<li>高可靠性：Nginx 是一个高可靠性的 Web 服务器，这也是用户为什么选择 Nginx 的基本条件，现在很多网站都在使用 Nginx，足以说明 Nginx 的可靠性。高可靠性来自其核心框架代码的优秀设计和实现</li>
+</ul>
+<p>可以使用 docker run 指令直接运行官方 nginx 镜像</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@sarly docker<span class="token punctuation">]</span><span class="token comment"># docker run -d -p 80:80 --name nginx nginx</span></pre></td></tr><tr><td data-num="2"></td><td><pre>0f850eb7c1d7db3d558905511af20a7e1cd071602faeae54aebdc9f8be725e4f</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">[</span>root@sarly docker<span class="token punctuation">]</span><span class="token comment"># docker ps</span></pre></td></tr><tr><td data-num="4"></td><td><pre>CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                NAMES</pre></td></tr><tr><td data-num="5"></td><td><pre>0f850eb7c1d7        nginx               <span class="token string">"/docker-entrypoin..."</span>   <span class="token number">2</span> seconds ago       Up <span class="token number">1</span> second         <span class="token number">0.0</span>.0.0:80-<span class="token operator">></span><span class="token number">80</span>/tcp   nginx</pre></td></tr></table></figure><p>目前 Nginx 容器已经在 0.0.0.0:80 启动并映射了 80 端口，此时可以打开浏览器访问此地址，就可以看到 Nginx 输出的页面<br>
+<img data-src="https://s3.bmp.ovh/imgs/2023/01/12/9a0644d3509e9be7.png" alt=""></p>
+<h3 id="自定义web页面"><a class="markdownIt-Anchor" href="#自定义web页面">#</a> 自定义 Web 页面</h3>
+<p>首先，新建 index.html 文件，自定义内容</p>
+<figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">http-equiv</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>X-UA-Compatible<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>IE=edge<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>viewport<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>width=device-width, initial-scale=1.0<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>Nginx Web<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="11"></td><td><pre>        Hello Nginx!</pre></td></tr><tr><td data-num="12"></td><td><pre>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span></pre></td></tr></table></figure><p>启动 Nginx 并挂载文件目录到容器</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@sarly nginx<span class="token punctuation">]</span><span class="token comment"># docker run -d --name nginx -p 80:80 -v /root/docker/nginx:/usr/share/nginx/html:ro --privileged=true nginx</span></pre></td></tr><tr><td data-num="2"></td><td><pre>2d7b7e2ac6ccb91a882e7c1091fa5e7c7215eef50a242827758c17443b415b2d</pre></td></tr></table></figure><p><img data-src="https://s3.bmp.ovh/imgs/2023/01/12/2c6cd1c578c24f1e.png" alt=""></p>
+<p>也可以使用自定义 Dockerfile</p>
+<figure class="highlight vim"><figcaption data-lang="vim"></figcaption><table><tr><td data-num="1"></td><td><pre># 设置继承自创建的sshd镜像</pre></td></tr><tr><td data-num="2"></td><td><pre>FROM sshd<span class="token punctuation">:</span>dockerfile</pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre># 创建着基本信息</pre></td></tr><tr><td data-num="5"></td><td><pre>MAINTAINER docker_user <span class="token punctuation">(</span>user@docker<span class="token operator">.</span><span class="token builtin">com</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre># 安装nginx，设置nginx已非daemon方式启动</pre></td></tr><tr><td data-num="8"></td><td><pre>RUN \</pre></td></tr><tr><td data-num="9"></td><td><pre>    apt<span class="token operator">-</span>get install <span class="token operator">-</span><span class="token keyword">y</span> nginx <span class="token operator">&amp;&amp;</span> \</pre></td></tr><tr><td data-num="10"></td><td><pre>    rm <span class="token operator">-</span>rf <span class="token operator">/</span>var<span class="token operator">/</span>lib<span class="token operator">/</span>apt<span class="token operator">/</span>lists<span class="token operator">/</span><span class="token operator">*</span> <span class="token operator">&amp;&amp;</span> \</pre></td></tr><tr><td data-num="11"></td><td><pre>    echo <span class="token string">"\ndaemon off;"</span> <span class="token operator">></span><span class="token operator">></span> <span class="token operator">/</span>etc<span class="token operator">/</span>nginx<span class="token operator">/</span>nginx<span class="token operator">.</span><span class="token keyword">conf</span> <span class="token operator">&amp;&amp;</span> \</pre></td></tr><tr><td data-num="12"></td><td><pre>    chown <span class="token operator">-</span>R www<span class="token operator">-</span>data<span class="token punctuation">:</span>www<span class="token operator">-</span>data <span class="token operator">/</span>var<span class="token operator">/</span>lib<span class="token operator">/</span>nginx</pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre>RUN echo <span class="token string">"Asia/Shanghai"</span> <span class="token operator">></span> <span class="token operator">/</span>etc<span class="token operator">/</span>timezone <span class="token operator">&amp;&amp;</span> \</pre></td></tr><tr><td data-num="15"></td><td><pre>    dpkg<span class="token operator">-</span>reconfigure <span class="token operator">-</span><span class="token keyword">f</span> noninteractive tzdata</pre></td></tr><tr><td data-num="16"></td><td><pre># 注意这里是更改系统的时区设置，因为在Web应用中经常会用到时区这个系统变量</pre></td></tr><tr><td data-num="17"></td><td><pre></pre></td></tr><tr><td data-num="18"></td><td><pre># 添加用户的脚本，并设置权限</pre></td></tr><tr><td data-num="19"></td><td><pre>ADD run<span class="token operator">.</span><span class="token keyword">sh</span> <span class="token operator">/</span>run<span class="token operator">.</span><span class="token keyword">sh</span></pre></td></tr><tr><td data-num="20"></td><td><pre>RUN chmod <span class="token number">755</span> <span class="token operator">/</span><span class="token operator">*</span><span class="token operator">.</span><span class="token keyword">sh</span></pre></td></tr><tr><td data-num="21"></td><td><pre></pre></td></tr><tr><td data-num="22"></td><td><pre># 定义可以被挂载的目录，分别是虚拟主机的挂载目录、证书目录、配置目录和日志目录</pre></td></tr><tr><td data-num="23"></td><td><pre>VOLUME <span class="token punctuation">[</span><span class="token string">"/etc/nginx/sites-enabled"</span><span class="token punctuation">,</span> <span class="token string">"/etc/nginx/certs"</span><span class="token punctuation">,</span> <span class="token string">"/etc/nginx/conf.d"</span><span class="token punctuation">,</span> <span class="token string">"/var/log/nginx"</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="24"></td><td><pre></pre></td></tr><tr><td data-num="25"></td><td><pre># 定义工作目录</pre></td></tr><tr><td data-num="26"></td><td><pre>WORKDIR <span class="token operator">/</span>root<span class="token operator">/</span>docker<span class="token operator">/</span>nginx</pre></td></tr><tr><td data-num="27"></td><td><pre></pre></td></tr><tr><td data-num="28"></td><td><pre># 定义输出命令</pre></td></tr><tr><td data-num="29"></td><td><pre>CMD <span class="token punctuation">[</span><span class="token string">"/run.sh"</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="30"></td><td><pre></pre></td></tr><tr><td data-num="31"></td><td><pre># 定义输出端口</pre></td></tr><tr><td data-num="32"></td><td><pre>EXPOSE <span class="token number">80</span></pre></td></tr><tr><td data-num="33"></td><td><pre>EXPOSE <span class="token number">443</span></pre></td></tr></table></figure><p>run.sh 脚本文件内容</p>
+<figure class="highlight vim"><figcaption data-lang="vim"></figcaption><table><tr><td data-num="1"></td><td><pre>#<span class="token operator">!</span> <span class="token operator">/</span><span class="token builtin">bin</span><span class="token operator">/</span>bash</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">/</span>usr<span class="token operator">/</span>sbin<span class="token operator">/</span>sshd &amp;</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token operator">/</span>usr<span class="token operator">/</span>sbin<span class="token operator">/</span>nginx</pre></td></tr></table></figure><p>创建镜像，使用 docker build，创建 nginx:stable</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@sarly nginx<span class="token punctuation">]</span><span class="token comment"># docker build -t nginx:stable .</span></pre></td></tr></table></figure><p>启动容器，查看内部的 80 端口被映射到本地的 32770 端口</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">[</span>root@sarly nginx<span class="token punctuation">]</span><span class="token comment"># docker ps</span></pre></td></tr><tr><td data-num="2"></td><td><pre>CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                                                           NAMES</pre></td></tr><tr><td data-num="3"></td><td><pre>88d07c44b263        nginx:stable        <span class="token string">"/run.sh"</span>                <span class="token number">58</span> minutes ago      Up <span class="token number">58</span> minutes       <span class="token number">0.0</span>.0.0:32771-<span class="token operator">></span><span class="token number">22</span>/tcp, <span class="token number">0.0</span>.0.0:32770-<span class="token operator">></span><span class="token number">80</span>/tcp, <span class="token number">0.0</span>.0.0:32769-<span class="token operator">></span><span class="token number">443</span>/tcp, <span class="token number">0.0</span>.0.0:32768-<span class="token operator">></span><span class="token number">5000</span>/tcp   agitated_khorana</pre></td></tr><tr><td data-num="4"></td><td><pre>12350822a21f        nginx               <span class="token string">"/docker-entrypoin..."</span>   About an hour ago   Up About an hour    <span class="token number">0.0</span>.0.0:80-<span class="token operator">></span><span class="token number">80</span>/tcp</pre></td></tr></table></figure>
+      <div class="tags">
+          <a href="/tags/Linux-Docker/" rel="tag"><i class="ic i-tag"></i> Linux Docker</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2023-01-13 17:32:31" itemprop="dateModified" datetime="2023-01-13T17:32:31+08:00">2023-01-13</time>
+  </span>
+  <span id="2023/01/12/Docker应用篇/" class="item leancloud_visitors" data-flag-title="Docker应用篇" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+<div class="reward">
+  <button><i class="ic i-heartbeat"></i> Donate</button>
+  <p>Give me a cup of [coffee]~(￣▽￣)~*</p>
+  <div id="qr">
+      
+      <div>
+        <img data-src="/images/wechatpay.png" alt="小芳芳 WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div>
+        <img data-src="/images/alipay.png" alt="小芳芳 Alipay">
+        <p>Alipay</p>
+      </div>
+  </div>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>石理一淡 <i class="ic i-at"><em>@</em></i>士多啤梨苹果橙
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2023/01/12/Docker%E5%BA%94%E7%94%A8%E7%AF%87/" title="Docker应用篇">http://example.com/2023/01/12/Docker应用篇/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2023/01/04/Docker%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E7%AF%87/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tuapi.eees.cc&#x2F;api.php?category&#x3D;dongman&amp;type&#x3D;302&amp;?176360" title="Docker基本操作篇">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> Linux Docker</span>
+  <h3>Docker基本操作篇</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx"><span class="toc-number">1.</span> <span class="toc-text"> Nginx</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89web%E9%A1%B5%E9%9D%A2"><span class="toc-number">1.1.</span> <span class="toc-text"> 自定义 Web 页面</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+        <ul>
+          <li><a href="/2023/01/04/Docker%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E7%AF%87/" rel="bookmark" title="Docker基本操作篇">Docker基本操作篇</a></li><li class="active"><a href="/2023/01/12/Docker%E5%BA%94%E7%94%A8%E7%AF%87/" rel="bookmark" title="Docker应用篇">Docker应用篇</a></li>
+        </ul>
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="小芳芳"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">小芳芳</p>
+  <div class="description" itemprop="description"></div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">23</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item categories">
+      <a href="/categories/">
+        <span class="count">13</span>
+        <span class="name">categories</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">15</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL0NMQVktemhhbw==" title="https:&#x2F;&#x2F;github.com&#x2F;CLAY-zhao"><i class="ic i-github"></i></span>
+      <span class="exturl item bilibili" data-url="aHR0cHM6Ly9zcGFjZS5iaWxpYmlsaS5jb20vMjkxMzUwNTA=" title="https:&#x2F;&#x2F;space.bilibili.com&#x2F;29135050"><i class="ic i-bilibili"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/about/" rel="section"><i class="ic i-user"></i>关于我</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>文章</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>分類</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>標簽</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>友鏈</a>
+  </li>
+
+    
+  <li class="item">
+    <a href="/links/" rel="section"><i class="ic i-magic"></i>網址</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Linux/" title="In Linux">Linux</a>
+</div>
+
+    <span><a href="/2022/12/07/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE%EF%BC%89/" title="linux 基础篇（文件权限与目录配置）">linux 基础篇（文件权限与目录配置）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
+</div>
+
+    <span><a href="/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" title="Inside The Python Virtual Machine - Python Objects">Inside The Python Virtual Machine - Python Objects</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/11/02/Python%E7%9A%84%E5%B1%9E%E6%80%A7%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/" title="Python的属性是如何工作的">Python的属性是如何工作的</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/07/06/Python%20zip%E5%86%85%E7%BD%AE%E7%B1%BB%E7%9A%84%E8%83%8C%E5%90%8E%E6%9C%BA%E5%88%B6/" title="Python zip内置类的背后机制">Python zip内置类的背后机制</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Linux-Docker/" title="In Linux Docker">Linux Docker</a>
+</div>
+
+    <span><a href="/2023/01/04/Docker%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E7%AF%87/" title="Docker基本操作篇">Docker基本操作篇</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/12/11/%E5%87%B1%E5%A8%9C%EF%BC%9A%E7%B2%BE%E7%A5%9E%E4%B9%8B%E6%A9%8B%EF%BC%88BOSS%E9%97%9C%E5%8D%A1%E8%A8%98%E9%8C%84%EF%BC%89/" title="凱娜：精神之橋（BOSS關卡記錄）">凱娜：精神之橋（BOSS關卡記錄）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+</div>
+
+    <span><a href="/2022/06/13/Python%20tuple%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python Tuple實現原理">Python Tuple實現原理</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">小芳芳 @ Leayoos Chiu</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2023/01/12/Docker应用篇/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>
