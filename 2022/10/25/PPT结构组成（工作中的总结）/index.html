@@ -102,12 +102,12 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?381716"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?891619"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?634263"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?887124"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?580175"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?865037"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?169794"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?259122"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?636025"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?748318"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?463162"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?661466"></li>
         </ul>
       </div>
     </header>
@@ -157,61 +157,66 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
     
 
     <h3 id="ppt结构组成"><a class="markdownIt-Anchor" href="#ppt结构组成">#</a> PPT 结构组成</h3>
-<p>PPT 本质上是一个 ZIP 压缩包，将 PPT 改为 ZIP 之后解压可以看到这些文件：</p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/8c97ea36d8908052.png" alt=""></p>
+<p>PPT 本质上是一个 ZIP 压缩包，将 PPT 改为 ZIP 之后解压可以看到这些文件：<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/8c97ea36d8908052.png" alt=""></p>
 <span id="more"></span>
 <p>里面的文件数量会根据幻灯片的内容所有不同，但肯定会有<br>
  [Content_Types].xml、.rels、presentation 这些文件，如果 PPT 一页都没有是无法解压缩的</p>
 <p>[Content_Types] 文件定义了所有幻灯片里用到的格式和内容，就是提前声明这些内容</p>
 <figure class="highlight xml"><figcaption data-lang="XML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Override</span> <span class="token attr-name">PartName</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/ppt/slideLayouts/slideLayout1.xml<span class="token punctuation">"</span></span></pre></td></tr><tr><td data-num="2"></td><td><pre>              <span class="token attr-name">ContentType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span> # 声明不同母版的布局</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Override</span> <span class="token attr-name">PartName</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/ppt/slideMasters/slideMaster1.xml<span class="token punctuation">"</span></span></pre></td></tr><tr><td data-num="4"></td><td><pre>              <span class="token attr-name">ContentType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span> # 声明母版</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Override</span> <span class="token attr-name">PartName</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/ppt/slides/slide1.xml<span class="token punctuation">"</span></span></pre></td></tr><tr><td data-num="6"></td><td><pre>              <span class="token attr-name">ContentType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>application/vnd.openxmlformats-officedocument.presentationml.slide+xml<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>  # 声明每一页幻灯片</pre></td></tr></table></figure><p>Relationships 标签它是为了方便各种资源的的引用，格式为：</p>
 <figure class="highlight xml"><figcaption data-lang="XML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Relationship</span> <span class="token attr-name">Id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rId1<span class="token punctuation">"</span></span> <span class="token attr-name">Type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties<span class="token punctuation">"</span></span> <span class="token attr-name">Target</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>docProps/app.xml<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span></pre></td></tr></table></figure><p>Id 就是在其他地方引用的标识符，Type 一般是一个链接，可能是指定类型，Target 就是资源的存放位置，slides、slideMasters、slideLayouts 文件夹下都有一个_rels 的文件夹，presentation.xml 也有对应的 presentation.xml.rels 文件</p>
-<p><strong>Presentation</strong> 包含了构成 PPTX 的各种规范、属性、字体、备注、过渡动画等</p>
-<p><strong>Slides</strong> 这位更是重量级它存储的就是每页幻灯片的具体内容，包括动画设置，你有几页幻灯片，那就会有 slide1~n 个 xml 文件</p>
-<p><strong>Slide Master</strong> 它包含母版的所有文本、格式等的定义</p>
-<p><strong>Slide Layouts</strong> 它包含了幻灯片使用的版式的默认格式，就是母版下的不同布局样式</p>
+<ul>
+<li>Presentation：包含了构成 PPTX 的各种规范、属性、字体、备注、过渡动画等</li>
+<li>Slides：这位更是重量级，它存储的就是每页幻灯片的具体内容，包括动画设置，你有几页幻灯片，那就会有 slide1~n 个 xml 文件</li>
+<li>Slide Master：它包含母版的所有文本、格式等的定义</li>
+<li>Slide Layouts：它包含了幻灯片使用的版式的默认格式，就是母版下的不同布局样式</li>
+</ul>
 <h3 id="替换背景图"><a class="markdownIt-Anchor" href="#替换背景图">#</a> 替换背景图</h3>
 <blockquote>
 <p>如果要将自己的背景图替换到 PPTX 里作为背景，应该怎么做</p>
 </blockquote>
 <ol>
-<li>首先，如果 PPT 里套用了图片、媒体文件等，那么 PPT 目录里就会有一个 media 目录，里面会存放 PPT 套用的图片、媒体文件</li>
-</ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/61f7470602c70c6c.png" alt=""></p>
-<ol start="2">
+<li>
+<p>首先，如果 PPT 里套用了图片、媒体文件等，那么 PPT 目录里就会有一个 media 目录，里面会存放 PPT 套用的图片、媒体文件<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/61f7470602c70c6c.png" alt=""></p>
+</li>
 <li>
 <p>将我们自己的背景图复制到里面，然后改成不会冲突的名字</p>
 </li>
 <li>
-<p>改背景图不需要修改 slideLayouts 里面的东西，只需要修改 slides 目录，也就是每页幻灯片对应的文件</p>
+<p>改背景图不需要修改 slideLayouts 里面的东西，只需要修改 slides 目录，也就是每页幻灯片对应的文件<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5fc2a5db26d88a35.png" alt=""></p>
+</li>
+<li>
+<p>里面一共有 slide1~18 个 xml，也就是有 18 页<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/41b74f8d443d1b00.png" alt=""></p>
+</li>
+<li>
+<p>我们将第一页改成自己的背景图，首先在 slides 目录下有一个_rels 的目录<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/d39a43b83a8be5aa.png" alt=""></p>
+</li>
+<li>
+<p>它们都定义了每页幻灯片的资源引用关系，打开 slide1.xml.rels<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/be5f3e1987c66dd2.png" alt=""></p>
+</li>
+<li>
+<p>然后我们自己新增一个标签，定义一个背景图的引用，Id 一定不要重复<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/16798418509c3dd9.png" alt=""></p>
+</li>
+<li>
+<p>我们再修改一下 slide1.xml，给它新增一个背景图设置的标签<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5a4961c202207e5b.png" alt=""></p>
 </li>
 </ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5fc2a5db26d88a35.png" alt=""></p>
-<ol start="4">
-<li>里面一共有 slide1~18 个 xml，也就是有 18 页</li>
-</ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/41b74f8d443d1b00.png" alt=""></p>
-<ol start="5">
-<li>我们将第一页改成自己的背景图，首先在 slides 目录下有一个_rels 的目录</li>
-</ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/d39a43b83a8be5aa.png" alt=""></p>
-<ol start="6">
-<li>它们都定义了每页幻灯片的资源引用关系，打开 slide1.xml.rels</li>
-</ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/be5f3e1987c66dd2.png" alt=""></p>
-<ol start="7">
-<li>然后我们自己新增一个标签，定义一个背景图的引用，Id 一定不要重复</li>
-</ol>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/16798418509c3dd9.png" alt=""></p>
-<p>8 . 我们再修改一下 slide1.xml，给它新增一个背景图设置的标签</p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/5a4961c202207e5b.png" alt=""></p>
-<p>13. 基本上就可以了，我们将所有文件打包成 ZIP 再改成 PPTX 后缀名就能打开文件了，背景图已经设置好了，很简单<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/438a09286fd494c9.png" alt=""></p>
-<p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/72fd181077e3f655.png" alt=""></p>
+<p>基本上就可以了，我们将所有文件打包成 ZIP 再改成 PPTX 后缀名就能打开文件了，背景图已经设置好了，很简单<br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/438a09286fd494c9.png" alt=""><br>
+<img data-src="https://s3.bmp.ovh/imgs/2022/10/25/72fd181077e3f655.png" alt=""></p>
 <h3 id="将自己的母版替换为其他ppt的母版"><a class="markdownIt-Anchor" href="#将自己的母版替换为其他ppt的母版">#</a> 将自己的母版替换为其他 PPT 的母版</h3>
 <p>替换母版就非常的麻烦了，要改的东西特别多，来看看如何替换</p>
 <p><img data-src="https://s3.bmp.ovh/imgs/2022/10/25/623518d30c876351.png" alt=""></p>
 <ol>
 <li>
-<p>先准备一份自己设置好的 PPT 母版，还是以这个 PPT 为例，替换它所有母版为我们</p>
+<p>先准备一份自己设置好的 PPT 母版，还是以这个 PPT 为例，替换它所有母版为我们的母版</p>
 </li>
 <li>
 <p>暂且称呼 A 为我们的母版 PPT、B 为被替换的 PPT</p>
@@ -290,7 +295,7 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
       <i class="ic i-calendar-check"></i>
     </span>
     <span class="text">Edited on</span>
-    <time title="Modified: 2022-11-01 17:08:17" itemprop="dateModified" datetime="2022-11-01T17:08:17+08:00">2022-11-01</time>
+    <time title="Modified: 2023-02-21 10:27:44" itemprop="dateModified" datetime="2023-02-21T10:27:44+08:00">2023-02-21</time>
   </span>
   <span id="2022/10/25/PPT结构组成（工作中的总结）/" class="item leancloud_visitors" data-flag-title="PPT结构组成（工作中的总结）" title="Views">
       <span class="icon">
@@ -348,7 +353,7 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
     <div class="item left">
       
 
-  <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tuapi.eees.cc&#x2F;api.php?category&#x3D;dongman&amp;type&#x3D;302&amp;?526909" title="Python Django服务启动时做了什么?">
+  <a href="/2022/10/19/Python%20Django%E6%9C%8D%E5%8A%A1%E5%90%AF%E5%8A%A8%E6%97%B6%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tuapi.eees.cc&#x2F;api.php?category&#x3D;dongman&amp;type&#x3D;302&amp;?700919" title="Python Django服务启动时做了什么?">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> Django</span>
   <h3>Python Django服务启动时做了什么?</h3>
@@ -358,7 +363,7 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
     <div class="item right">
       
 
-  <a href="/2022/11/02/Python%E7%9A%84%E5%B1%9E%E6%80%A7%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tuapi.eees.cc&#x2F;api.php?category&#x3D;dongman&amp;type&#x3D;302&amp;?289520" title="Python的属性是如何工作的">
+  <a href="/2022/11/02/Python%E7%9A%84%E5%B1%9E%E6%80%A7%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tuapi.eees.cc&#x2F;api.php?category&#x3D;dongman&amp;type&#x3D;302&amp;?717587" title="Python的属性是如何工作的">
   <span class="type">Next Post</span>
   <span class="category"><i class="ic i-flag"></i> C</span>
   <h3>Python的属性是如何工作的</h3>
@@ -398,7 +403,7 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
 <nav class="state">
     <div class="item posts">
       <a href="/archives/">
-        <span class="count">26</span>
+        <span class="count">27</span>
         <span class="name">posts</span>
       </a>
     </div>
@@ -495,22 +500,22 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/Life/" title="In Life">Life</a>
+<a href="/categories/game/" title="In game">game</a>
 </div>
 
-    <span><a href="/2022/06/03/%E7%AB%AF%E5%8D%88%E8%8A%82%E5%BF%AB%E4%B9%90/" title="端午节快乐">端午节快乐</a></span>
+    <span><a href="/2022/11/04/%E6%81%90%E9%AC%BC%E7%97%87%E5%8D%95%E9%80%9A-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9A%BE%E5%BA%A6-%E6%97%A0%E8%BA%B2%E8%97%8F%E7%82%B9/" title="恐鬼症单通 自定义难度 无躲藏点!">恐鬼症单通 自定义难度 无躲藏点!</a></span>
   </li>
 
       
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/Office/" title="In Office">Office</a>
+<a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
-<a href="/categories/Office/PowerPoint/" title="In PowerPoint">PowerPoint</a>
+<a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/10/25/PPT%E7%BB%93%E6%9E%84%E7%BB%84%E6%88%90%EF%BC%88%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E6%80%BB%E7%BB%93%EF%BC%89/" title="PPT结构组成（工作中的总结）">PPT结构组成（工作中的总结）</a></span>
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
   </li>
 
       
@@ -529,6 +534,46 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
   <li class="item">
     
 <div class="breadcrumb">
+<a href="/categories/Linux-Kubernetes/" title="In Linux Kubernetes">Linux Kubernetes</a>
+</div>
+
+    <span><a href="/2023/02/03/k8s-Statefulset%E6%9C%89%E7%8A%B6%E6%80%81%E5%BA%94%E7%94%A8/" title="k8s Statefulset有状态应用">k8s Statefulset有状态应用</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
+</div>
+
+    <span><a href="/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/" title="Inside The Python Virtual Machine - Compliling Python Source Code">Inside The Python Virtual Machine - Compliling Python Source Code</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Linux/" title="In Linux">Linux</a>
+</div>
+
+    <span><a href="/2022/12/20/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%89/" title="linux 基础篇（文件与目录管理）">linux 基础篇（文件与目录管理）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
+</div>
+
+    <span><a href="/2023/02/17/Inside-The-Python-Virtual-Machine-Code-Objects/" title="Inside-The-Python-Virtual-Machine-Code Objects">Inside-The-Python-Virtual-Machine-Code Objects</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
@@ -541,62 +586,20 @@ Leayoos Chiu = 士多啤梨苹果橙</title>
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/Linux-Kubernetes/" title="In Linux Kubernetes">Linux Kubernetes</a>
-</div>
-
-    <span><a href="/2023/02/01/Linux%E6%90%AD%E5%BB%BAk8s%E7%8E%AF%E5%A2%83/" title="Linux搭建k8s环境">Linux搭建k8s环境</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Linux-Kubernetes/" title="In Linux Kubernetes">Linux Kubernetes</a>
-</div>
-
-    <span><a href="/2023/02/03/k8s-Statefulset%E6%9C%89%E7%8A%B6%E6%80%81%E5%BA%94%E7%94%A8/" title="k8s Statefulset有状态应用">k8s Statefulset有状态应用</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/game/" title="In game">game</a>
-</div>
-
-    <span><a href="/2023/02/16/%E5%A7%9C%E9%A5%BC%E4%BA%BA%E7%8E%8B%E5%9B%BD-%E5%AE%88%E6%8A%A4%E4%B9%8B%E6%88%98/" title="Cookie-Run-Kingdom-守护之战终于过60wave了!!!">Cookie-Run-Kingdom-守护之战终于过60wave了!!!</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Linux-Docker/" title="In Linux Docker">Linux Docker</a>
-</div>
-
-    <span><a href="/2023/01/12/Docker%E5%BA%94%E7%94%A8%E7%AF%87/" title="Docker应用篇">Docker应用篇</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
 <a href="/categories/Linux/" title="In Linux">Linux</a>
 </div>
 
-    <span><a href="/2022/12/20/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%89/" title="linux 基础篇（文件与目录管理）">linux 基础篇（文件与目录管理）</a></span>
+    <span><a href="/2022/12/07/linux%20%E5%9F%BA%E7%A1%80%E7%AF%87%EF%BC%88%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E4%B8%8E%E7%9B%AE%E5%BD%95%E9%85%8D%E7%BD%AE%EF%BC%89/" title="linux 基础篇（文件权限与目录配置）">linux 基础篇（文件权限与目录配置）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/python/" title="In python">python</a>
+</div>
+
+    <span><a href="/2022/11/22/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/" title="微信小程序抓包">微信小程序抓包</a></span>
   </li>
 
   </ul>
