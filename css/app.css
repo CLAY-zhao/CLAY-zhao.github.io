@@ -2955,6 +2955,12 @@ main >.inner {
 .social .item.bilibili i {
   color: #75a1eb;
 }
+.social .item.music::before {
+  background-color: #e60026;
+}
+.social .item.music i {
+  color: #e60026;
+}
 .social .item:focus i,
 .social .item:hover i {
   color: var(--grey-0);
