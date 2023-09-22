@@ -102,12 +102,12 @@ Leayoos Chiu = .不敢吱声</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?641559"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?788698"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?854523"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?117357"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?863388"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?492795"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?269914"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?718496"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?544264"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?750472"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?531119"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?728594"></li>
         </ul>
       </div>
     </header>
@@ -155,15 +155,15 @@ Leayoos Chiu = .不敢吱声</title>
 
     <h1 id="mysql-innodb的mvcc实现机制"><a class="markdownIt-Anchor" href="#mysql-innodb的mvcc实现机制">#</a> MySQL InnoDB 的 MVCC 实现机制</h1>
 <blockquote>
-<p>MVCC，全程：Multi Version Concurrency Control，即多版本并发控制。具体介绍：[多版本并发控制](<span class="exturl" data-url="aHR0cHM6Ly96aC53aWtpcGVkaWEub3JnL3poLWhrLyVFNSVBNCU5QSVFNyU4OSU4OCVFNiU5QyVBQyVFNSVCOSVCNiVFNSU4RiU5MSVFNiU4RSVBNyVFNSU4OCVCNiM6fjp0ZXh0PSVFNSVBNCU5QSVFNyU4OSU4OCVFNiU5QyVBQyVFNCVCOCVBNiVFOCVBMSU4QyVFNiU4RSVBNyVFNSU4OCVCNihNdWx0aXZlcnNpb24sJUU2JTk2JUJDJUU1JUFGJUE2JUU3JThGJUJFJUU3JTlBJTg0JUU5JTlBJTk0JUU5JTlCJUEyJUU3JUI0JTlBJUU1JTg4JUE1JUUzJTgwJTgyKQ==">https://zh.wikipedia.org/zh-hk/ 多版本并发控制 #:~:text = 多版本並行控制 (Multiversion, 於實現的隔離級別。)</span></p>
+<p>MVCC，全程：Multi Version Concurrency Control，即多版本并发控制</p>
 </blockquote>
 <p>MVCC 在 InnoDB 中的实现是为了提高数据库并发能力，用更好的方式去处理读写冲突，做到即使有读写冲突时，也不需要加锁，非阻塞并发读。</p>
 <h2 id="什么是当前读和快照读"><a class="markdownIt-Anchor" href="#什么是当前读和快照读">#</a> 什么是当前读和快照读？</h2>
 <ul>
 <li>当前读：像 select lock in share mode（共享锁），select for update、update、insert、delete（排他锁）这些操作都是一种当前读，顾名思义，就是它读取的记录是最新版本，读取时还要保证其它并发事务不能修改当前记录，会对读取的记录进行加锁。</li>
 </ul>
-<p>可以通过 MySQL 来测试一下<br>
-<img data-src="https://s3.bmp.ovh/imgs/2023/09/21/1bb272cc0388fe79.jpg" alt=""></p>
+<p>可以通过 MySQL 来测试一下</p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2023/09/21/1bb272cc0388fe79.jpg" alt=""></p>
 <ul>
 <li>快照读：像不加锁的 select 操作就是快照读，即不加锁的非阻塞读；快照读的前提是隔离级别不是串行化的，串行化下的快照读会退化成当前读；之所以出现快照读的情况，是基于提高并发性能的考虑，快照读的实现是基于多版本并发控制，即 MVCC，可以认为 MVCC 是行锁的一个变种，在很多情况下，避免了加锁操作，降低开销；既然是基于多版本，那么快照读可能读取到的数据不一定是最新版本，很可能是之前的历史版本。</li>
 </ul>
@@ -240,39 +240,7 @@ Leayoos Chiu = .不敢吱声</title>
 <blockquote>
 <p>判断条件的部分源码如下</p>
 </blockquote>
-<pre><code class="language-cc">/** Check whether the changes by id are visible.
-	@param[in]	id	transaction id to check against the view
-	@param[in]	name	table name
-	@return whether the view sees the modifications of id. */
-	bool changes_visible(
-		trx_id_t		id,
-		const table_name_t&amp;	name) const
-		MY_ATTRIBUTE((warn_unused_result))
-	&#123;
-		ut_ad(id &gt; 0);
-
-		if (id &lt; m_up_limit_id || id == m_creator_trx_id) &#123;
-
-			return(true);
-		&#125;
-
-		check_trx_id_sanity(id, name);
-
-		if (id &gt;= m_low_limit_id) &#123;
-
-			return(false);
-
-		&#125; else if (m_ids.empty()) &#123;
-
-			return(true);
-		&#125;
-
-		const ids_t::value_type*	p = m_ids.data();
-
-		return(!std::binary_search(p, p + m_ids.size(), id));
-	&#125;
-</code></pre>
-<blockquote>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">/** Check whether the changes by id are visible.</pre></td></tr><tr><td data-num="2"></td><td><pre>	@param[in]	id	transaction id to check against the view</pre></td></tr><tr><td data-num="3"></td><td><pre>	@param[in]	name	table name</pre></td></tr><tr><td data-num="4"></td><td><pre>	@return whether the view sees the modifications of id. */</span></pre></td></tr><tr><td data-num="5"></td><td><pre>	bool <span class="token function">changes_visible</span><span class="token punctuation">(</span></pre></td></tr><tr><td data-num="6"></td><td><pre>		<span class="token class-name">trx_id_t</span>		id<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="7"></td><td><pre>		<span class="token keyword">const</span> <span class="token class-name">table_name_t</span><span class="token operator">&amp;</span>	name<span class="token punctuation">)</span> <span class="token keyword">const</span></pre></td></tr><tr><td data-num="8"></td><td><pre>		<span class="token function">MY_ATTRIBUTE</span><span class="token punctuation">(</span><span class="token punctuation">(</span>warn_unused_result<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>	<span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>		<span class="token function">ut_ad</span><span class="token punctuation">(</span>id <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre>		<span class="token keyword">if</span> <span class="token punctuation">(</span>id <span class="token operator">&lt;</span> m_up_limit_id <span class="token operator">||</span> id <span class="token operator">==</span> m_creator_trx_id<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="13"></td><td><pre></pre></td></tr><tr><td data-num="14"></td><td><pre>			<span class="token keyword">return</span><span class="token punctuation">(</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>		<span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>		<span class="token function">check_trx_id_sanity</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="18"></td><td><pre></pre></td></tr><tr><td data-num="19"></td><td><pre>		<span class="token keyword">if</span> <span class="token punctuation">(</span>id <span class="token operator">>=</span> m_low_limit_id<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="20"></td><td><pre></pre></td></tr><tr><td data-num="21"></td><td><pre>			<span class="token keyword">return</span><span class="token punctuation">(</span>false<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="22"></td><td><pre></pre></td></tr><tr><td data-num="23"></td><td><pre>		<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>m_ids<span class="token punctuation">.</span><span class="token function">empty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="24"></td><td><pre></pre></td></tr><tr><td data-num="25"></td><td><pre>			<span class="token keyword">return</span><span class="token punctuation">(</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="26"></td><td><pre>		<span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="27"></td><td><pre></pre></td></tr><tr><td data-num="28"></td><td><pre>		<span class="token keyword">const</span> <span class="token class-name">ids_t</span><span class="token operator">::</span>value_type<span class="token operator">*</span>	p <span class="token operator">=</span> m_ids<span class="token punctuation">.</span><span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="29"></td><td><pre></pre></td></tr><tr><td data-num="30"></td><td><pre>		<span class="token keyword">return</span><span class="token punctuation">(</span><span class="token operator">!</span>std<span class="token operator">::</span><span class="token function">binary_search</span><span class="token punctuation">(</span>p<span class="token punctuation">,</span> p <span class="token operator">+</span> m_ids<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> id<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="31"></td><td><pre>	<span class="token punctuation">&#125;</span></pre></td></tr></table></figure><blockquote>
 <ul>
 <li>trx_list：未提交事务 ID 列表，用来维护 read view 生成时刻系统正活跃的事务 ID</li>
 <li>up_limit_id：记录 trx_list 列表中事务 ID 最小的 ID</li>
@@ -407,6 +375,10 @@ Leayoos Chiu = .不敢吱声</title>
 <p>这里与上表的唯一区别仅仅是在表 1 的事务 B 在事务 A 修改金额前快照读过一次金额数据，而表 2 的事务 B 在事务 A 修改金额钱没有进行过快照读。</p>
 <h3 id="rc-rr级别下的innodb快照读有什么不同"><a class="markdownIt-Anchor" href="#rc-rr级别下的innodb快照读有什么不同">#</a> RC、RR 级别下的 InnoDB 快照读有什么不同？</h3>
 <p>正是 read view 生成时机的不同，从而造成 RC、RR 级别下快照读的结果不同</p>
+<p>我们可以测试一下，我们开启两个事务，一个事务查询并更新值，另一个事务只查询</p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2023/09/22/79dfeccea32697ae.png" alt=""></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2023/09/22/902da8affd3ff65b.png" alt=""></p>
+<p><img data-src="https://s3.bmp.ovh/imgs/2023/09/22/0790c98622f68efb.png" alt=""></p>
 <ul>
 <li>在 RR 级别下的某个事务对某条记录的第一次快照会创建一个快照及 read view，将当前系统活跃的其它事务记录起来，此后在调用快照读的时候，还是使用同一个 read view，所以只要当前事务在其它事务提交更新之前使用过快照读，那么之后的快照读使用的都是同一个 read view，所以对之后的修改不可见</li>
 <li>即 RR 级别下，快照读生成 read view 时，read view 会记录此时所有其它活动事务的快照，这些事务的修改对于当前事务都是不可见的。而早于 read view 创建的事务所做的修改均是可见的</li>
@@ -432,7 +404,7 @@ Leayoos Chiu = .不敢吱声</title>
       <i class="ic i-calendar-check"></i>
     </span>
     <span class="text">Edited on</span>
-    <time title="Modified: 2023-09-21 18:22:57" itemprop="dateModified" datetime="2023-09-21T18:22:57+08:00">2023-09-21</time>
+    <time title="Modified: 2023-09-22 16:28:08" itemprop="dateModified" datetime="2023-09-22T16:28:08+08:00">2023-09-22</time>
   </span>
   <span id="2023/09/21/MySQL-InnoDB的MVCC实现原理/" class="item leancloud_visitors" data-flag-title="MySQL InnoDB的MVCC实现原理" title="Views">
       <span class="icon">
@@ -490,7 +462,7 @@ Leayoos Chiu = .不敢吱声</title>
     <div class="item left">
       
 
-  <a href="/2023/08/15/%E8%BA%AB%E4%BB%BD%E8%AF%81%E6%A0%A1%E9%AA%8C%E7%AE%97%E6%B3%95-ISO-7064-1983-MOD-11-2/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tuapi.eees.cc&#x2F;api.php?category&#x3D;dongman&amp;type&#x3D;302&amp;?208975" title="身份证校验算法 (ISO 7064:1983.MOD 11-2)">
+  <a href="/2023/08/15/%E8%BA%AB%E4%BB%BD%E8%AF%81%E6%A0%A1%E9%AA%8C%E7%AE%97%E6%B3%95-ISO-7064-1983-MOD-11-2/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tuapi.eees.cc&#x2F;api.php?category&#x3D;dongman&amp;type&#x3D;302&amp;?591028" title="身份证校验算法 (ISO 7064:1983.MOD 11-2)">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> ISO</span>
   <h3>身份证校验算法 (ISO 7064:1983.MOD 11-2)</h3>
@@ -628,10 +600,24 @@ Leayoos Chiu = .不敢吱声</title>
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
+<a href="/categories/MySQL/" title="In MySQL">MySQL</a>
 </div>
 
-    <span><a href="/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" title="Inside The Python Virtual Machine - Python Objects">Inside The Python Virtual Machine - Python Objects</a></span>
+    <span><a href="/2023/09/21/MySQL-InnoDB%E7%9A%84MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="MySQL InnoDB的MVCC实现原理">MySQL InnoDB的MVCC实现原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
+</div>
+
+    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
   </li>
 
       
@@ -643,19 +629,7 @@ Leayoos Chiu = .不敢吱声</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/08/Python%E5%86%85%E7%BD%AEgetattr%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="getattr實現原理">getattr實現原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/Python/" title="In Python">Python</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/Python/AI/" title="In AI">AI</a>
-</div>
-
-    <span><a href="/2023/07/14/%E5%88%9D%E6%AD%A5%E4%BD%93%E9%AA%8CCodeFormer/" title="初步体验CodeFormer">初步体验CodeFormer</a></span>
+    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
   </li>
 
       
@@ -665,7 +639,17 @@ Leayoos Chiu = .不敢吱声</title>
 <a href="/categories/Linux-Docker/" title="In Linux Docker">Linux Docker</a>
 </div>
 
-    <span><a href="/2023/01/04/Docker%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E7%AF%87/" title="Docker基本操作篇">Docker基本操作篇</a></span>
+    <span><a href="/2023/01/12/Docker%E5%BA%94%E7%94%A8%E7%AF%87/" title="Docker应用篇">Docker应用篇</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Linux-Kubernetes/" title="In Linux Kubernetes">Linux Kubernetes</a>
+</div>
+
+    <span><a href="/2023/02/03/k8s-Statefulset%E6%9C%89%E7%8A%B6%E6%80%81%E5%BA%94%E7%94%A8/" title="k8s Statefulset有状态应用">k8s Statefulset有状态应用</a></span>
   </li>
 
       
@@ -677,7 +661,17 @@ Leayoos Chiu = .不敢吱声</title>
 <a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
+    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/HTTP/" title="In HTTP">HTTP</a>
+</div>
+
+    <span><a href="/2023/07/04/HTTP%E7%8A%B6%E6%80%81%E7%A0%81/" title="HTTP状态码">HTTP状态码</a></span>
   </li>
 
       
@@ -694,44 +688,20 @@ Leayoos Chiu = .不敢吱声</title>
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/game/" title="In game">game</a>
+<a href="/categories/Linux-Docker/" title="In Linux Docker">Linux Docker</a>
 </div>
 
-    <span><a href="/2022/11/14/Cookie-Run-Kingdom%E6%B4%BB%E5%8A%A8-B-A-D-4/" title="Cookie Run Kingdom活动 - B.A.D.4">Cookie Run Kingdom活动 - B.A.D.4</a></span>
+    <span><a href="/2023/01/04/Docker%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E7%AF%87/" title="Docker基本操作篇">Docker基本操作篇</a></span>
   </li>
 
       
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/Linux-Kubernetes/" title="In Linux Kubernetes">Linux Kubernetes</a>
+<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
 </div>
 
-    <span><a href="/2023/02/01/Linux%E6%90%AD%E5%BB%BAk8s%E7%8E%AF%E5%A2%83/" title="Linux搭建k8s环境">Linux搭建k8s环境</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/08/12/Python%20Property%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" title="Property源码分析">Property源码分析</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
+    <span><a href="/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" title="Inside The Python Virtual Machine - Python Objects">Inside The Python Virtual Machine - Python Objects</a></span>
   </li>
 
   </ul>
