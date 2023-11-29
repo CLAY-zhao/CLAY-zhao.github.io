@@ -102,12 +102,12 @@ Leayoos Chiu = .不敢吱声</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?421146"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?799616"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?910195"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?57245"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?964643"></li>
-          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?557312"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?894539"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?580395"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?775936"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?286212"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?21497"></li>
+          <li class="item" data-background-image="https://tuapi.eees.cc/api.php?category=dongman&type=302&?728009"></li>
         </ul>
       </div>
     </header>
@@ -228,7 +228,55 @@ Leayoos Chiu = .不敢吱声</title>
 <p>在操作码为 STORE_NAME 时，VM 首先从 co_names 中获取名称，然后将该名称映射到堆栈顶部的值。它用作 f_locals 名称 - 值的映射，通常是字典。对于 STORE_FAST 操作码，VM 不需要获取名称。局部变量的数量可以由编译器静态计算，因此 VM 可以使用数组来存储它们的值。每个局部变量都可以与该数组的索引相关联。为了将名称映射到值，VM 只需将值存储在相应的索引中即可</p>
 <h3 id="load_deref和store_deref"><a class="markdownIt-Anchor" href="#load_deref和store_deref">#</a> LOAD_DEREF 和 STORE_DEREF</h3>
 <p>在一种情况下，编译器不会为函数的本地变量生成 LOAD_FAST 和 STORE_FAST, 当在嵌套函数中使用变量时会发生这种情况</p>
-<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>  b <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="3"></td><td><pre>  <span class="token keyword">def</span> <span class="token function">g</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">return</span> b</pre></td></tr></table></figure><figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span></pre></td></tr><tr><td data-num="2"></td><td><pre>Disassembly of <span class="token operator">&lt;</span>code object f at 0x1027c72f0, <span class="token function">file</span> <span class="token string">"nested.py"</span>, line <span class="token operator"><span class="token file-descriptor important">1</span>></span>:</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token number">2</span>           <span class="token number">0</span> LOAD_CONST               <span class="token number">1</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>            <span class="token number">2</span> STORE_DEREF              <span class="token number">0</span> <span class="token punctuation">(</span>b<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token number">3</span>           <span class="token number">4</span> LOAD_CLOSURE             <span class="token number">0</span> <span class="token punctuation">(</span>b<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            <span class="token number">6</span> BUILD_TUPLE              <span class="token number">1</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            <span class="token number">8</span> LOAD_CONST               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token operator">&lt;</span>code object g at 0x1027c7240, <span class="token function">file</span> <span class="token string">"nested.py"</span>, line <span class="token operator"><span class="token file-descriptor important">3</span>></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>           <span class="token number">10</span> LOAD_CONST               <span class="token number">3</span> <span class="token punctuation">(</span><span class="token string">'f.&lt;locals>.g'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>           <span class="token number">12</span> MAKE_FUNCTION            <span class="token number">8</span> <span class="token punctuation">(</span>closure<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>           <span class="token number">14</span> STORE_FAST               <span class="token number">0</span> <span class="token punctuation">(</span>g<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>           <span class="token number">16</span> LOAD_CONST               <span class="token number">0</span> <span class="token punctuation">(</span>None<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td><pre>           <span class="token number">18</span> RETURN_VALUE</pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre>Disassembly of <span class="token operator">&lt;</span>code object g at 0x1027c7240, <span class="token function">file</span> <span class="token string">"nested.py"</span>, line <span class="token operator"><span class="token file-descriptor important">3</span>></span>:</pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token number">4</span>           <span class="token number">0</span> LOAD_DEREF               <span class="token number">0</span> <span class="token punctuation">(</span>b<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="17"></td><td><pre>            <span class="token number">2</span> RETURN_VALUE</pre></td></tr></table></figure><h1 id="未完待续"><a class="markdownIt-Anchor" href="#未完待续">#</a> 未完待续</h1>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>  b <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="3"></td><td><pre>  <span class="token keyword">def</span> <span class="token function">g</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">return</span> b</pre></td></tr></table></figure><figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span></pre></td></tr><tr><td data-num="2"></td><td><pre>Disassembly of <span class="token operator">&lt;</span>code object f at 0x1027c72f0, <span class="token function">file</span> <span class="token string">"nested.py"</span>, line <span class="token operator"><span class="token file-descriptor important">1</span>></span>:</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token number">2</span>           <span class="token number">0</span> LOAD_CONST               <span class="token number">1</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>            <span class="token number">2</span> STORE_DEREF              <span class="token number">0</span> <span class="token punctuation">(</span>b<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token number">3</span>           <span class="token number">4</span> LOAD_CLOSURE             <span class="token number">0</span> <span class="token punctuation">(</span>b<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>            <span class="token number">6</span> BUILD_TUPLE              <span class="token number">1</span></pre></td></tr><tr><td data-num="8"></td><td><pre>            <span class="token number">8</span> LOAD_CONST               <span class="token number">2</span> <span class="token punctuation">(</span><span class="token operator">&lt;</span>code object g at 0x1027c7240, <span class="token function">file</span> <span class="token string">"nested.py"</span>, line <span class="token operator"><span class="token file-descriptor important">3</span>></span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>           <span class="token number">10</span> LOAD_CONST               <span class="token number">3</span> <span class="token punctuation">(</span><span class="token string">'f.&lt;locals>.g'</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>           <span class="token number">12</span> MAKE_FUNCTION            <span class="token number">8</span> <span class="token punctuation">(</span>closure<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre>           <span class="token number">14</span> STORE_FAST               <span class="token number">0</span> <span class="token punctuation">(</span>g<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="12"></td><td><pre>           <span class="token number">16</span> LOAD_CONST               <span class="token number">0</span> <span class="token punctuation">(</span>None<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="13"></td><td><pre>           <span class="token number">18</span> RETURN_VALUE</pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre>Disassembly of <span class="token operator">&lt;</span>code object g at 0x1027c7240, <span class="token function">file</span> <span class="token string">"nested.py"</span>, line <span class="token operator"><span class="token file-descriptor important">3</span>></span>:</pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token number">4</span>           <span class="token number">0</span> LOAD_DEREF               <span class="token number">0</span> <span class="token punctuation">(</span>b<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="17"></td><td><pre>            <span class="token number">2</span> RETURN_VALUE</pre></td></tr></table></figure><p>编译器为单元变量和自由变量生成 LOAD_REDEF 和 STORE_DEREF 操作码。单元变量是嵌套函数中引用的变量。在上述代码中，b 是函数 f 的单元变量，因为它被 g 引用。从嵌套函数的角度来看，自由变量是单元变量。它是一个未绑定在嵌套函数中但在封闭函数。在代码中，b 是函数 g 的自由变量，因为它没有绑定在 g 中，而是绑定在 f 中</p>
+<p>单元变量和自由变量的值存储在 f_localsplus 数组中，唯一的区别是，f_localsplus [index_of_cell_or_free_variable] 不是直接指向该值，而是指向包含该值的单元格对象</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject_HEAD</pre></td></tr><tr><td data-num="3"></td><td><pre>    PyObject <span class="token operator">*</span>ob_ref<span class="token punctuation">;</span>       <span class="token comment">/* Content of the cell or NULL when empty */</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token punctuation">&#125;</span> PyCellObject<span class="token punctuation">;</span></pre></td></tr></table></figure><p>STORE_DEREF 操作码从堆栈中弹出值，获取 oparg 指定的变量的单元格，并将该单元格的 ob_ref 分配给弹出的值</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">case</span> <span class="token function">TARGET</span><span class="token punctuation">(</span>STORE_DEREF<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject <span class="token operator">*</span>v <span class="token operator">=</span> <span class="token function">POP</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    PyObject <span class="token operator">*</span>cell <span class="token operator">=</span> freevars<span class="token punctuation">[</span>oparg<span class="token punctuation">]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    PyObject <span class="token operator">*</span>oldobj <span class="token operator">=</span> <span class="token function">PyCell_GET</span><span class="token punctuation">(</span>cell<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    <span class="token function">PyCell_SET</span><span class="token punctuation">(</span>cell<span class="token punctuation">,</span> v<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token function">Py_XDECREF</span><span class="token punctuation">(</span>oldobj<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token function">DISPATCH</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>LOAD_DEREF 操作码的工作原理是将单元格的内容推入堆栈</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">case</span> <span class="token function">TARGET</span><span class="token punctuation">(</span>LOAD_DEREF<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject <span class="token operator">*</span>cell <span class="token operator">=</span> freevars<span class="token punctuation">[</span>oparg<span class="token punctuation">]</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    PyObject <span class="token operator">*</span>value <span class="token operator">=</span> <span class="token function">PyCell_GET</span><span class="token punctuation">(</span>cell<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>value <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        <span class="token function">format_exc_unbound</span><span class="token punctuation">(</span>tstate<span class="token punctuation">,</span> co<span class="token punctuation">,</span> oparg<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        <span class="token keyword">goto</span> error<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token function">Py_INCREF</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token function">PUSH</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token function">DISPATCH</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>在单元格中存储值是什么原因？这样做是为了将自由变量与相应单元变量连接起来。它们的值存储在不同框架对象的不同命名空间中，但存储在同一单元格中。VM 在创建封闭函数时将封闭函数的单元格传递给封闭函数。LOAD_CLOSURE 操作码将一个单元推入堆栈，MAKE_FUNCTION 操作码使用该单元为相应的自由变量创建一个函数对象。由于单元机制，当封闭函数重新分配单元变量时，封闭函数会看到重新分配</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">g</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        <span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    a <span class="token operator">=</span> <span class="token string">'assigned'</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    g<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    a <span class="token operator">=</span> <span class="token string">'reassigned'</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    g<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre>f<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>$ python cell_reassign<span class="token punctuation">.</span>py </pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> assigned</pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> reassigned</pre></td></tr></table></figure><p>反之亦然</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">g</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="3"></td><td><pre>        <span class="token keyword">nonlocal</span> a</pre></td></tr><tr><td data-num="4"></td><td><pre>        a <span class="token operator">=</span> <span class="token string">'reassigned'</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    a <span class="token operator">=</span> <span class="token string">'assigned'</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    g<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">print</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre></pre></td></tr><tr><td data-num="10"></td><td><pre>f<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre>$ python free_reassign<span class="token punctuation">.</span>py </pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> assigned</pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> reassigned</pre></td></tr></table></figure><p>当我们调用函数时，CPython 会创建一个 FrameObject 来执行它，单元机制的好处是它允许避免将封闭函数的 FrameObject 及其所有引用保留在内存中。</p>
+<h3 id="load_global和store_global"><a class="markdownIt-Anchor" href="#load_global和store_global">#</a> LOAD_GLOBAL 和 STORE_GLOBAL</h3>
+<p>编译器为函数中的全局变量生成 LOAD_GLOBAL 和 STORE_GLOBAL 操作码。如果变量被 global 声明或者未绑定在函数和任何封闭函数内（它既不是本地变量也不是自由变量），则该变量被认为是函数中的全局变量。</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre>a <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="2"></td><td><pre>d <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    b <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">g</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        <span class="token keyword">global</span> d</pre></td></tr><tr><td data-num="8"></td><td><pre>        c <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        d <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="10"></td><td><pre>        <span class="token keyword">return</span> a <span class="token operator">+</span> b <span class="token operator">+</span> c <span class="token operator">+</span> d</pre></td></tr></table></figure><p>变量 c 不是全局变量，因为它是 g 函数的本地变量。变量 b 不是全局变量，因为它是自由变量。变量 a 是全局变量，因为它既不是本地变量也不是自由变量。并且变量 d 是全局的，因为它显式的声明了 global</p>
+<p>这时 STORE_GLOBAL 操作码的实现</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">case</span> <span class="token function">TARGET</span><span class="token punctuation">(</span>STORE_GLOBAL<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject <span class="token operator">*</span>name <span class="token operator">=</span> <span class="token function">GETITEM</span><span class="token punctuation">(</span>names<span class="token punctuation">,</span> oparg<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    PyObject <span class="token operator">*</span>v <span class="token operator">=</span> <span class="token function">POP</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token keyword">int</span> err<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>    err <span class="token operator">=</span> <span class="token function">PyDict_SetItem</span><span class="token punctuation">(</span>f<span class="token operator">-></span>f_globals<span class="token punctuation">,</span> name<span class="token punctuation">,</span> v<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre>    <span class="token function">Py_DECREF</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>    <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        <span class="token keyword">goto</span> error<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>    <span class="token function">DISPATCH</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>f_globals 字段是 FrameObject 的一個字典，它將全局名稱映射到它們的值。儅 CPython 為模塊創建 FrameObject 時，它會分配 g_globals 字典分配給模塊</p>
+<figure class="highlight shell"><figcaption data-lang="Bash"></figcaption><table><tr><td data-num="1"></td><td><pre>$ python <span class="token parameter variable">-q</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token function">import</span> sys</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> globals<span class="token punctuation">(</span><span class="token punctuation">)</span> is sys.modules<span class="token punctuation">[</span><span class="token string">'__main__'</span><span class="token punctuation">]</span>.__dict__</pre></td></tr><tr><td data-num="4"></td><td><pre>True</pre></td></tr></table></figure><p>当 VM 执行 MAKE_FUNCTION 操作码来创建新的函数对象时，它将该对象的 func_globals 字段分配给当前帧对象的 f_globals。当函数被调用时，VM 会为其创建一个新的框架对象，并将 f_globals 设置为 func_globals</p>
+<p>LOAD_GLOBAL 的实现和 LOAD_NAME 的实现类似，但有两个例外:</p>
+<ul>
+<li>它不会查找 f_locals 中的值</li>
+<li>它使用缓存来减少查找时间</li>
+</ul>
+<p>CPython 将结果缓存在 co_opcache 数组中的代码对象中。该数组存储指向_PyOpcache 结构的指针</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    PyObject <span class="token operator">*</span>ptr<span class="token punctuation">;</span>  <span class="token comment">/* Cached pointer (borrowed reference) */</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token class-name">uint64_t</span> globals_ver<span class="token punctuation">;</span>  <span class="token comment">/* ma_version of global dict */</span></pre></td></tr><tr><td data-num="4"></td><td><pre>    <span class="token class-name">uint64_t</span> builtins_ver<span class="token punctuation">;</span> <span class="token comment">/* ma_version of builtin dict */</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span> _PyOpcache_LoadGlobal<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token keyword">struct</span> <span class="token class-name">_PyOpcache</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>    <span class="token keyword">union</span> <span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>        _PyOpcache_LoadGlobal lg<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre>    <span class="token punctuation">&#125;</span> u<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre>    <span class="token keyword">char</span> optimized<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token punctuation">&#125;</span><span class="token punctuation">;</span></pre></td></tr></table></figure><p>_PyOpcache_LoadGlobal 结构体的 ptr 字段指向 LOAD_GLOBAL 的实际结果。高速缓存按指令号维护。代码对象中的另一个数组称为 co_opcache_map，将字节码中的每条指令映射到其在 co_opcache 中的索引减一。如果指令不是 LOAD_GLOBAL，它会将该指令映射为 0，这意味着该指令永远不会被缓存。缓存的大小不会超过 254。如果字节码包含超过 254 条 LOAD_GLOBAL 指令，co_cocache_map 也会将多余的指令映射到 0</p>
+<p>如果 VM 在执行 LOAD_GLOBAL 时在缓存中找到一个值，它会确保自上次查找该值以来 f_global 和 f_builtins 字典没有被修改。这是通过将 global_ver 和 builtins_ver 与字典的 ma_version_tag 进行比较来完成的。每次修改字典时，字典的 ma_version_tag 字典都会更改。更多详细信息，请参阅 <span class="exturl" data-url="aHR0cHM6Ly9wZXBzLnB5dGhvbi5vcmcvcGVwLTA1MDkv">PEP 509</span></p>
+<p>如果 VM 在缓存中没有找到值，它会首先在 f_globals 中进行正常查找，然后在 f_builtins 中进行查找。如果它最终找到了一个值，它会记住两个字典的当前 ma_version_tag 并将该值推入堆栈。</p>
+<h3 id="load_name和store_name-and-load_classderef"><a class="markdownIt-Anchor" href="#load_name和store_name-and-load_classderef">#</a> LOAD_NAME 和 STORE_NAME (and LOAD_CLASSDEREF)</h3>
+<p>编译器为类定义创建代码对象，就像为模块和函数创建代码对象一样。有趣的是，编译器几乎总是为类体内的变量生成 LOAD_NAME 和 STORE_NAME 操作码。此规则有两个罕见的例外：自由变量和显式声明为全局的变量</p>
+<p>VM 以不同的方式执行 *_NAME 和 *_FAST 操作码。因此，变量在类主体中的工作方式与函数中的工作方式不同</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">A</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"This code is executed"</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre></pre></td></tr><tr><td data-num="4"></td><td><pre>$ python class_local<span class="token punctuation">.</span>py</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> <span class="token keyword">global</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> local</pre></td></tr></table></figure><p>第一次加载时，VM 从 f_globals 加载 x 变量的值，然后它将新值存储在 f_locals 中，并在第二次加载时从那里加载它。如果它是一个函数，那么当我们调用它时，我们会得到 UnboundLocalError: local variable ‘x’ referenced before assignment when we call it，因为编译器认为 x 变量是 C 的局部变量</p>
+<p>类和函数的命名空间如何相互作用？当我们将函数放入类中，该函数看不到绑定在类名称空间中的名称</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">class</span> <span class="token class-name">D</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    x <span class="token operator">=</span> <span class="token number">1</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">def</span> <span class="token function">method</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>D<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>method<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>$ python func_in_class<span class="token punctuation">.</span>py</pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> NameError<span class="token punctuation">:</span> name <span class="token string">'x'</span> <span class="token keyword">is</span> <span class="token keyword">not</span> defined</pre></td></tr></table></figure><p>这是因为 VM 在执行类定义时使用 STORE_NAME 存储 x 的值，并在执行函数时尝试使用 LOAD_GLOBAL 加载它。然而，当我们将类定义中放入函数时，单元机制的工作方式就像将函数放入函数中一样</p>
+<figure class="highlight python"><figcaption data-lang="python"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="2"></td><td><pre>    x <span class="token operator">=</span> <span class="token string">"I'm a cell variable"</span></pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token keyword">class</span> <span class="token class-name">B</span><span class="token punctuation">:</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        <span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>f<span class="token punctuation">(</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="7"></td><td><pre></pre></td></tr><tr><td data-num="8"></td><td><pre>$ python class_in_func<span class="token punctuation">.</span>py </pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token operator">>></span><span class="token operator">></span> I'm a cell variable</pre></td></tr></table></figure><p>但还是有区别的。编译器生成 LOAD_CLASSDEREF 操作码而不是 LOAD_DEREF 来加载 x 的值，dis 模块有解释<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLnB5dGhvbi5vcmcvMy9saWJyYXJ5L2Rpcy5odG1sI29wY29kZS1MT0FEX0NMQVNTREVSRUY="> LOAD_CLASSDEREF</span> 的作用</p>
+<p>与 LOAD_DEREF 非常类似，但在查询单元格之前首先检查本地字典。这用于在类中加载自由变量</p>
+<p>那么，为什么它首先检查 locals 字典？对于函数，编译器可以确定变量是否为本地变量。对于类，编译器无法确定。这是因为 CPython 有元类，元类可以通过实现<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLnB5dGhvbi5vcmcvMy9yZWZlcmVuY2UvZGF0YW1vZGVsLmh0bWwjcHJlcGFyaW5nLXRoZS1jbGFzcy1uYW1lc3BhY2U=">__prepare__</span>方法为类准备一个非空的局部字典</p>
+<h3 id="总结"><a class="markdownIt-Anchor" href="#总结">#</a> 总结</h3>
+<p>确定变量的范围</p>
+<ol>
+<li>如果变量声明为全局变量，则它是显式全局变量</li>
+<li>如果变量声明为局部变量，则它是自由变量</li>
+<li>如果变量绑定在当前代码块内，则它是局部变量</li>
+<li>如果变量绑定在不是类定义的封闭代码块中，则它是自由变量。否则，它是一个隐式全局变量</li>
+</ol>
+<p>更新范围</p>
+<ol>
+<li>如果变量是本地变量并且在封闭的代码块中是空闲的，则它是单元格变量</li>
+</ol>
+<p>决定生成哪个操作码</p>
+<ol>
+<li>如果变量是单元变量或自由变量，则产生 *_DEREF 操作码；如果当前代码块是类定义，则生成 LOAD_CLASSDEREF 操作码来加载值</li>
+<li>如果变量是局部变量并且当前代码块是函数，则生成 *_FAST 操作码</li>
+<li>如果变量是显式全局变量或者隐式全局变量并且当前代码块是函数，则生成 *_GLOBAL 操作码，否在，生成 *_NAME 操作码</li>
+</ol>
 
       <div class="tags">
           <a href="/tags/CPython/" rel="tag"><i class="ic i-tag"></i> CPython</a>
@@ -244,7 +292,7 @@ Leayoos Chiu = .不敢吱声</title>
       <i class="ic i-calendar-check"></i>
     </span>
     <span class="text">Edited on</span>
-    <time title="Modified: 2023-11-21 10:01:42" itemprop="dateModified" datetime="2023-11-21T10:01:42+08:00">2023-11-21</time>
+    <time title="Modified: 2023-11-29 09:49:53" itemprop="dateModified" datetime="2023-11-29T09:49:53+08:00">2023-11-29</time>
   </span>
   <span id="2023/11/16/CPython中变量是如何实现的/" class="item leancloud_visitors" data-flag-title="CPython中变量是如何实现的" title="Views">
       <span class="icon">
@@ -302,7 +350,7 @@ Leayoos Chiu = .不敢吱声</title>
     <div class="item left">
       
 
-  <a href="/2023/09/21/MySQL-InnoDB%E7%9A%84MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tuapi.eees.cc&#x2F;api.php?category&#x3D;dongman&amp;type&#x3D;302&amp;?368332" title="MySQL InnoDB的MVCC实现原理">
+  <a href="/2023/09/21/MySQL-InnoDB%E7%9A%84MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tuapi.eees.cc&#x2F;api.php?category&#x3D;dongman&amp;type&#x3D;302&amp;?457479" title="MySQL InnoDB的MVCC实现原理">
   <span class="type">Previous Post</span>
   <span class="category"><i class="ic i-flag"></i> MySQL</span>
   <h3>MySQL InnoDB的MVCC实现原理</h3>
@@ -326,7 +374,7 @@ Leayoos Chiu = .不敢吱声</title>
   <div class="panels">
     <div class="inner">
       <div class="contents panel pjax" data-title="Contents">
-          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E6%AD%A5%E4%BA%86%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text"> 初步了解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E5%92%8C%E8%8C%83%E5%9B%B4"><span class="toc-number">2.</span> <span class="toc-text"> 命名空间和范围</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#load_fast%E5%92%8Cstore_fast"><span class="toc-number">3.</span> <span class="toc-text"> LOAD_FAST 和 STORE_FAST</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#load_deref%E5%92%8Cstore_deref"><span class="toc-number">4.</span> <span class="toc-text"> LOAD_DEREF 和 STORE_DEREF</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD"><span class="toc-number"></span> <span class="toc-text"> 未完待续</span></a>
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E6%AD%A5%E4%BA%86%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text"> 初步了解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E5%92%8C%E8%8C%83%E5%9B%B4"><span class="toc-number">2.</span> <span class="toc-text"> 命名空间和范围</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#load_fast%E5%92%8Cstore_fast"><span class="toc-number">3.</span> <span class="toc-text"> LOAD_FAST 和 STORE_FAST</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#load_deref%E5%92%8Cstore_deref"><span class="toc-number">4.</span> <span class="toc-text"> LOAD_DEREF 和 STORE_DEREF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#load_global%E5%92%8Cstore_global"><span class="toc-number">5.</span> <span class="toc-text"> LOAD_GLOBAL 和 STORE_GLOBAL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#load_name%E5%92%8Cstore_name-and-load_classderef"><span class="toc-number">6.</span> <span class="toc-text"> LOAD_NAME 和 STORE_NAME (and LOAD_CLASSDEREF)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text"> 总结</span></a></li></ol>
       </div>
       <div class="related panel pjax" data-title="Related">
         <ul>
@@ -443,17 +491,17 @@ Leayoos Chiu = .不敢吱声</title>
 <a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
 </div>
 
-    <span><a href="/2023/02/17/Inside-The-Python-Virtual-Machine-Code-Objects/" title="Inside-The-Python-Virtual-Machine-Code Objects">Inside-The-Python-Virtual-Machine-Code Objects</a></span>
+    <span><a href="/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" title="Inside The Python Virtual Machine - Python Objects">Inside The Python Virtual Machine - Python Objects</a></span>
   </li>
 
       
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/MySQL/" title="In MySQL">MySQL</a>
+<a href="/categories/ISO/" title="In ISO">ISO</a>
 </div>
 
-    <span><a href="/2023/09/21/MySQL-InnoDB%E7%9A%84MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="MySQL InnoDB的MVCC实现原理">MySQL InnoDB的MVCC实现原理</a></span>
+    <span><a href="/2023/08/15/%E8%BA%AB%E4%BB%BD%E8%AF%81%E6%A0%A1%E9%AA%8C%E7%AE%97%E6%B3%95-ISO-7064-1983-MOD-11-2/" title="身份证校验算法 (ISO 7064:1983.MOD 11-2)">身份证校验算法 (ISO 7064:1983.MOD 11-2)</a></span>
   </li>
 
       
@@ -463,7 +511,27 @@ Leayoos Chiu = .不敢吱声</title>
 <a href="/categories/game/" title="In game">game</a>
 </div>
 
-    <span><a href="/2022/11/04/%E6%81%90%E9%AC%BC%E7%97%87%E5%8D%95%E9%80%9A-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9A%BE%E5%BA%A6-%E6%97%A0%E8%BA%B2%E8%97%8F%E7%82%B9/" title="恐鬼症单通 自定义难度 无躲藏点!">恐鬼症单通 自定义难度 无躲藏点!</a></span>
+    <span><a href="/2023/02/16/%E5%A7%9C%E9%A5%BC%E4%BA%BA%E7%8E%8B%E5%9B%BD-%E5%AE%88%E6%8A%A4%E4%B9%8B%E6%88%98/" title="Cookie-Run-Kingdom-守护之战终于过60wave了!!!">Cookie-Run-Kingdom-守护之战终于过60wave了!!!</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/12/11/%E5%87%B1%E5%A8%9C%EF%BC%9A%E7%B2%BE%E7%A5%9E%E4%B9%8B%E6%A9%8B%EF%BC%88BOSS%E9%97%9C%E5%8D%A1%E8%A8%98%E9%8C%84%EF%BC%89/" title="凱娜：精神之橋（BOSS關卡記錄）">凱娜：精神之橋（BOSS關卡記錄）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/Linux-Docker/" title="In Linux Docker">Linux Docker</a>
+</div>
+
+    <span><a href="/2023/01/04/Docker%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E7%AF%87/" title="Docker基本操作篇">Docker基本操作篇</a></span>
   </li>
 
       
@@ -473,41 +541,11 @@ Leayoos Chiu = .不敢吱声</title>
 <a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
 <a href="/categories/CPython/C/" title="In C">C</a>
-</div>
-
-    <span><a href="/2022/06/23/CPython-VM%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" title="CPython VM的工作原理">CPython VM的工作原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
-</div>
-
-    <span><a href="/2022/11/16/Inside-The-Python-Virtual-Machine-Python-Objects/" title="Inside The Python Virtual Machine - Python Objects">Inside The Python Virtual Machine - Python Objects</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
 <i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
+<a href="/categories/CPython/C/Python/" title="In Python">Python</a>
 </div>
 
-    <span><a href="/2022/08/03/Python%20list%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" title="Python list实现原理">Python list实现原理</a></span>
-  </li>
-
-      
-  <li class="item">
-    
-<div class="breadcrumb">
-<a href="/categories/CPython-C/" title="In CPython C">CPython C</a>
-</div>
-
-    <span><a href="/2022/11/07/Inside-The-Python-Virtual-Machine-Compliling-Python-Source-Code/" title="Inside The Python Virtual Machine - Compliling Python Source Code">Inside The Python Virtual Machine - Compliling Python Source Code</a></span>
+    <span><a href="/2022/06/22/Python%20range%E7%9A%84%E5%AF%A6%E7%8F%BE%E5%8E%9F%E7%90%86/" title="Python range的實現原理">Python range的實現原理</a></span>
   </li>
 
       
@@ -526,22 +564,32 @@ Leayoos Chiu = .不敢吱声</title>
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/CPython/" title="In CPython">CPython</a>
-<i class="ic i-angle-right"></i>
-<a href="/categories/CPython/C/" title="In C">C</a>
+<a href="/categories/python/" title="In python">python</a>
 </div>
 
-    <span><a href="/2022/06/28/Python%20map%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%A9%B6/" title="Python map对象探究">Python map对象探究</a></span>
+    <span><a href="/2022/11/22/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8A%93%E5%8C%85/" title="微信小程序抓包">微信小程序抓包</a></span>
   </li>
 
       
   <li class="item">
     
 <div class="breadcrumb">
-<a href="/categories/Linux-Docker/" title="In Linux Docker">Linux Docker</a>
+<a href="/categories/CPython/" title="In CPython">CPython</a>
+<i class="ic i-angle-right"></i>
+<a href="/categories/CPython/C/" title="In C">C</a>
 </div>
 
-    <span><a href="/2023/01/12/Docker%E5%BA%94%E7%94%A8%E7%AF%87/" title="Docker应用篇">Docker应用篇</a></span>
+    <span><a href="/2022/06/06/%E5%93%AA%E4%BA%9BPython%E6%93%8D%E4%BD%9C%E6%98%AFatomic%E7%9A%84%EF%BC%9F/" title="哪些Python操作是atomic的？">哪些Python操作是atomic的？</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+<a href="/categories/game/" title="In game">game</a>
+</div>
+
+    <span><a href="/2022/11/14/Cookie-Run-Kingdom%E6%B4%BB%E5%8A%A8-B-A-D-4/" title="Cookie Run Kingdom活动 - B.A.D.4">Cookie Run Kingdom活动 - B.A.D.4</a></span>
   </li>
 
   </ul>
